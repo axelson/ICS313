@@ -6,6 +6,14 @@
 (defun get-prop (obj property)
   (get obj property))
 
+(defun set-prop (obj property value)
+  (setf (get obj property) value))
+
+(defun prop-with-value (obj value)
+  (let ((position (search (list value) (symbol-plist obj))))
+    (if position
+        (nth (1- position) (symbol-plist obj)))))
+
 (progn
   (defparameter bart "Bart")
   (setf (get 'bart 'age) 7) 
