@@ -1,4 +1,6 @@
 ; RPG Game
+; functions: get-prop set-prop num-props
+; macros: add-prop new-prop
 (defun num-props (obj)
   (/ (length (symbol-plist obj))
      2))
