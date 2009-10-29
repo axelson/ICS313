@@ -26,6 +26,15 @@
     (if position
         (nth (1- position) (symbol-plist obj)))))
 
+(defun contains? (obj item)
+  (cond
+    ((null obj) nil)
+    ((listp obj)
+     (if (eql 'description (caar obj))
+         (format t "It's a good list")))))
+
+
+
 (progn
   (defparameter bart "Bart")
   (setf (get 'bart 'age) 7) 
