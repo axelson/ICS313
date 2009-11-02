@@ -5,18 +5,21 @@
   (length obj))
 
 (defun get-prop (obj property)
-  (loop for sublist in obj
-       do (when (eql (car sublist) property)
-            (return (cadr sublist)))))
+  (cadr (find-if #'(lambda (x) (eql x property))
+           obj
+           :key #'car)))
 
 (defun set-prop (obj property value)
-  (setf (get obj property) value))
+  (nsubstitute-if (list property value) #'(lambda (x) (eql x property))
+                 obj
+                 :key #'car)
+  nil)
 
 (defun prop-with-value (obj value)
-  (let ((position (search (list value) (symbol-plist obj))))
-    (if position
-        (nth (1- position) (symbol-plist obj)))))
-
+  (car (find-if #'(lambda (x) (eql x value))
+               obj
+               :key #'cadr)))
+  
 (defun contains? (obj item)
   (cond
     ((null obj) nil)
