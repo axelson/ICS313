@@ -30,13 +30,15 @@
   (cond
     ((null obj) nil)
     ((containerp obj)
-     (loop for item in (cdadr obj)
-          do
-          (format t "item: ~A" item)
-          (cond
-               ((containerp item) (contains? item itemname))
-               ((eql (car item) itemname)
-                 (return t))))
+     (loop for item in (cadadr obj)
+        do
+                                        ;(format t "item: ~A~%" item)
+        (cond
+          ((containerp item)
+           (if (contains? item itemname)
+               (return t)))
+          ((eql item itemname)
+           (return t))))
      )))
 
 
