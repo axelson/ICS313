@@ -19,13 +19,25 @@
   (car (find-if #'(lambda (x) (eql x value))
                obj
                :key #'cadr)))
-  
-(defun contains? (obj item)
+
+(defun containerp (obj)
+  (cond
+    ((listp obj)
+     (when (listp (car obj))
+       (eql 'description (caar obj))))))
+
+(defun contains? (obj itemname)
   (cond
     ((null obj) nil)
-    ((listp obj)
-     (if (eql 'description (caar obj))
-         (format t "It's a good list")))))
+    ((containerp obj)
+     (loop for item in (cdadr obj)
+          do
+          (format t "item: ~A" item)
+          (cond
+               ((containerp item) (contains? item itemname))
+               ((eql (car item) itemname)
+                 (return t))))
+     )))
 
 
 ; If using plists
