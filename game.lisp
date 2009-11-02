@@ -2,24 +2,15 @@
 ; functions: get-prop set-prop num-props
 ; macros: add-prop new-prop
 (defun num-props (obj)
-  (/ (length (symbol-plist obj))
-     2))
-
-(defmacro num-propsm (obj)
-  `(/ (length (symbol-plist (quote ,obj)))
-     2))
+  (length obj))
 
 (defun get-prop (obj property)
-  (get obj property))
-
-(defmacro get-propm (obj property)
-  `(get (quote ,obj) ,property))
+  (loop for sublist in obj
+       do (when (eql (car sublist) property)
+            (return (cadr sublist)))))
 
 (defun set-prop (obj property value)
   (setf (get obj property) value))
-
-(defmacro set-propm (obj property value)
-  `(setf (get (quote ,obj) ,property) ,value))
 
 (defun prop-with-value (obj value)
   (let ((position (search (list value) (symbol-plist obj))))
@@ -34,12 +25,16 @@
          (format t "It's a good list")))))
 
 
+; If using plists
+;; (progn
+;;   (defparameter bart "Bart")
+;;   (setf (get 'bart 'age) 7) 
+;;   (setf (get 'bart 'hair-color) 'yellow) 
+;;   (setf (get 'bart 'name) "Bart Simpson"))
 
-(progn
-  (defparameter bart "Bart")
-  (setf (get 'bart 'age) 7) 
-  (setf (get 'bart 'hair-color) 'yellow) 
-  (setf (get 'bart 'name) "Bart Simpson"))
+(defparameter bart '((name "Bart Simpson")
+                     (age 7)
+                     (hair-color yellow)))
 
 (progn
   (defparameter pouch '((description "a small coin pouch") (contents (coins iou-note))))
