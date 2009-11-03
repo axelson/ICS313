@@ -132,3 +132,17 @@
   `(setf ,symbol (cons (list ,name ,default-value) ,symbol)))
 
 
+;; Write a macro (new-prop name getter setter) which will generate a get- and set- function for the property, as follows:
+;; (new-prop age get-age set-age) ;; note the lack of quotes
+;; ==>
+;; (defun get-age (obj)
+;;   (get-prop obj 'age))
+;; (defun set-age (obj value)
+;;   (set-age obj 'age value))
+(defmacro new-prop (name getter setter)
+  "Generates a getter and setter for a property"
+  `(progn
+    (defun ,getter (obj)
+       (get-prop obj (quote ,name)))
+    (defun ,setter (obj age)
+       (set-prop obj (quote ,name) age))))
