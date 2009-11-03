@@ -1,6 +1,24 @@
-; RPG Game
-; functions: get-prop set-prop num-props
-; macros: add-prop new-prop
+;; RPG Game
+;; Author: Jason Axelson
+;; ested on CMUCL version 19f-1
+
+;; If using plists
+;; (progn
+;;   (defparameter bart "Bart")
+;;   (setf (get 'bart 'age) 7) 
+;;   (setf (get 'bart 'hair-color) 'yellow) 
+;;   (setf (get 'bart 'name) "Bart Simpson"))
+
+(defparameter bart '((name "Bart Simpson")
+                     (age 7)
+                     (hair-color yellow)))
+
+(progn
+  (defparameter pouch '((description "a small coin pouch") (contents (coins iou-note))))
+  (defparameter bag '((description "a paper bag") (contents (sandwich apple soda))))
+  (defparameter box `((description "small blue box") (contents (,pouch feather))))
+  (defparameter backpack `((description "leather backpack") (contents (,box ,bag)))))
+
 (defun num-props (obj)
   (length obj))
 
@@ -80,23 +98,4 @@
 (defmacro add-prop (symbol name default-value)
   `(setf ,symbol (cons (list ,name ,default-value) ,symbol)))
 
-
-; If using plists
-;; (progn
-;;   (defparameter bart "Bart")
-;;   (setf (get 'bart 'age) 7) 
-;;   (setf (get 'bart 'hair-color) 'yellow) 
-;;   (setf (get 'bart 'name) "Bart Simpson"))
-
-(defparameter bart '((name "Bart Simpson")
-                     (age 7)
-                     (hair-color yellow)))
-
-
-
-(progn
-  (defparameter pouch '((description "a small coin pouch") (contents (coins iou-note))))
-  (defparameter bag '((description "a paper bag") (contents (sandwich apple soda))))
-  (defparameter box `((description "small blue box") (contents (,pouch feather))))
-  (defparameter backpack `((description "leather backpack") (contents (,box ,bag)))))
 
