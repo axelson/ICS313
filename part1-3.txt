@@ -1,0 +1,54 @@
+part3) p.477-479
+1)
+          +--------------+
+          |Locals        |
+B      +--+Dynamic link  |
+       |  |Static link   +----+
+       |  |Return (to C) |    |
+       |  +--------------+    |
+       +->|Locals        |    |
+C      +--+Dynamic link  |    |
+       |  |Static link   +--+ |
+       |  |Return (to A) |  | |
+       |  +--------------+  | |
+       +->|Locals        |<-+-+
+A      +--|Dynamic link  |
+       |  |Static link   +--+
+       |  |Return BigSub |  |
+       |  +--------------+  |
+BigSub +->|Locals        |<-+
+          +--------------+
+
+
+3)
+
+          +--------------+
+          |Locals        |
+D      +--+Dynamic link  |
+       |  |Static link   +--+
+       |  |Return (to C) |  |
+       |  +--------------+  |
+       +->|Locals        |<-+
+C      +--+Dynamic link  |
+       |  |Static link   +------+
+       |  |Return (to C) |      |
+       |  +--------------+      |
+       +->|Parameter a=F |      |
+          |Locals        |      |
+A      +--|Dynamic link  |      |
+       |  |Static link   -----+ |
+       |  |Return (to C) |    | |
+       |  +--------------+    | |
+       +->|Locals        |    | |
+B      +--+Dynamic link  |    | |
+       |  |Static link   +--+ | |
+       |  |Return (to C) |  | | |
+       |  +--------------+  | | |
+       +->|Parameter a=T |<-+ | |
+          |Locals        |    | |
+A      +--+Dynamic link  |    | |
+       |  |Static link   +--+ | |
+       |  |Return BigSub |  | | |
+       |  +--------------+  | | |
+BigSub +->|Locals        |<-+-+-+
+          +--------------+
