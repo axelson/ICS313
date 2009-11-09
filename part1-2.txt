@@ -1,0 +1,9 @@
+Problem Set: #5. pp. 445-446.
+
+Find values of variables value and list
+a. passed by value
+    value=2, list=[1 3 5 7 9]
+b. passed by reference
+    value=2, list=[3 1 5 7 9]
+c. passed by value-result
+    value=2, list=[3 1 5 7 9]
