@@ -143,6 +143,6 @@
   "Generates a getter and setter for a property"
   `(progn
     (defun ,getter (obj)
-       (get-prop obj (quote ,name)))
-    (defun ,setter (obj age)
-       (set-prop obj (quote ,name) age))))
+       (get-prop obj ',name))
+    (defun ,setter (obj value)
+       (set-prop obj ',name value))))
