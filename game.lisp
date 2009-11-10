@@ -146,3 +146,11 @@
        (get-prop obj ',name))
     (defun ,setter (obj value)
        (set-prop obj ',name value))))
+
+(defun game ()
+  "Runs the game"
+  ;; REPL loop
+  (loop do
+       (format t "What now? ")
+       (setf input (read))
+       (format t "input ~A~%" input)))
