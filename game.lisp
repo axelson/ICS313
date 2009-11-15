@@ -147,10 +147,32 @@
     (defun ,setter (obj value)
        (set-prop obj ',name value))))
 
+(progn
+  (defparameter game-state '((door1-opened t)
+                             (age 7)
+                             (hair-color yellow)))
+  (defparameter pouch '((description "a small coin pouch")
+                        (contents (coins marbles))))
+  (defparameter player '((age 9)
+                         (inventory pouch))))
+
+(defun player-has? (item)
+  "Checks if player is currently holding item in their inventory"
+  (contains? (symbol-value (get-prop player 'inventory)) item))
+
+(defun get-state (prop)
+  "Returns the state of the property prop"
+  (get-prop game-state prop))
+
+
 (defun game ()
   "Runs the game"
   ;; REPL loop
-  (loop do
-       (format t "What now? ")
-       (setf input (read))
+  (loop
+    with input
+    do (format t "What now? ")
+       (setf input (read-line))
+       (when (string= input "win")
+           (format t "You won!")
+           (return))
        (format t "input ~A~%" input)))
