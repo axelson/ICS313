@@ -265,7 +265,10 @@
 (defun describe-room (room)
   (if room
       (format t "~A~%" (eval (get-prop (get-prop rooms room) 'describe)))
-      (format t "~A~%" (eval (get-prop (get-room (get-state 'current-room)) 'describe)))))
+      (format t "~A~%" (eval (get-prop (get-current-room) 'describe)))))
+
+(defun get-current-room ()
+  (get-room (get-state 'current-room)))
 
 (defun handle-input (input)
   (cond ((find input '("win game" "win") :test #'equalp)
