@@ -167,7 +167,9 @@
 			(contents (coins marbles))))
   (defparameter player '((age 9)
                          (inventory pouch)))
-  (defparameter rooms '((lobby ((describe   "A dead person hangs motionless from the roof.  The police officer stands next to the door with a stern look on his face.")
+  (defparameter rooms '((lobby ((describe (if (= (get-state 'age) 7)
+					         "A dead person hangs motionless from the roof.  The police officer stands next to the door with a stern look on his face."
+					      "Where did the dead guy go?"))
 				(west kitchen)
 				(north ballroom)
 				(east bathroom)
@@ -267,8 +269,8 @@
 ;; TODO make room optional
 (defun describe-room (room)
   (if room
-      (format t "~A~%" (get-prop (get-prop rooms room) 'description))
-      (format t "~A~%" (get-prop (get-room (get-state 'current-room)) 'description))))
+      (format t "~A~%" (eval (get-prop (get-prop rooms room) 'describe)))
+      (format t "~A~%" (eval (get-prop (get-room (get-state 'current-room)) 'describe)))))
 
 (defun handle-input (input)
   (cond ((find input '("win game" "win") :test #'equalp)
