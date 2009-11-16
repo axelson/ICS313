@@ -149,12 +149,17 @@
 
 (progn
   (defparameter game-state '((door1-opened t)
+			     (current-room lobby)
                              (age 7)
                              (hair-color yellow)))
   (defparameter pouch '((description "a small coin pouch")
                         (contents (coins marbles))))
   (defparameter player '((age 9)
-                         (inventory pouch))))
+                         (inventory pouch)))
+  (defparameter rooms '((lobby ((description "A dead person lies on the floor, his body hopelessly mangled")
+				(west kitchen)))
+			(kitchen ((description "A typical kitchen")
+				  (east lobby))))))
 
 (defun player-has? (item)
   "Checks if player is currently holding item in their inventory"
@@ -164,15 +169,41 @@
   "Returns the state of the property prop"
   (get-prop game-state prop))
 
+(defun get-room (room)
+  (get-prop rooms room))
+
 
 (defun game ()
   "Runs the game"
   ;; REPL loop
   (loop
-    with input
-    do (format t "What now? ")
-       (setf input (read-line))
-       (when (string= input "win")
-           (format t "You won!")
-           (return))
-       (format t "input ~A~%" input)))
+     do (format t "What now? ")
+     until (handle-input (read-line))))
+
+(defun describe-room (room)
+  (if room
+      (format t "~A~%" (get-prop (get-prop rooms room) 'description))
+      (format t "~A~%" (get-prop (get-room (get-state 'current-room)) 'description))))
+
+(defun handle-input (input)
+  (cond ((string= input "win game")
+	 (format t "You won!") t)
+	((find input '("N" "north" "up") :test #'equalp)
+	 (format t "north~%"))
+	((find input '("S" "south" "down") :test #'equalp)
+	 (format t "south~%"))
+	((find input '("E" "east" "right") :test #'equalp)
+	 (format t "east~%"))
+	((find input '("W" "west" "left") :test #'equalp)
+	 (format t "west~%"))
+	(t
+	 (format t "input -> ~A~%" input)
+	 (describe-room nil))))
+	 
+
+(defun move (direction)
+    (case direction
+      ((list north) (format t "north~%"))
+      ((list south) (format t "south~%"))
+      (east (format t "east~%"))
+      (west (format t "west~%"))))
