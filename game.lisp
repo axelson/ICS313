@@ -292,10 +292,26 @@
 
 (defun move (direction)
     (case direction
-      (NORTH (format t "North~%"))
-      (SOUTH (format t "South~%"))
-      (EAST (format t "East~%"))
-      (WEST (format t "West~%"))))
+      (NORTH
+       (if (get-prop (get-current-room) 'north)
+	   (format t "North~%")
+	   (move-error)))
+      (SOUTH (format t "South~%")
+       (if (get-prop (get-current-room) 'south)
+	   (format t "South~%")
+	   (move-error)))
+      (EAST (format t "East~%")
+       (if (get-prop (get-current-room) 'east)
+	   (format t "East~%")
+	   (move-error)))
+      (WEST (format t "West~%")
+       (if (get-prop (get-current-room) 'west)
+	   (format t "West~%")
+	   (move-error)))))
+
+(defun move-error ()
+  "Shows user error when they try to move in a restricted direction"
+  (format t "A wall blocks your path~%"))
 
 (defun show-intro ()
   (format t "Welcome to Mystery Mansion! (For in-game instructions, enter \"help\").~%")
