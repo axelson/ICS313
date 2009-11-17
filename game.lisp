@@ -60,8 +60,8 @@
   "Returns true if obj is a container, nil otherwise"
   (cond
     ((listp obj)
-     (when (listp (car obj))
-       (eql 'description (caar obj))))))
+     (when (and (listp (car obj)) (get-prop obj 'contents))
+       t))))
 
 ;; Write a recursive function (contains? obj thing) which will return t if a container or one of its contents contains the thing, otherwise returns nil.
 (defun contains? (obj itemname)
