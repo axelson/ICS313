@@ -69,14 +69,13 @@
   (cond
     ((null obj) nil)
     ((containerp obj)
-     (loop for item in (cadadr obj)
-        do
-          (cond
-            ((containerp item)
-             (if (contains? item itemname)
-                 (return t)))
-            ((eql item itemname)
-             (return t)))))))
+     (loop for item in (get-prop obj 'contents)
+           do (cond
+                ((containerp item)
+                 (if (contains? item itemname)
+                     (return t)))
+                ((eql item itemname)
+                 (return t)))))))
 
 
 ;; We can also store functions in our lists, and use them to give objects behaviors. For example:
