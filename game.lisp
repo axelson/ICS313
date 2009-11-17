@@ -390,6 +390,9 @@
      (format t "You Fail the Game!~%") t)
     ((find input '("look" "l") :test #'equalp)
      (describe-room))
+    ((search "talk" input)
+     (format t "You must be trying to talk~%")
+     (talk (cadr (string-split " " input))))
     ((equalp input "help")
      (format t "COMMAND LIST:~%")
      (format t "---DIRECTIONS---~%")
@@ -419,7 +422,10 @@
      (move 'third))
     (t
      (format t "I don't know what to do with this command: ~A~%Maybe you should try running \"help\"~%" input))))
-	 
+
+(defun talk (character)
+  "Try to talk to the specified character"
+  (format t "You are trying to talk to ~A~%" character))
 
 (defun move (direction)
   "Try to move to a different room"
