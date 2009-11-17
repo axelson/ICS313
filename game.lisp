@@ -358,6 +358,9 @@
 (defmacro char-talk (character)
   `(do-action (get-prop characters ',character) 'talk))
 
+(defun char-talkf (character)
+  (do-action (get-prop characters character) 'talk))
+
 ;;;;;;;;
 ; Game ;
 ;;;;;;;;
@@ -390,8 +393,7 @@
     ((find input '("look" "l") :test #'equalp)
      (describe-room))
     ((search "talk" input)
-     (format t "You must be trying to talk~%")
-     (talk (cadr (string-split " " input))))
+     (talk (string-left-trim "talk " input)))
     ((equalp input "help")
      (format t "COMMAND LIST:~%")
      (format t "---DIRECTIONS---~%")
@@ -400,7 +402,8 @@
      (format t "3. Head East - \"E\", \"east\", \"right\"~%")
      (format t "4. Head West - \"W\", \"west\", \"left\"~%")
      (format t "~%---ACTIONS---~%")
-     (format t "1. Look/Check the current room - \"look\"~%"))
+     (format t "1. Look/Check the current room - \"look\"~%")
+     (format t "2. Talk to a person in the room - \"talk\"~%"))
     ((find input '("eval") :test #'equalp)
      (format t "~A~%" (eval (read-from-string (read-line)))))
     ;; Directions
@@ -422,9 +425,22 @@
     (t
      (format t "I don't know what to do with this command: ~A~%Maybe you should try running \"help\"~%" input))))
 
-(defun talk (character)
+(defun talk (character-string)
   "Try to talk to the specified character"
-  (format t "You are trying to talk to ~A~%" character))
+  (cond
+    ((= 0 (length character-string))
+     (format t "You talk to the wall, the wall does not talk back, perhaps you should try talking to a person~%"))
+    ((contains? (get-current-room) (find-character character-string))
+     (char-talkf (find-character character-string)))
+    (t (format t "Sorry \"~A\" does not exist. Maybe they're only in your head?~%" character-string))))
+
+(defun find-character (character-string)
+  (cond
+    ((not (stringp character-string)) (format t "this requires a string~%"))
+    ((search "police" character-string) 'police)
+    ((search "officer" character-string) 'police)
+    ((search "fat" character-string) 'fat-pompous-bastard)
+    ))
 
 (defun move (direction)
   "Try to move to a different room"
