@@ -296,7 +296,7 @@
      (format t "You won!") t)
     ((find input '("quit" "exit" "q") :test #'equalp)
      (format t "You Fail the Game!~%") t)
-    ((search "look" input :test #'equalp)
+    ((find input '("look" "l") :test #'equalp)
      (describe-room nil))
     ((equalp input "help")
      (format t "COMMAND LIST:~%")
