@@ -281,6 +281,7 @@
      until (handle-input (read-line))))
 
 (defun describe-room (&optional (room nil))
+  "Describes the contents of a room"
   (if room
       (format t "~A~%" (eval (get-prop (get-prop rooms room) 'describe)))
       (format t "~A~%" (eval (get-prop (get-current-room) 'describe)))))
@@ -289,6 +290,7 @@
   (get-room (get-state 'current-room)))
 
 (defun handle-input (input)
+  "Handles user input"
   (cond
     ;; Commands
     ((find input '("win game" "win") :test #'equalp)
@@ -307,7 +309,7 @@
      (format t "~%---ACTIONS---~%")
      (format t "1. Look/Check the current room - \"look\"~%"))
     ((find input '("e" "eval") :test #'equalp)
-     (format t "~A~%" (read-from-string (read-line))))
+     (format t "~A~%" (eval (read-from-string (read-line)))))
     ;; Directions
     ((find input '("N" "north" "up") :test #'equalp)
      (move 'north))
@@ -329,6 +331,7 @@
 	 
 
 (defun move (direction)
+  "Try to move to a different room"
   (if (get-prop (get-current-room) direction)
       (progn
         (set-prop game-state 'current-room (get-prop (get-current-room) direction))
@@ -341,6 +344,7 @@
   (format t "There is a wall.  You cannot go in that direction.~%"))
 
 (defun show-intro ()
+  "Shows introduction when game starts"
   (format t "Welcome to Mystery Mansion! (For in-game instructions, enter \"help\").~%")
   (format t "~%Press Enter to continue...") (read-line)
   (format t "~%It is a dark and stormy night.  Although you are celebrating at a party in a large and elegant mansion, for some reason you can't shake off this feeling of uneasiness.  As the night progresses, you feel a chill run down your back as if someone has been watching you the entire time.  Guests begin to leave and you notice that your friend has left without you.  The host asks you where your friend went and you explain your situation.  The host smiles and offers a room to stay for the night.  Seeing that you have no other means of returning you gladly accept the offer.  As you enter the room , you feel extremely exhausted from all the chatter and head right to bed.")
