@@ -185,28 +185,37 @@
 				      (talk nil)))
 			      ))
 
+;; Character talk functions
+
   (set-prop (get-prop characters 'police) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
+				(0 (format t "I got here as soon as I got the call.~%"))
 				(t (format t "I am here to ensure everyone's safety.~%"))))))
 
   (set-prop (get-prop characters 'married-couple) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
+				(0 (format t "We were just about to go to bed when we heard the commotion.~%"))
 				(t (format t "I am just worried about the safety of my family.~%"))))))
 
   (set-prop (get-prop characters 'fat-pompous-bastard) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
+				(0 (format t "I did not come down here to chit chat with you.~%"))
+				(1 (format t "Oh, it is you again.~%"))
 				(t (format t "I just got this new suit.~%"))))))
 
   (set-prop (get-prop characters 'young-rich-widow) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
+				(0 (format t "Do you anymore information about what is going on?~%"))
+				(1 (format t "Excuse me, may I help you?~%"))
 				(t (format t "I may need some comforting.~%"))))))
   (set-prop (get-prop characters 'butler) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
+				(0 (format t "Hello sir, did you need my service?"))
 				(t (format t "I used to take care of Batman.~%"))))))
 
 
