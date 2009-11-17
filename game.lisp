@@ -296,8 +296,7 @@
 	 (format t "1. Look/Check the current room - \"look\"~%")
 	 )
 	(t
-	 (format t "I don't know what to do with this command: ~A~%" input)
-	 (describe-room nil))))
+	 (format t "I don't know what to do with this command: ~A~%Maybe you should try running \"help\"~%" input))))
 	 
 
 (defun move (direction)
