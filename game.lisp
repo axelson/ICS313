@@ -390,7 +390,7 @@
      (format t "4. Head West - \"W\", \"west\", \"left\"~%")
      (format t "~%---ACTIONS---~%")
      (format t "1. Look/Check the current room - \"look\"~%"))
-    ((find input '("e" "eval") :test #'equalp)
+    ((find input '("eval") :test #'equalp)
      (format t "~A~%" (eval (read-from-string (read-line)))))
     ;; Directions
     ((find input '("N" "north" "up") :test #'equalp)
