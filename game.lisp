@@ -280,8 +280,7 @@
      do (format t "What now? ")
      until (handle-input (read-line))))
 
-;; TODO make room optional
-(defun describe-room (room)
+(defun describe-room (&optional (room nil))
   (if room
       (format t "~A~%" (eval (get-prop (get-prop rooms room) 'describe)))
       (format t "~A~%" (eval (get-prop (get-current-room) 'describe)))))
@@ -297,7 +296,7 @@
     ((find input '("quit" "exit" "q") :test #'equalp)
      (format t "You Fail the Game!~%") t)
     ((find input '("look" "l") :test #'equalp)
-     (describe-room nil))
+     (describe-room))
     ((equalp input "help")
      (format t "COMMAND LIST:~%")
      (format t "---DIRECTIONS---~%")
