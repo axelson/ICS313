@@ -304,24 +304,32 @@
     (case direction
       (NORTH
        (if (get-prop (get-current-room) 'north)
-	   (format t "North~%")
+	   (progn
+	     (set-prop game-state 'current-room (get-prop (get-current-room) 'north))
+	     (format t "You moved north, you are now in the ~(~s~).~%" (get-prop game-state 'current-room)))
 	   (move-error)))
-      (SOUTH (format t "South~%")
+      (SOUTH
        (if (get-prop (get-current-room) 'south)
-	   (format t "South~%")
+	   (progn
+	     (set-prop game-state 'current-room (get-prop (get-current-room) 'south))
+	     (format t "You moved south, you are now in the ~(~s~).~%" (get-prop game-state 'current-room)))
 	   (move-error)))
-      (EAST (format t "East~%")
+      (EAST
        (if (get-prop (get-current-room) 'east)
-	   (format t "East~%")
+	   (progn
+	     (set-prop game-state 'current-room (get-prop (get-current-room) 'east))
+	     (format t "You moved east, you are now in the ~(~s~).~%" (get-prop game-state 'current-room)))
 	   (move-error)))
-      (WEST (format t "West~%")
+      (WEST
        (if (get-prop (get-current-room) 'west)
-	   (format t "West~%")
+	   (progn
+	     (set-prop game-state 'current-room (get-prop (get-current-room) 'west))
+	     (format t "You moved east, you are now in the ~(~s~).~%" (get-prop game-state 'current-room)))
 	   (move-error)))))
 
 (defun move-error ()
   "Shows user error when they try to move in a restricted direction"
-  (format t "A wall blocks your path~%"))
+  (format t "There is a wall.  You cannot go in that direction.~%"))
 
 (defun show-intro ()
   (format t "Welcome to Mystery Mansion! (For in-game instructions, enter \"help\").~%")
