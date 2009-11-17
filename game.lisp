@@ -1,5 +1,10 @@
-; Assignment 06
-; RPG Game
+;; Assignment 06
+;; RPG Game
+;; Authors: Jason Axelson, Robert Kim, Chris Ho
+
+;;;;;;;;;;;;;;;;;;;;;;
+; From Assignment 05 ;
+;;;;;;;;;;;;;;;;;;;;;;
 
 ;; If using plists
 ;; (progn
@@ -7,10 +12,6 @@
 ;;   (setf (get 'bart 'age) 7) 
 ;;   (setf (get 'bart 'hair-color) 'yellow) 
 ;;   (setf (get 'bart 'name) "Bart Simpson"))
-
-;;;;;;;;;;;;;;;;;;;;;;
-; From Assignment 05 ;
-;;;;;;;;;;;;;;;;;;;;;;
 
 (defparameter bart '((name "Bart Simpson")
                      (age 7)
@@ -167,8 +168,50 @@
 			(contents (coins marbles))))
   (defparameter player '((age 9)
                          (inventory pouch)))
-  (defparameter rooms '((lobby ((displayname "the lobby")
-				(describe (if (= (get-state 'age) 7)
+  (defparameter characters '(
+			     (police ((describe "The police officer")
+				      (state 0)
+				      (talk nil)))
+			     (married-couple ((describe "The married couple")
+					      (state 0)
+					      (talk nil)))
+			     (fat-pompous-bastard ((describe "The fat, pompous bastard")
+						   (state 0)
+						   (talk nil)))
+			     (young-rich-widow ((describe "The young, rich widow")
+						(state 0)
+						(talk nil)))
+			     (butler ((describe "The butler")
+				      (state 0)
+				      (talk nil)))
+			      ))
+
+  (set-prop (get-prop characters 'police) 'talk
+	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
+			      (cond
+				(t (format t "I am here to ensure everyone's safety.~%"))))))
+
+  (set-prop (get-prop characters 'married-couple) 'talk
+	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
+			      (cond
+				(t (format t "I am just worried about the safety of my family.~%"))))))
+
+  (set-prop (get-prop characters 'fat-pompous-bastard) 'talk
+	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
+			      (cond
+				(t (format t "I just got this new suit.~%"))))))
+
+  (set-prop (get-prop characters 'young-rich-widow) 'talk
+	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
+			      (cond
+				(t (format t "I may need some comforting.~%"))))))
+  (set-prop (get-prop characters 'butler) 'talk
+	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
+			      (cond
+				(t (format t "I used to take care of Batman.~%"))))))
+
+
+  (defparameter rooms '((lobby ((describe (if (= (get-state 'age) 7)
 					      "A dead person hangs motionless from the roof.  The police officer stands next to the body with a stern look on his face.  The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right."
 					      "A rope hangs from the roof.  It looks as if the rope was cut.  Where did the dead guy go?"))
 				(west kitchen)
@@ -249,6 +292,42 @@
 ; End Global Objects ;
 ;;;;;;;;;;;;;;;;;;;;;;
 
+;;;;;;;;;;;
+; Riddles ;
+;;;;;;;;;;;
+
+(defparameter riddles '(
+			; First floor riddles
+			(
+			 ((Ice-Riddle " A man is found hanging in a room 30 feet off the ground. There is nothing else in the room except for a large puddle of water on the ground. The police can't see any way the man could have climbed the walls to get to where he is hanging.~%How did this man hang himself? ")
+			  (Answer Ice)
+			  (Hint "Think."))
+			 ((Birthday-Riddle "What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?")
+			  (Answer 23)
+			  (Hint "What is the general formula for finding the probability that no people in the room have the same birthday?"))
+			 ((Rainy-Day-Riddle "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way. Why does he do this?")
+			  (Answer Umbrella)
+			  (Hint "Think."))
+			 ((Quarter-Dime-Riddle "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter. What are the two coins?")
+			  (Answer (Quarter Dime))
+			  (Hint "Think.")))
+			; Second floor riddles
+			(
+			 ((Children-Age-Riddle " A deliveryman comes to a house to drop off a package. He asks the woman who lives there how many children she has.~%\"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at the house number nailed to the front of her house. \"I need another hint,\" he says.~%The woman thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.~%The deliveryman's eyes light up and he tells her the ages of her three children. What are their ages?")
+			  (Answer (1 6 6))
+			  (Hint "Think."))
+			 (Second-Place-Riddle "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")
+			 (Answer Second)
+			 (Hint "Think."))
+			; Third floor riddles
+			(
+			 ((Twins-Riddle "Two girls are born to the same mother, on the same day, at the same time, in the same month and year and yet they're not twins. How can this be?")
+			  (Answer Triplets)
+			  (Hint "Think.")))))
+;;;;;;;;;;;;;;;
+; End Riddles ;
+;;;;;;;;;;;;;;;
+
 ;;;;;;;;;;;;;
 ; Functions ;
 ;;;;;;;;;;;;;
@@ -267,6 +346,9 @@
 ;;;;;;;;;;;;;;;;;
 ; End Functions ;
 ;;;;;;;;;;;;;;;;;
+
+(defmacro char-talk (character)
+  `(do-action (get-prop characters ',character) 'talk))
 
 ;;;;;;;;
 ; Game ;
