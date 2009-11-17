@@ -300,31 +300,12 @@
 	 
 
 (defun move (direction)
-    (case direction
-      (NORTH
-       (if (get-prop (get-current-room) 'north)
-	   (progn
-	     (set-prop game-state 'current-room (get-prop (get-current-room) 'north))
-	     (format t "You moved north, you are now in the ~(~s~).~%" (get-prop game-state 'current-room)))
-	   (move-error)))
-      (SOUTH
-       (if (get-prop (get-current-room) 'south)
-	   (progn
-	     (set-prop game-state 'current-room (get-prop (get-current-room) 'south))
-	     (format t "You moved south, you are now in the ~(~s~).~%" (get-prop game-state 'current-room)))
-	   (move-error)))
-      (EAST
-       (if (get-prop (get-current-room) 'east)
-	   (progn
-	     (set-prop game-state 'current-room (get-prop (get-current-room) 'east))
-	     (format t "You moved east, you are now in the ~(~s~).~%" (get-prop game-state 'current-room)))
-	   (move-error)))
-      (WEST
-       (if (get-prop (get-current-room) 'west)
-	   (progn
-	     (set-prop game-state 'current-room (get-prop (get-current-room) 'west))
-	     (format t "You moved east, you are now in the ~(~s~).~%" (get-prop game-state 'current-room)))
-	   (move-error)))))
+  (if (get-prop (get-current-room) direction)
+      (progn
+        (set-prop game-state 'current-room (get-prop (get-current-room) direction))
+        (format t "You moved ~A, you are now in the ~(~s~).~%" direction (get-prop game-state 'current-room)))
+      (move-error)))
+
 
 (defun move-error ()
   "Shows user error when they try to move in a restricted direction"
