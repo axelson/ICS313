@@ -343,6 +343,15 @@
 (defun get-room (room)
   (get-prop rooms room))
 
+(defun string-split (split-string string)
+  "Returns a list containing items in 'string' split from occurrences of 'split-string'."
+  (loop with l = (length split-string)
+        for n = 0 then (+ pos l)
+        for pos = (search split-string string :start2 n)
+        if pos collect (subseq string n pos)
+          else collect (subseq string n)
+        while pos))
+
 ;;;;;;;;;;;;;;;;;
 ; End Functions ;
 ;;;;;;;;;;;;;;;;;
