@@ -331,54 +331,64 @@ The storage room back down.")
 			 (Riddle (lambda ()
 				     (format t "Test riddle")))
 			 (Answer (lambda ()
-				   ()))
+				   '(a test list)))
 			 (Hint (lambda ()
 				   (format t "A hint string"))))
 			; First floor riddles
 			(Ice-Riddle
-			 (Riddle "A man is found hanging in a room 30 feet off the ground. There is nothing else in the room except for a large puddle of water on the ground. The police can't see any way the man could have climbed the walls to get to where he is hanging.~%How did this man hang himself?")
-			 (Answer Ice)
-			 (Hint "Think."))
+			 (Riddle (lambda () (format t "A man is found hanging in a room 30 feet off the ground. There is nothing else in the room except for a large puddle of water on the ground. The police can't see any way the man could have climbed the walls to get to where he is hanging.~%How did this man hang himself?")))
+			 (Answer (lambda () 'Ice))
+			 (Hint (lambda () (format t "Think."))))
 			(Birthday-Riddle
-			 (Riddle "What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?")
-			 (Answer 23)
-			 (Hint "What is the general formula for finding the probability that no people in the room have the same birthday?"))
+			 (Riddle (lambda () (format t "What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?")))
+			 (Answer (lambda () 23))
+			 (Hint (lambda () (format t "What is the general formula for finding the probability that no people in the room have the same birthday?"))))
 			(Rainy-Day-Riddle
-			 (Riddle "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way. Why does he do this?")
-			 (Answer Umbrella)
-			 (Hint "Think."))
+			 (Riddle (lambda () (format t "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way. Why does he do this?")))
+			 (Answer (lambda () 'Umbrella))
+			 (Hint (lambda () (format t "Think."))))
 			(Quarter-Dime-Riddle
-			 (Riddle "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter. What are the two coins?")
-			 (Answer (Quarter Dime))
-			 (Hint "Think."))
+			 (Riddle (lambda () (format t "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter. What are the two coins?")))
+			 (Answer (lambda () '(Quarter Dime)))
+			 (Hint (lambda () (format t "Think."))))
 			; Second floor riddles
 			(Children-Age-Riddle
-			 (Riddle "A deliveryman comes to a house to drop off a package. He asks the woman who lives there how many children she has.~%\"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at the house number nailed to the front of her house. \"I need another hint,\" he says.~%The woman thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.~%The deliveryman's eyes light up and he tells her the ages of her three children. What are their ages?")
-			 (Answer (1 6 6))
-			 (Hint "Think."))
+			 (Riddle (lambda () (format t "A deliveryman comes to a house to drop off a package. He asks the woman who lives there how many children she has.~%\"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at the house number nailed to the front of her house. \"I need another hint,\" he says.~%The woman thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.~%The deliveryman's eyes light up and he tells her the ages of her three children. What are their ages?")))
+			 (Answer (lambda () '(1 6 6)))
+			 (Hint (lambda () (format t "Think."))))
 			(Second-Place-Riddle
-			 (Riddle "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")
-			 (Answer Second)
-			 (Hint "Think."))
+			 (Riddle (lambda () (format t "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")))
+			 (Answer (lambda () 'Second))
+			 (Hint (lambda () (format t "Think."))))
 			; Third floor riddles
 			(Twins-Riddle
-			 (Riddle "Two girls are born to the same mother, on the same day, at the same time, in the same month and year and yet they're not twins. How can this be?")
-			 (Answer Triplets)
-			 (Hint "Think."))))
+			 (Riddle (lambda () (format t "Two girls are born to the same mother, on the same day, at the same time, in the same month and year and yet they're not twins. How can this be?")))
+			 (Answer (lambda () 'Triplets))
+			 (Hint (lambda () (format t "Think."))))))
 
 ;; Riddle accessor function
 ;; e.g., (access-riddle riddles 'twins-riddle 'hint)
-(defmacro access-riddle (list-name riddle-name item)
-  `(loop for i in ,list-name do
-	(if (eq (car i) ,riddle-name)
-	    (loop for j in (cdr i) do
-		 (if (eq (car j) ,item) (format t (cadr j)) ())) ())))
+;;
+;;(defmacro access-riddle (list-name riddle-name item)
+;;  `(loop for i in ,list-name do
+;;	(if (eq (car i) ,riddle-name)
+;;	    (loop for j in (cdr i) do
+;;		 (if (eq (car j) ,item) (format t (cadr j)) ())) ())))
+;;
+;;(defmacro access-struct (struct-name group-name item)
+;; `(loop for i in ,struct-name do
+;;	(if (eq (car i) ,group-name)
+;;	    (loop for j in (cdr i) do
+;;		 (if (eq (car j) ,item) (progn (funcall (cadr j)) (return-from access-struct)) ())) ())))
 
-(defmacro access-struct (struct-name group-name item)
-  `(loop for i in ,struct-name do
-	(if (eq (car i) ,group-name)
-	    (loop for j in (cdr i) do
-		 (if (eq (car j) ,item) (funcall (cadr j)) ())) ())))
+(defun access-struct (struct-name group-name item)
+  (loop for i in struct-name do
+       (if (eq (car i) group-name)
+	   (loop for j in (cdr i) do
+		(if (eq (car j) item) (return-from access-struct (funcall (cadr j))) ())) ())))
+
+;;(defun answer-test-riddle ()
+;;  (return-from answer-test-riddle 1))
 
 ;;;;;;;;;;;;;;;
 ; End Riddles ;
