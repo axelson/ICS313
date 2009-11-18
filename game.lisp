@@ -190,109 +190,130 @@
   (set-prop (get-prop characters 'police) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
-				(0 (format t "I got here as soon as I got the call.~%"))
-				(t (format t "I am here to ensure everyone's safety.~%"))))))
+				(0 (format t "Police Officer: \"I got here as soon as I got the call.\"~%"))
+				(t (format t "Police Officer: \"I am here to ensure everyone's safety.\"~%"))))))
 
   (set-prop (get-prop characters 'married-couple) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
-				(0 (format t "We were just about to go to bed when we heard the commotion.~%"))
-				(t (format t "I am just worried about the safety of my family.~%"))))))
+				(0 (format t "Married Couple: \"We were just about to go to bed when we heard the commotion.\"~%"))
+				(t (format t "Married Couple: \"I am just worried about the safety of my family.\"~%"))))))
 
   (set-prop (get-prop characters 'fat-pompous-bastard) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
-				(0 (format t "I did not come down here to chit chat with you.~%"))
-				(1 (format t "Oh, it is you again.~%"))
-				(t (format t "I just got this new suit.~%"))))))
+				(0 (format t "Fat Pompous Bastard: \"I did not come down here to chit chat with you.\"~%"))
+				(1 (format t "Fat Pompous Bastard: \"Oh, you again.\"~%"))
+				(t (format t "Fat Pompous Bastard: \"I just got this new suit.\"~%"))))))
 
   (set-prop (get-prop characters 'young-rich-widow) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
-				(0 (format t "Do you anymore information about what is going on?~%"))
-				(1 (format t "Excuse me, may I help you?~%"))
-				(t (format t "I may need some comforting.~%"))))))
+				(0 (format t "Young Rich Widow: \"Do you anymore information about what is going on?\"~%"))
+				(1 (format t "Young Rich Widow: \"Excuse me, may I help you?\"~%"))
+				(t (format t "Young Rich Widow: \"I may need some comforting.\"~%"))))))
   (set-prop (get-prop characters 'butler) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
-				(0 (format t "Hello sir, did you need my service?"))
-				(t (format t "I used to take care of Batman.~%"))))))
+				(0 (format t "Butler: \"Hello sir, may I be of service to you?\""))
+				(t (format t "Butler: \"I used to take care of Batman.\"~%"))))))
 
 
-  (defparameter rooms '((lobby ((describe (if (= (get-state 'age) 7)
-					      "A dead person hangs motionless from the roof.  The police officer stands next to the body with a stern look on his face.  The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right."
-					      "A rope hangs from the roof.  It looks as if the rope was cut.  Where did the dead guy go?"))
+  (defparameter rooms '(
+			(lobby ((state 0)
+				(displayname "the lobby")
+				(describe (if (= (get-state 'age) 7) 
+					      "A dead person hangs motionless from the roof.  The police officer stands next to the body with a stern look on his face.  
+The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right."
+					      "A rope hangs from the roof.  It looks as if the rope was cut.  Where did the dead guy go?
+The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right."))
 				(west kitchen)
 				(north ballroom)
 				(east bathroom)
 				(south elevator)
                                 (contents (police))))
 			(kitchen ((displayname "the kitchen")
-				  (describe "A typical kitchen")
+				  (describe "A gorgeous kitchen with top-of-the-line kitchenware.  Doesn't look like anyone tampered with anything here.  
+The lobby is to the right.")
 				  (east lobby)))
 			(ballroom ((displayname "the ballroom")
-				   (describe "A ballroom large enough to fit a hundred people.")
+				   (describe "A ballroom large enough to fit a hundred people.  
+The lobby is behind you.")
 				   (south lobby)))
 			(bathroom ((displayname "the bathroom")
-				   (describe "A luxurious bathroom.  Something seems odd...")
+				   (describe "A luxurious bathroom.  Something seems odd...  
+The lobby is to the left.")
 				   (west lobby)
 				   (south basement)))
 			(basement ((displayname "the basement")
-				   (describe "The basement.  Why was the entrance hidden?")
+				   (describe "The basement.  Why was the entrance hidden?  
+The bathroom is up the stairs.")
 				   (north bathroom)))
 			(elevator ((displayname "the elevator")
-				   (describe "An elevator with three buttons for each level of the mansion")
+				   (describe "An elevator with three buttons for each level of the mansion: 1 2 3.  Which button do you press? (1, 2, or 3)")
 				   (first lobby)
 				   (second hallway2)
 				   (third hallway3)))
 			(hallway2 ((displayname "the second floor hallway")
-				   (describe "The second floor hallway.")
+				   (describe "The second floor hallway.
+Your room is to the right and there is another room to the left.  The hallway extends north.")
 				   (north hallway2north)
 				   (east yourroom)
 				   (west vacantroom1)
 				   (south elevator)))
 			(hallway2north ((displayname "the north-side of the second floor hallway")
-					(describe "The north-side of the second floor hallway.  Huge paintings are on the sides of the walls.")
+					(describe "The north-side of the second floor hallway.  Huge paintings are on the sides of the walls.
+There is a room to the right and a room at the end of the hall.")
 					(north yrwroom)
 					(east fpbroom)
 					(south hallway2)))
 			(yrwroom ((displayname "the young rich widow's room")
-				  (describe "")
+				  (describe "The young rich widow's room.
+The hallway is behind you.")
 				  (south hallway2north)))
 			(fpbroom ((displayname "the fat pompous bastard's room")
-				  (describe "")
+				  (describe "It stenches of alcohol.  Empty bottles lie on the ground throughout the room.
+The hallway is to the left.")
 				  (west hallway2north)))
 			(yourroom ((displayname "your room")
 				   (describe "Your room.")
 				   (west hallway2)))
 			(vacantroom1((displayname "a vacant room")
-				     (description "A vacant room.")
+				     (description "A vacant room.
+The hallway is to the right.")
 				     (east hallway2)))
 			(hallway3 ((displayname "the third floor hallway")
-				   (describe "The third floor hallway.  It splits into two different directions: north and east.")
+				   (describe "The third floor hallway.
+There are two rooms to the left and right.  The hallway extends north.")
 				   (north hallway3north)
 				   (east mcroom)
 				   (west broom)
 				   (south elevator)))
 			(hallway3north ((displayname "the north side of the third floor hallway")
-					(describe "The north-side of the third floor hallway.")
+					(describe "The north-side of the third floor hallway.
+There is a room to the right and a room at the end of the hall.")
 					(east vacantroom2)
 					(north storageroom)))
 			(vacantroom2 ((displayname "a vacant room")
-				      (describe "A vacant room.")
+				      (describe "A vacant room.
+The hallway is to the left.")
 				      (west hallway3north)))
 			(storageroom ((displayname "the storage room")
-				      (describe "A large storage room.  It looks messy.")
+				      (describe "A large storage room.  It looks messy.
+The hallway is behind you.")
 				      (south hallway3north)
 				      (north attic)))
 			(mcroom ((displayname "the married couple's room")
-				 (describe "")
+				 (describe "The married couple's room.
+The hallway is to the left.")
 				 (west hallway3)))
 			(broom ((displayname "the butler's room")
-				(describe "")
+				(describe "The butler's room.
+The hallway is to the right.")
 				(east hallway3)))
 			(attic ((displayname "the attic")
-				(describe "The mansion's attic.  The entrance was left open.")
+				(describe "The mansion's attic.  The entrance was left open.
+The storage room back down.")
 				(south storageroom)))
 			)))
 
@@ -386,8 +407,9 @@
 (defun describe-room (&optional (room nil))
   "Describes the contents of a room"
   (if room
-      (format t "~A~%" (eval (get-prop (get-prop rooms room) 'describe)))
-      (format t "~A~%" (eval (get-prop (get-current-room) 'describe)))))
+      (format t "~A~%~%" (eval (get-prop (get-prop rooms room) 'describe)))
+      (format t "~A~%~%" (eval (get-prop (get-current-room) 'describe)))))
+
 
 (defun get-current-room ()
   (get-room (get-state 'current-room)))
@@ -397,9 +419,11 @@
   (cond
     ;; Commands
     ((find input '("win game" "win") :test #'equalp)
-     (format t "You won!") t)
+     (format t "You won!")
+     (reset-state) t)
     ((find input '("quit" "exit" "q") :test #'equalp)
-     (format t "You Fail the Game!~%") t)
+     (format t "You Fail the Game!~%")
+     (reset-state) t)
     ((find input '("look" "l") :test #'equalp)
      (describe-room))
     ((search "talk" input)
@@ -413,7 +437,7 @@
      (format t "4. Head West - \"W\", \"west\", \"left\"~%")
      (format t "~%---ACTIONS---~%")
      (format t "1. Look/Check the current room - \"look\"~%")
-     (format t "2. Talk to a person in the room - \"talk\"~%"))
+     (format t "2. Initiate a conversation with a character in the room - \"talk\" + character description (i.e. \"talk to young widow\")~%"))
     ((find input '("eval") :test #'equalp)
      (format t "~A~%" (eval (read-from-string (read-line)))))
     ;; Directions
@@ -450,14 +474,32 @@
     ((search "police" character-string) 'police)
     ((search "officer" character-string) 'police)
     ((search "fat" character-string) 'fat-pompous-bastard)
+    ((search "bastard" character-string) 'fat-pompous-bastard)
     ))
 
 (defun move (direction)
   "Try to move to a different room"
   (if (get-prop (get-current-room) direction)
       (progn
-        (set-prop game-state 'current-room (get-prop (get-current-room) direction))
-        (format t "You moved ~A, you are now in the ~(~s~).~%" direction (get-prop game-state 'current-room)))
+	(cond
+	  ((equalp (get-prop (get-current-room) 'state) 0)
+	   (format t "Are you sure you want to leave the lobby? (y/n) ")
+	   (if (y-or-n-p)
+	       (progn
+		 (show-intro2)
+		 (set-prop (get-prop rooms 'lobby) 'state 1)
+		 )
+	       )
+	   )
+	  ((equalp (get-prop game-state 'current-room) 'elevator)
+	   (set-prop game-state 'current-room (get-prop (get-current-room) direction))
+	   (format t "You moved to the ~A FLOOR, you are now in ~A.~%" direction (eval (get-prop (get-current-room) 'displayname)))
+	   )
+	  (t   
+	   (set-prop game-state 'current-room (get-prop (get-current-room) direction))
+	   (format t "You moved ~A, you are now in ~A.~%" direction (eval (get-prop (get-current-room) 'displayname))))
+	  )
+	)
       (move-error)))
 
 
@@ -471,6 +513,22 @@
   (format t "~%Press Enter to continue...") (read-line)
   (format t "~%It is a dark and stormy night.  Although you are celebrating at a party in a large and elegant mansion, for some reason you can't shake off this feeling of uneasiness.  As the night progresses, you feel a chill run down your back as if someone has been watching you the entire time.  Guests begin to leave and you notice that your friend has left without you.  The host asks you where your friend went and you explain your situation.  The host smiles and offers a room to stay for the night.  Seeing that you have no other means of returning you gladly accept the offer.  As you enter the room , you feel extremely exhausted from all the chatter and head right to bed.")
   (format t "~%~%Press Enter to continue...") (read-line)
-  (format t "~%A sharp shriek resonates throughout the hallways, startling you from your sleep.  You dash out of the room to investigate what had happened and as you walk into the lobby, you gasp in terror as you see the host, dead, hanging from the roof.  A woman, dressed in black, is on the floor trembling as if she had seen a ghost.  A couple also gasp as they enter the lobby.  You hear a snort next to you, and a somewhat large man begins ranting about how the host had it coming to him.  The butler comes in, looks at the host's dead body frantically, calls the police and rushes right back out.  Not much time passes when you hear a knock on the door and a policeman walks in.  The policeman explains that due to the heavy rain and wind, there will be no backup for awhile.  Ten minutes later the butler bursts through the lobby door and says that the cameras did not catch anyone entering or exiting the premises.  You ask the butler if there is anyone else in the mansion, and he replies that everyone here is all that is left from yesterday's party.  A cold silence.  Eyes begin searching throughout the room, as if judging who could have been the killer.  Seeing how jumping to conclusions is not a wise idea, you suggest that everyone head back to their rooms for now.~%")
+  (format t "~%A sharp shriek resonates throughout the hallways, startling you from your sleep.  You dash out of the room to investigate what had happened and as you walk into the lobby you gasp in terror as you see the host, dead, hanging from the roof.  A woman, dressed in black, is on the floor trembling as if she had seen a ghost.  A couple also gasp as they enter the lobby.  You hear a snort next to you, and a somewhat large man begins ranting about how the host had it coming to him.  The butler comes in, looks at the host's dead body frantically, calls the police and rushes right back out.  Not much time passes when you hear a knock on the door and a policeman walks in.  The policeman explains that due to the heavy rain and wind, there will be no backup for awhile.  Ten minutes later the butler bursts through the lobby door and says that the cameras did not catch anyone entering or exiting the premises.  You ask the butler if there is anyone else in the mansion, and he replies that everyone here is all that is left from yesterday's party.  A cold silence.  Eyes begin searching throughout the room, as if judging who could have been the killer.~%")
   (format t "~%Press Enter to continue...") (read-line)
   )
+
+(defun show-intro2 ()
+  "Shows the second part of the introduction when you try to leave the lobby"
+  (format t "~%You try to exit the lobby when the young rich widow screams, \"Where do you think you're going?!  Trying to hide the evidence?!  HE'S THE KILLER!!\"")(read-line)
+  (format t "Startled, you retort, \"I'm no killer!  And nothing's going to get accomplished just standing here!  I'm gonna get to the bottom of this!\"")(read-line)
+  (format t "\"Hold on guys, calm down.\" says the police officer.  \"I got some bad news.  I just called for backup and it seems that due to the storm, they won't be able to send anyone up until next morning...\"")(read-line) 
+  (format t "\"Wait a minute.. Are you saying that we have to sleep here overnight with the killer still in this house?!\" yelled the wife of the married couple.  \"I'm sorry but that's not possible!  I'm leaving now!\"")(read-line)
+  (format t "As the wife heads towards the elevator the butler walks right in front of her path.  \"I'm sorry madam.  But I'm afraid I cannot let you go.\"")(read-line)
+  (format t "\"AND WHY IS THAT?!\" demanded the wife.")(read-line)
+  (format t "\"Unfortunately, the bridge connecting to the island that this mansion is on has been heavily damaged due to the storm.  It is uncrossable.  And I am afraid that I cannot let you out on one of the young master's boats in this waether...\" the butler explained.")(read-line)
+  (format t "\"So are you telling me to stay here and DIE?!\"")(read-line)
+  (format t "\"No.  But I do say that the probably of that happening is higher if you left this mansion now, madam.\" calmly replied the butler.")(read-line)
+)
+
+(defun reset-state()
+  (set-prop (get-prop rooms 'lobby) 'state 0))
