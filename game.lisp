@@ -181,7 +181,7 @@
 						(state 0)
 						(talk nil)))
 			     (butler ((describe "The butler")
-				      (state 0)
+				      (state 1)
 				      (talk nil)))
 			      ))
 
@@ -190,32 +190,32 @@
   (set-prop (get-prop characters 'police) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
-				(0 (format t "Police Officer: \"I got here as soon as I got the call.\"~%"))
+				((= state 0) (format t "Police Officer: \"I got here as soon as I got the call.\"~%"))
 				(t (format t "Police Officer: \"I am here to ensure everyone's safety.\"~%"))))))
 
   (set-prop (get-prop characters 'married-couple) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
-				(0 (format t "Married Couple: \"We were just about to go to bed when we heard the commotion.\"~%"))
+				((= state 0) (format t "Married Couple: \"We were just about to go to bed when we heard the commotion.\"~%"))
 				(t (format t "Married Couple: \"I am just worried about the safety of my family.\"~%"))))))
 
   (set-prop (get-prop characters 'fat-pompous-bastard) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
-				(0 (format t "Fat Pompous Bastard: \"I did not come down here to chit chat with you.\"~%"))
-				(1 (format t "Fat Pompous Bastard: \"Oh, you again.\"~%"))
+				((= state 0) (format t "Fat Pompous Bastard: \"I did not come down here to chit chat with you.\"~%"))
+				((= state 1) (format t "Fat Pompous Bastard: \"Oh, you again.\"~%"))
 				(t (format t "Fat Pompous Bastard: \"I just got this new suit.\"~%"))))))
 
   (set-prop (get-prop characters 'young-rich-widow) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
-				(0 (format t "Young Rich Widow: \"Do you anymore information about what is going on?\"~%"))
-				(1 (format t "Young Rich Widow: \"Excuse me, may I help you?\"~%"))
+				((= state 0) (format t "Young Rich Widow: \"Do you anymore information about what is going on?\"~%"))
+				((= state 1) (format t "Young Rich Widow: \"Excuse me, may I help you?\"~%"))
 				(t (format t "Young Rich Widow: \"I may need some comforting.\"~%"))))))
   (set-prop (get-prop characters 'butler) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (cond
-				(0 (format t "Butler: \"Hello sir, may I be of service to you?\""))
+				((= state 0) (format t "Butler: \"Hello sir, may I be of service to you?\""))
 				(t (format t "Butler: \"I used to take care of Batman.\"~%"))))))
 
 
@@ -327,33 +327,59 @@ The storage room back down.")
 ;;;;;;;;;;;
 
 (defparameter riddles '(
+			(Test-Riddle
+			 (Riddle (lambda ()
+				     (format t "Test riddle")))
+			 (Answer (lambda ()
+				   ()))
+			 (Hint (lambda ()
+				   (format t "A hint string"))))
 			; First floor riddles
-			(
-			 ((Ice-Riddle " A man is found hanging in a room 30 feet off the ground. There is nothing else in the room except for a large puddle of water on the ground. The police can't see any way the man could have climbed the walls to get to where he is hanging.~%How did this man hang himself? ")
-			  (Answer Ice)
-			  (Hint "Think."))
-			 ((Birthday-Riddle "What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?")
-			  (Answer 23)
-			  (Hint "What is the general formula for finding the probability that no people in the room have the same birthday?"))
-			 ((Rainy-Day-Riddle "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way. Why does he do this?")
-			  (Answer Umbrella)
-			  (Hint "Think."))
-			 ((Quarter-Dime-Riddle "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter. What are the two coins?")
-			  (Answer (Quarter Dime))
-			  (Hint "Think.")))
+			(Ice-Riddle
+			 (Riddle "A man is found hanging in a room 30 feet off the ground. There is nothing else in the room except for a large puddle of water on the ground. The police can't see any way the man could have climbed the walls to get to where he is hanging.~%How did this man hang himself?")
+			 (Answer Ice)
+			 (Hint "Think."))
+			(Birthday-Riddle
+			 (Riddle "What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?")
+			 (Answer 23)
+			 (Hint "What is the general formula for finding the probability that no people in the room have the same birthday?"))
+			(Rainy-Day-Riddle
+			 (Riddle "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way. Why does he do this?")
+			 (Answer Umbrella)
+			 (Hint "Think."))
+			(Quarter-Dime-Riddle
+			 (Riddle "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter. What are the two coins?")
+			 (Answer (Quarter Dime))
+			 (Hint "Think."))
 			; Second floor riddles
-			(
-			 ((Children-Age-Riddle " A deliveryman comes to a house to drop off a package. He asks the woman who lives there how many children she has.~%\"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at the house number nailed to the front of her house. \"I need another hint,\" he says.~%The woman thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.~%The deliveryman's eyes light up and he tells her the ages of her three children. What are their ages?")
-			  (Answer (1 6 6))
-			  (Hint "Think."))
-			 (Second-Place-Riddle "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")
+			(Children-Age-Riddle
+			 (Riddle "A deliveryman comes to a house to drop off a package. He asks the woman who lives there how many children she has.~%\"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at the house number nailed to the front of her house. \"I need another hint,\" he says.~%The woman thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.~%The deliveryman's eyes light up and he tells her the ages of her three children. What are their ages?")
+			 (Answer (1 6 6))
+			 (Hint "Think."))
+			(Second-Place-Riddle
+			 (Riddle "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")
 			 (Answer Second)
 			 (Hint "Think."))
 			; Third floor riddles
-			(
-			 ((Twins-Riddle "Two girls are born to the same mother, on the same day, at the same time, in the same month and year and yet they're not twins. How can this be?")
-			  (Answer Triplets)
-			  (Hint "Think.")))))
+			(Twins-Riddle
+			 (Riddle "Two girls are born to the same mother, on the same day, at the same time, in the same month and year and yet they're not twins. How can this be?")
+			 (Answer Triplets)
+			 (Hint "Think."))))
+
+;; Riddle accessor function
+;; e.g., (access-riddle riddles 'twins-riddle 'hint)
+(defmacro access-riddle (list-name riddle-name item)
+  `(loop for i in ,list-name do
+	(if (eq (car i) ,riddle-name)
+	    (loop for j in (cdr i) do
+		 (if (eq (car j) ,item) (format t (cadr j)) ())) ())))
+
+(defmacro access-struct (struct-name group-name item)
+  `(loop for i in ,struct-name do
+	(if (eq (car i) ,group-name)
+	    (loop for j in (cdr i) do
+		 (if (eq (car j) ,item) (funcall (cadr j)) ())) ())))
+
 ;;;;;;;;;;;;;;;
 ; End Riddles ;
 ;;;;;;;;;;;;;;;
