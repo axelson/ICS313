@@ -425,14 +425,14 @@ The bathroom is up the stairs.")
 
 (defun exec-list (inlist)
   (loop for i in inlist do
-       (funcall i)))
+       (funcall (eval i))))
 
 (defun exec-list-specific (inlist number)
   (let ((no 1))
     (loop for i in inlist do
 	 (progn
 	   (if (eq number no)
-	       (return-from exec-list-specific (funcall i)) ())
+	       (return-from exec-list-specific (funcall (eval i))) ())
 	   (setf no (1+ no))))))
 
 
