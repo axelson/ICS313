@@ -541,8 +541,8 @@ The storage room back down.")
 (defun describe-room (&optional (room nil))
   "Describes the contents of a room"
   (if room
-      (format t "~A~%~%" (eval (get-prop (get-prop rooms room) 'describe)))
-      (format t "~A~%~%" (eval (get-prop (get-current-room) 'describe)))))
+      (format t (concatenate 'string (eval (get-prop (get-prop rooms room) 'describe)) "~%~%"))
+      (format t (concatenate 'string (eval (get-prop (get-current-room) 'describe)) "~%~%"))))
 
 
 (defun get-current-room (&optional (property nil))
