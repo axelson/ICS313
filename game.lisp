@@ -350,6 +350,43 @@ The storage room back down.")
 ; End Global Objects ;
 ;;;;;;;;;;;;;;;;;;;;;;
 
+(defparameter convo-police
+  '(
+    (lobby-1
+     (q-01
+      (lambda () (format t "Police officer: Did you find anything useful?~%~%You say:~%")))
+     (r-01
+      (lambda () (format t "(1) Do you have anything helpful?~%"))
+      (lambda () (format t "(2) No, nothing substantial, yet.~%")))
+     (a-01
+      (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%"))
+      (lambda () (format t "I am gay.~%"))))
+))
+
+(defun access-convo-all (character dialog-name item-list)
+  (loop for i in character do
+       (if (eq (car i) dialog-name)
+	   (loop for j in (cdr i) do
+		(if (eq (car j) item-list) (exec-list (cdr j)) ())) ())))
+
+(defun access-convo-action (character dialog-name item-list item-no)
+  (loop for i in character do
+       (if (eq (car i) dialog-name)
+	   (loop for j in (cdr i) do
+		(if (eq (car j) item-list) (exec-list-specific (cdr j) item-no) ())) ())))
+
+(defun exec-list (inlist)
+  (loop for i in inlist do
+       (funcall i)))
+
+(defun exec-list-specific (inlist number)
+  (let ((no 1))
+    (loop for i in inlist do
+	 (progn
+	   (if (eq number no)
+	       (return-from exec-list-specific (funcall i)) ())
+	   (setf no (1+ no))))))
+
 ;;;;;;;;;;;
 ; Riddles ;
 ;;;;;;;;;;;
