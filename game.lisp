@@ -201,34 +201,36 @@
 
   (set-prop (get-prop characters 'police) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
-			      (cond
-				((= state 0) (format t "Police Officer: \"I got here as soon as I got the call.\"~%"))
-				(t (format t "Police Officer: \"I am here to ensure everyone's safety.\"~%"))))))
+			      (case state
+				(0 (format t "Police Officer: \"I got here as soon as I got the call.\"~%"))
+				(1 (format t "I've sent everyone up to their rooms, if you find out more information, let me know."))
+				(otherwise (format t "Police Officer: \"I am here to ensure everyone's safety.\"~%"))))))
 
   (set-prop (get-prop characters 'married-couple) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
-			      (cond
-				((= state 0) (format t "Married Couple: \"We were just about to go to bed when we heard the commotion.\"~%"))
-				(t (format t "Married Couple: \"I am just worried about the safety of my family.\"~%"))))))
+			      (case state
+				(0 (format t "Married Couple: \"We were just about to go to bed when we heard the commotion.\"~%"))
+				(1 (format t "Excuse me, should you be looking around?"))
+				(otherwise (format t "Married Couple: \"I am just worried about the safety of my family.\"~%"))))))
 
   (set-prop (get-prop characters 'fat-pompous-bastard) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
-			      (cond
-				((= state 0) (format t "Fat Pompous Bastard: \"I did not come down here to chit chat with you.\"~%"))
-				((= state 1) (format t "Fat Pompous Bastard: \"Oh, you again.\"~%"))
-				(t (format t "Fat Pompous Bastard: \"I just got this new suit.\"~%"))))))
+			      (case state
+				(0 (format t "Fat Pompous Bastard: \"I did not come down here to chit chat with you.\"~%"))
+				() (format t "Fat Pompous Bastard: \"Oh, you again.\"~%"))
+				(otherwise (format t "Fat Pompous Bastard: \"I just got this new suit.\"~%"))))))
 
   (set-prop (get-prop characters 'young-rich-widow) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
-			      (cond
-				((= state 0) (format t "Young Rich Widow: \"Do you anymore information about what is going on?\"~%"))
-				((= state 1) (format t "Young Rich Widow: \"Excuse me, may I help you?\"~%"))
-				(t (format t "Young Rich Widow: \"I may need some comforting.\"~%"))))))
+			      (case state
+				(0 (format t "Young Rich Widow: \"Do you anymore information about what is going on?\"~%"))
+				(1 (format t "Young Rich Widow: \"Excuse me, may I help you?\"~%"))
+				(otherwise (format t "Young Rich Widow: \"I may need some comforting.\"~%"))))))
   (set-prop (get-prop characters 'butler) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
-			      (cond
-				((= state 0) (format t "Butler: \"Hello sir, may I be of service to you?\""))
-				(t (format t "Butler: \"I used to take care of Batman.\"~%"))))))
+			      (case state
+				(0 (format t "Butler: \"Hello sir, may I be of service to you?\""))
+				(otherwise (format t "Butler: \"I used to take care of Batman.\"~%"))))))
 
   (set-prop (get-prop characters 'poo) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
