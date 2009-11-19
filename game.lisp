@@ -457,7 +457,9 @@ The storage room back down.")
     (loop for item in (string-split " " key-list)
        do (if (search item search-string)
               (incf matches)))
-    matches))
+    (if (= 0 matches)
+        nil
+        matches)))
 
 ;;;;;;;;;;;;;;;;;
 ; End Functions ;
