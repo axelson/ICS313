@@ -388,7 +388,9 @@ The bathroom is up the stairs.")
 
 (defun parse-input (input)
   (loop
-     (case (read-from-string input)
+     (case (if (string= input "")
+               nil
+               (read-from-string input))
 	 (1 (return-from parse-input 1))
 	 (2 (return-from parse-input 2))
 	 (3 (return-from parse-input 3))
