@@ -217,7 +217,7 @@
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (case state
 				(0 (format t "Fat Pompous Bastard: \"I did not come down here to chit chat with you.\"~%"))
-				() (format t "Fat Pompous Bastard: \"Oh, you again.\"~%"))
+				(1) (format t "Fat Pompous Bastard: \"Oh, you again.\"~%"))
 				(otherwise (format t "Fat Pompous Bastard: \"I just got this new suit.\"~%"))))))
 
   (set-prop (get-prop characters 'young-rich-widow) 'talk
