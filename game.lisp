@@ -418,6 +418,10 @@ The storage room back down.")
           else collect (subseq string n)
         while pos))
 
+(defun search-string (key-list instring)
+  "Searches instring for words matching string-list"
+  (loop for ))
+
 ;;;;;;;;;;;;;;;;;
 ; End Functions ;
 ;;;;;;;;;;;;;;;;;
