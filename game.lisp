@@ -86,7 +86,7 @@
             bart))
 
 ;; Write a function or macro (do-action obj action) which will call the property's function, and test it by making bart talk. Hint: you may want to use funcall.
-(defun do-action (obj action)
+(defun do-action-original (obj action)
   "Calls function stored in action property on object"
   (funcall (get-prop obj action)))
 
