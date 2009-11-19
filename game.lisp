@@ -252,7 +252,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 The police officer stands next to the body with a stern look on his face.  
 The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
 					    (t
-					      "A rope hangs from the roof.  It looks as if the rope was cut.  Where did the dead guy go?
+					      "Where did the dead guy go?  There are no traces of his body.
 The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")))
 				(west kitchen)
 				(north ballroom)
@@ -610,7 +610,7 @@ The storage room back down.")
 
 (defun show-intro ()
   "Shows introduction when game starts"
-  (format t "Welcome to Mystery Mansion! (For in-game instructions, enter \"help\").~%")
+  (format t "Welcome to Mystery Mansion!~%(To progress through the dialogue, press ENTER whenever you see '...'.  To skip the dialogue, type \"skip\")")
   (if (enter-to-continue) (return-from show-intro))
   (format t "~%It is a dark and stormy night.  Although you are celebrating at a party in a large and elegant mansion, for some reason you can't shake off this feeling of uneasiness.  As the night progresses, you feel a chill run down your back as if someone has been watching you the entire time.  Guests begin to leave and you notice that your friend has left without you.  The host asks you where your friend went and you explain your situation.  The host smiles and offers a room to stay for the night.  Seeing that you have no other means of returning you gladly accept the offer.  As you enter the room , you feel extremely exhausted from all the chatter and head right to bed.~%")
   (if (enter-to-continue) (return-from show-intro))
@@ -629,7 +629,7 @@ The storage room back down.")
   (format t "Seeing how bad the storm has gotten, I'm afraid I can't let you go.  Also, I would like for everyone to remain in this house to gather eye-witnesses or clues for this murder.")(if (enter-to-continue) (return-from show-intro2))
   (format t "\"So are you telling me to stay here and DIE?!\" screamed the wife.")(if (enter-to-continue) (return-from show-intro2))
   (format t "\"No.  But I do say that the probably of that happening is higher if you left this mansion now, ma'am.  Seeing how the killer is still on the loose, it's more likely that he's waiting for us to panic and leave the house.  I think it's better if we all go back into our rooms, and if anything happens, I'll be here.\" calmly said the officer.")(if (enter-to-continue) (return-from show-intro2))
-  (format t "With that, everyone agreed to return to their rooms and meet in the lobby the next morning.")(if (enter-to-continue) (return-from show-intro2))
+  (format t "With that, everyone somewhat agreed to return to their rooms and meet in the lobby the next morning.")(if (enter-to-continue) (return-from show-intro2))
   (format t "You, on the other hand, couldn't shake this feeling that the killer was someone in the room.  You had to find out who did it and why.")(if (enter-to-continue) (return-from show-intro2))
 )
 
