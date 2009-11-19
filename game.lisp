@@ -507,8 +507,11 @@ The storage room back down.")
       (format t "~A~%~%" (eval (get-prop (get-current-room) 'describe)))))
 
 
-(defun get-current-room ()
-  (get-room (get-state 'current-room)))
+(defun get-current-room (&optional (property nil))
+  "Gets the the current room object, with an optional property"
+  (if property
+      (get-prop (get-current-room) property)
+      (get-room (get-state 'current-room))))
 
 (defun handle-input (input)
   "Handles user input"
