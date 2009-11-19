@@ -417,9 +417,7 @@ The storage room back down.")
 ;;  (return-from answer-test-riddle 1))
 
 (defun split-line (line)
-  (let ((start 0))
-    (setq line (concatenate 'string line " "))
-    (setq parsed '())
+  (let ((start 0) (line (concatenate 'string line " ")) (parsed '()))
     (loop for i from 0 to (1- (length line)) do
 	 (if (equalp #\Space (char line i))
 	     (progn (setf parsed (append parsed (list (subseq line start i)))) (setf start (1+ i))) ()))
