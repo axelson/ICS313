@@ -222,16 +222,19 @@
   (defparameter rooms '(
 			(lobby ((state 0)
 				(displayname "the lobby")
-				(describe (if (= (get-state 'age) 7) 
+				(describe (cond 
+					    ((= (get-prop (get-prop rooms 'lobby) 'state) 0) 
 					      "A dead person hangs motionless from the roof.  The police officer stands next to the body with a stern look on his face.  
-The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right."
+The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
+					    (t
 					      "A rope hangs from the roof.  It looks as if the rope was cut.  Where did the dead guy go?
-The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right."))
+The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")))
 				(west kitchen)
 				(north ballroom)
 				(east bathroom)
 				(south elevator)
-                                (contents (police))))
+                                (contents (police butler young-rich-widow married-couple fat-pompous-bastard))
+				))
 			(kitchen ((displayname "the kitchen")
 				  (describe "A gorgeous kitchen with top-of-the-line kitchenware.  Doesn't look like anyone tampered with anything here.  
 The lobby is to the right.")
@@ -502,15 +505,17 @@ The storage room back down.")
      (format t "You talk to the wall, the wall does not talk back, perhaps you should try talking to a person~%"))
     ((contains? (get-current-room) (find-character character-string))
      (char-talkf (find-character character-string)))
-    (t (format t "Sorry \"~A\" does not exist. Maybe they're only in your head?~%" character-string))))
+    (t (format t "Sorry, \"~A\" cannot hear through walls~%" character-string))))
 
 (defun find-character (character-string)
   (cond
     ((not (stringp character-string)) (format t "this requires a string~%"))
     ((search "police" character-string) 'police)
     ((search "officer" character-string) 'police)
-    ((search "fat" character-string) 'fat-pompous-bastard)
     ((search "bastard" character-string) 'fat-pompous-bastard)
+    ((search "widow" character-string) 'young-rich-widow)
+    ((search "couple" character-string) 'married-couple)
+    ((search "butler" character-string) 'butler)
     ))
 
 (defun move (direction)
@@ -524,6 +529,7 @@ The storage room back down.")
 	       (progn
 		 (show-intro2)
 		 (set-prop (get-prop rooms 'lobby) 'state 1)
+		 (set-prop (get-room 'lobby) 'contents '(police))
 		 )
 	       )
 	   )
@@ -567,7 +573,9 @@ The storage room back down.")
 )
 
 (defun reset-state()
-  (set-prop (get-prop rooms 'lobby) 'state 0))
+  (set-prop (get-prop rooms 'lobby) 'state 0)
+  (set-prop (get-room 'lobby) 'contents '(police butler married-couple fat-pompous-bastard young-rich-widow))
+  )
 
 (defun enter-to-continue ()
   (format t "...")
