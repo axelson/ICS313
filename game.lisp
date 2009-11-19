@@ -223,8 +223,13 @@
 			(lobby ((state 0)
 				(displayname "the lobby")
 				(describe (cond 
-					    ((= (get-prop (get-prop rooms 'lobby) 'state) 0) 
-					      "A dead person hangs motionless from the roof.  The police officer stands next to the body with a stern look on his face.  
+					    ((= (get-prop (get-prop rooms 'lobby) 'state) 0)
+					     "A dead person lays on the ground.  It seems as if he was stabbed numerous times.  
+The police officer, young rich widow, fat pompous bastard, butler, and married couple are all in the room. 
+The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
+					    ((= (get-prop (get-prop rooms 'lobby) 'state) 1) 
+					      "A dead person lays on the ground.  It seems as if he was stabbed numerous times.  
+The police officer stands next to the body with a stern look on his face.  
 The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
 					    (t
 					      "A rope hangs from the roof.  It looks as if the rope was cut.  Where did the dead guy go?
@@ -555,7 +560,7 @@ The storage room back down.")
   (if (enter-to-continue) (return-from show-intro))
   (format t "~%It is a dark and stormy night.  Although you are celebrating at a party in a large and elegant mansion, for some reason you can't shake off this feeling of uneasiness.  As the night progresses, you feel a chill run down your back as if someone has been watching you the entire time.  Guests begin to leave and you notice that your friend has left without you.  The host asks you where your friend went and you explain your situation.  The host smiles and offers a room to stay for the night.  Seeing that you have no other means of returning you gladly accept the offer.  As you enter the room , you feel extremely exhausted from all the chatter and head right to bed.~%")
   (if (enter-to-continue) (return-from show-intro))
-  (format t "~%A sharp shriek resonates throughout the hallways, startling you from your sleep.  You dash out of the room to investigate what had happened and as you walk into the lobby you gasp in terror as you see the host, dead, hanging from the roof.  A woman, dressed in black, is on the floor trembling as if she had seen a ghost.  A couple also gasp as they enter the lobby.  You hear a snort next to you, and a somewhat large man begins ranting about how the host had it coming to him.  The butler comes in, looks at the host's dead body frantically, calls the police and rushes right back out.  Not much time passes when you hear a knock on the door and a policeman walks in.  The policeman explains that due to the heavy rain and wind, there will be no backup for awhile.  Ten minutes later the butler bursts through the lobby door and says that the cameras did not catch anyone entering or exiting the premises.  You ask the butler if there is anyone else in the mansion, and he replies that everyone here is all that is left from yesterday's party.  A cold silence.  Eyes begin searching throughout the room, as if judging who could have been the killer.~%")
+  (format t "~%A sharp shriek resonates throughout the hallways, startling you from your sleep.  You dash out of the room to investigate what had happened and as you walk into the lobby you gasp in terror as you see the host, dead on the floor.  A woman, dressed in black, is on the floor trembling as if she had seen a ghost.  A couple also gasp as they enter the lobby.  You hear a snort next to you, and a somewhat fat, pompous bastard begins ranting about how the host had it coming to him.  The butler comes in, looks at the host's dead body frantically, calls the police and rushes right back out.  Not much time passes when you hear a knock on the door and a policeman walks in.  The policeman explains that due to the heavy rain and wind, there will be no backup for awhile.  Ten minutes later the butler bursts through the lobby door and says that the cameras did not catch anyone entering or exiting the premises during the night.  You ask the butler if there is anyone else in the mansion, and he replies that everyone here is all that is left from yesterday's party.  A cold silence.  Eyes begin searching throughout the room, as if judging who could have been the killer.~%")
   (if (enter-to-continue) (return-from show-intro))
   )
 
@@ -565,11 +570,13 @@ The storage room back down.")
   (format t "Startled, you retort, \"I'm no killer!  And nothing's going to get accomplished just standing here!  I'm gonna get to the bottom of this!\"")(if (enter-to-continue) (return-from show-intro2))
   (format t "\"Hold on guys, calm down.\" says the police officer.  \"I got some bad news.  I just called for backup and it seems that due to the storm, they won't be able to send anyone up until next morning...\"")(if (enter-to-continue) (return-from show-intro2)) 
   (format t "\"Wait a minute.. Are you saying that we have to sleep here overnight with the killer still in this house?!\" yelled the wife of the married couple.  \"I'm sorry but that's not possible!  I'm leaving now!\"")(if (enter-to-continue) (return-from show-intro2))
-  (format t "As the wife heads towards the elevator the butler walks right in front of her path.  \"I'm sorry madam.  But I'm afraid I cannot let you go.\"")(if (enter-to-continue) (return-from show-intro2))
+  (format t "As the wife heads towards the elevator, the officer walks right in front of her path.  \"I'm sorry ma'am.  But I'm afraid I cannot let you go.\"")(if (enter-to-continue) (return-from show-intro2))
   (format t "\"AND WHY IS THAT?!\" demanded the wife.")(if (enter-to-continue) (return-from show-intro2))
-  (format t "\"Unfortunately, the bridge connecting to the island that this mansion is on has been heavily damaged due to the storm.  It is uncrossable.  And I am afraid that I cannot let you out on one of the young master's boats in this waether...\" the butler explained.")(if (enter-to-continue) (return-from show-intro2))
-  (format t "\"So are you telling me to stay here and DIE?!\"")(if (enter-to-continue) (return-from show-intro2))
-  (format t "\"No.  But I do say that the probably of that happening is higher if you left this mansion now, madam.\" calmly replied the butler.")(if (enter-to-continue) (return-from show-intro2))
+  (format t "Seeing how bad the storm has gotten, I'm afraid I can't let you go.  Also, I would like for everyone to remain in this house to gather eye-witnesses or clues for this murder.")(if (enter-to-continue) (return-from show-intro2))
+  (format t "\"So are you telling me to stay here and DIE?!\" screamed the wife.")(if (enter-to-continue) (return-from show-intro2))
+  (format t "\"No.  But I do say that the probably of that happening is higher if you left this mansion now, ma'am.  Seeing how the killer is still on the loose, it's more likely that he's waiting for us to panic and leave the house.  I think it's better if we all go back into our rooms, and if anything happens, I'll be here.\" calmly said the officer.")(if (enter-to-continue) (return-from show-intro2))
+  (format t "With that, everyone agreed to return to their rooms and meet in the lobby the next morning.")(if (enter-to-continue) (return-from show-intro2))
+  (format t "You, on the other hand, couldn't shake this feeling that the killer was someone in the room.  You had to find out who did it and why.")(if (enter-to-continue) (return-from show-intro2))
 )
 
 (defun reset-state()
