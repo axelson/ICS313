@@ -244,13 +244,9 @@
 				(displayname "the lobby")
 				(describe (cond 
 					    ((= (get-prop (get-prop rooms 'lobby) 'state) 0)
-					     "A dead person lays on the ground.  It seems as if he was stabbed numerous times.  
-The police officer, young rich widow, fat pompous bastard, butler, and married couple are all in the room. 
-The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
+					     "A dead person lays on the ground.  It seems as if he was stabbed numerous times.~%The police officer, young rich widow, fat pompous bastard, butler, and married couple are all in the room.~%The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
 					    ((= (get-prop (get-prop rooms 'lobby) 'state) 1) 
-					      "A dead person lays on the ground.  It seems as if he was stabbed numerous times.  
-The police officer stands next to the body with a stern look on his face.  
-The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
+					      "A dead person lays on the ground.  It seems as if he was stabbed numerous times.~%The police officer stands next to the body with a stern look on his face.~%The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
 					    (t
 					      "Where did the dead guy go?  There are no traces of his body.
 The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")))
@@ -261,8 +257,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                                 (contents (police butler young-rich-widow married-couple fat-pompous-bastard))
 				))
 			(kitchen ((displayname "the kitchen")
-				  (describe "A gorgeous kitchen with top-of-the-line kitchenware.  Doesn't look like anyone tampered with anything here.  
-The lobby is to the right.")
+				  (describe "A gorgeous kitchen with top-of-the-line kitchenware.  Doesn't look like anyone tampered with anything here.~%The lobby is to the right.")
 				  (east lobby)))
 			(ballroom ((displayname "the ballroom")
 				   (describe "A ballroom large enough to fit a hundred people.  
@@ -284,65 +279,53 @@ The bathroom is up the stairs.")
 				   (second hallway2)
 				   (third hallway3)))
 			(hallway2 ((displayname "the second floor hallway")
-				   (describe "The second floor hallway.
-Your room is to the right and there is another room to the left.  The hallway extends north.")
+				   (describe "The second floor hallway.~%Your room is to the right and there is another room to the left.  The hallway extends north.")
 				   (north hallway2north)
 				   (east yourroom)
 				   (west vacantroom1)
 				   (south elevator)))
 			(hallway2north ((displayname "the north-side of the second floor hallway")
-					(describe "The north-side of the second floor hallway.  Huge paintings are on the sides of the walls.
-There is a room to the right and a room at the end of the hall.")
+					(describe "The north-side of the second floor hallway.  Huge paintings are on the sides of the walls.~%There is a room to the right and a room at the end of the hall.")
 					(north yrwroom)
 					(east fpbroom)
 					(south hallway2)))
 			(yrwroom ((displayname "the young rich widow's room")
-				  (describe "The young rich widow's room.
-The hallway is behind you.")
+				  (describe "The young rich widow's room.~%The hallway is behind you.")
 				  (south hallway2north)))
 			(fpbroom ((displayname "the fat pompous bastard's room")
-				  (describe "It stenches of alcohol.  Empty bottles lie on the ground throughout the room.
-The hallway is to the left.")
+				  (describe "It stenches of alcohol.  Empty bottles lie on the ground throughout the room.~%The hallway is to the left.")
 				  (west hallway2north)))
 			(yourroom ((displayname "your room")
 				   (describe "Your room.")
 				   (west hallway2)))
 			(vacantroom1((displayname "a vacant room")
-				     (description "A vacant room.
-The hallway is to the right.")
+				     (description "A vacant room.~%The hallway is to the right.")
 				     (east hallway2)))
 			(hallway3 ((displayname "the third floor hallway")
-				   (describe "The third floor hallway.
-There are two rooms to the left and right.  The hallway extends north.")
+				   (describe "The third floor hallway.~%There are two rooms to the left and right.  The hallway extends north.")
 				   (north hallway3north)
 				   (east mcroom)
 				   (west broom)
 				   (south elevator)))
 			(hallway3north ((displayname "the north side of the third floor hallway")
-					(describe "The north-side of the third floor hallway.
-There is a room to the right and a room at the end of the hall.")
+					(describe "The north-side of the third floor hallway.~%There is a room to the right and a room at the end of the hall.")
 					(east vacantroom2)
 					(north storageroom)))
 			(vacantroom2 ((displayname "a vacant room")
-				      (describe "A vacant room.
-The hallway is to the left.")
+				      (describe "A vacant room.~%The hallway is to the left.")
 				      (west hallway3north)))
 			(storageroom ((displayname "the storage room")
-				      (describe "A large storage room.  It looks messy.
-The hallway is behind you.")
+				      (describe "A large storage room.  It looks messy.~%The hallway is behind you.")
 				      (south hallway3north)
 				      (north attic)))
 			(mcroom ((displayname "the married couple's room")
-				 (describe "The married couple's room.
-The hallway is to the left.")
+				 (describe "The married couple's room.~%The hallway is to the left.")
 				 (west hallway3)))
 			(broom ((displayname "the butler's room")
-				(describe "The butler's room.
-The hallway is to the right.")
+				(describe "The butler's room.~%The hallway is to the right.")
 				(east hallway3)))
 			(attic ((displayname "the attic")
-				(describe "The mansion's attic.  The entrance was left open.
-The storage room back down.")
+				(describe "The mansion's attic.  The entrance was left open.~%The storage room back down.")
 				(south storageroom)))
 			)))
 
