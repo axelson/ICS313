@@ -183,7 +183,19 @@
 			     (butler ((describe "The butler")
 				      (state 1)
 				      (talk nil)))
+			     (poo ((describe "A rancid smell")
+				   (state 1)
+				   (talk nil)))
 			      ))
+
+; Interative sctructure
+;; (defparameter conversation-engine
+;;   '(
+;;     ;Police
+;;     (Police
+;;      ('(a b) (lambda () (let ((mood (char-get-prop Police 'mood)))
+;; 			  (cond
+;; 			    ((= mood 0) (format t "I am happy."))
 
 ;; Character talk functions
 
@@ -218,6 +230,12 @@
 				((= state 0) (format t "Butler: \"Hello sir, may I be of service to you?\""))
 				(t (format t "Butler: \"I used to take care of Batman.\"~%"))))))
 
+  (set-prop (get-prop characters 'poo) 'talk
+	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
+			      (cond
+				((= state 0) (format t "Poo: \"Hello!\"~%"))
+				((= state 1) (access-struct riddles 'Quarter-Dime-Riddle 'riddle))
+				(t (format t "Poo: \"I want a friend, please!\"~%"))))))
 
   (defparameter rooms '(
 			(lobby ((state 0)
@@ -337,15 +355,15 @@ The storage room back down.")
 			; First floor riddles
 			(Ice-Riddle
 			 (Riddle (lambda () (format t "A man is found hanging in a room 30 feet off the ground. There is nothing else in the room except for a large puddle of water on the ground. The police can't see any way the man could have climbed the walls to get to where he is hanging.~%How did this man hang himself?")))
-			 (Answer (lambda () 'Ice))
+			 (Answer (lambda () '(Ice)))
 			 (Hint (lambda () (format t "Think."))))
 			(Birthday-Riddle
 			 (Riddle (lambda () (format t "What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?")))
-			 (Answer (lambda () 23))
+			 (Answer (lambda () '(23)))
 			 (Hint (lambda () (format t "What is the general formula for finding the probability that no people in the room have the same birthday?"))))
 			(Rainy-Day-Riddle
 			 (Riddle (lambda () (format t "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way. Why does he do this?")))
-			 (Answer (lambda () 'Umbrella))
+			 (Answer (lambda () '(Umbrella)))
 			 (Hint (lambda () (format t "Think."))))
 			(Quarter-Dime-Riddle
 			 (Riddle (lambda () (format t "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter. What are the two coins?")))
@@ -358,12 +376,12 @@ The storage room back down.")
 			 (Hint (lambda () (format t "Think."))))
 			(Second-Place-Riddle
 			 (Riddle (lambda () (format t "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")))
-			 (Answer (lambda () 'Second))
+			 (Answer (lambda () '(Second)))
 			 (Hint (lambda () (format t "Think."))))
 			; Third floor riddles
 			(Twins-Riddle
 			 (Riddle (lambda () (format t "Two girls are born to the same mother, on the same day, at the same time, in the same month and year and yet they're not twins. How can this be?")))
-			 (Answer (lambda () 'Triplets))
+			 (Answer (lambda () '(Triplets)))
 			 (Hint (lambda () (format t "Think."))))))
 
 ;; Riddle accessor function
@@ -389,6 +407,15 @@ The storage room back down.")
 
 ;;(defun answer-test-riddle ()
 ;;  (return-from answer-test-riddle 1))
+
+(defun split-line (line)
+  (let ((start 0))
+    (setq line (concatenate 'string line " "))
+    (setq parsed '())
+    (loop for i from 0 to (1- (length line)) do
+	 (if (equalp #\Space (char line i))
+	     (progn (setf parsed (append parsed (list (subseq line start i)))) (setf start (1+ i))) ()))
+    (return-from split-line parsed)))
 
 ;;;;;;;;;;;;;;;
 ; End Riddles ;
@@ -418,9 +445,13 @@ The storage room back down.")
           else collect (subseq string n)
         while pos))
 
-(defun search-string (key-list instring)
-  "Searches instring for words matching string-list"
-  (loop for ))
+(defun search-string (key-list search-string)
+  "Searches search-string for words matching string-list"
+  (let ((matches 0))
+    (loop for item in (string-split " " key-list)
+       do (if (search item search-string)
+              (incf matches)))
+    matches))
 
 ;;;;;;;;;;;;;;;;;
 ; End Functions ;
@@ -431,6 +462,21 @@ The storage room back down.")
 
 (defun char-talkf (character)
   (do-action (get-prop characters character) 'talk))
+
+(defmacro char-get-prop (character property)
+  `(get-prop (get-prop characters ',character) ,property))
+
+(defmacro char-set-prop (character property value)
+  `(set-prop (get-prop characters ,character) ,property ,value))
+
+(defmacro char-set-state (character new-state)
+  `(char-set-prop ',character 'state ,new-state))
+
+(defmacro char-incr-state (character)
+  `(char-set-state ,character (1+ (char-get-prop ,character 'state)))) 
+
+(defmacro char-decr-state (character)
+  `(char-set-state ,character (1- (char-get-prop ,character 'state))))
 
 ;;;;;;;;
 ; Game ;
