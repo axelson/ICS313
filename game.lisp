@@ -637,6 +637,6 @@ The storage room back down.")
 
 (defun enter-to-continue ()
   (format t "...")
-  (if (equalp (read-line) "skip")
+  (if (search-string "skip s" (read-line))
       t
       nil))
