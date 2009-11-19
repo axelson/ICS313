@@ -169,7 +169,7 @@
                          (inventory pouch)))
   (defparameter characters '(
 			     (police ((describe "The police officer")
-				      (state 0)
+				      (state 1)
 				      (talk nil)))
 			     (married-couple ((describe "The married couple")
 					      (state 0)
@@ -203,7 +203,8 @@
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (case state
 				(0 (format t "Police Officer: \"I got here as soon as I got the call.\"~%"))
-				(1 (format t "I've sent everyone up to their rooms, if you find out more information, let me know."))
+				(1 (progn (format t "I've sent everyone up to their rooms, if you find out more information, let me know.")
+					  (access-convo-all convo-police 'lobby-1 'q-01)))
 				(otherwise (format t "Police Officer: \"I am here to ensure everyone's safety.\"~%"))))))
 
   (set-prop (get-prop characters 'married-couple) 'talk
@@ -334,18 +335,81 @@ The bathroom is up the stairs.")
 ; End Global Objects ;
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(defparameter convo-police
+(defparameter police
   '(
-    (lobby-1
-     (q-01
+    (place-1
+     (q-1
       (lambda () (format t "Police officer: Did you find anything useful?~%~%You say:~%")))
-     (r-01
-      (lambda () (format t "(1) Do you have anything helpful?~%"))
-      (lambda () (format t "(2) No, nothing substantial, yet.~%")))
-     (a-01
-      (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%"))
-      (lambda () (format t "I am gay.~%"))))
+     (a-1
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Do you have anything helpful?~%"))
+      (lambda () (format t "(3) No, nothing substantial, yet.~%")))
+     (r-1
+      (lambda () -1)
+      (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%") (end-convo))
+      (lambda () (format t "I am gay.~%") (end-convo))))
 ))
+
+(defun end-convo ()
+  (setf convo nil))
+
+(defun reset-convo ()
+  (setf convo nil))
+
+;; Conversation boolean
+(setf convo T)
+
+
+(setf places '(place-1 place-2 place-3))
+(setf questions '(q-1 q-2 q-3 q-4 q-5))
+(setf answers '(a-1 a-2 a-3 a-4 a-5))
+(setf responses '(r-1 r-2 r-3 r-4 r-5))
+
+; e.g., (run-convo police (char-get-prop police 'state))
+
+(defun run-convo (convo-char place-no)
+  (let ((question-no 1) (input 0))
+    ;(setq place-no (char-get-prop convo-char 'state))
+    ; First iteration
+    (access-convo-all convo-char (get-from-list places place-no) (get-from-list questions question-no))
+    (access-convo-all convo-char (get-from-list places place-no) (get-from-list answers question-no))
+    ; Start conversation
+    ; The first option always ends the conversation
+    (loop while (> (setf input (parse-input (read-line))) 1) do
+	 (access-convo-resp convo-char (get-from-list places place-no) (get-from-list responses question-no) input)
+	 (if convo
+	     (progn
+	       ; Update counters
+	       (setf question-no (1+ question-no))
+	       (access-convo-all convo-char (get-from-list places place-no) (get-from-list questions question-no))
+	       (access-convo-all convo-char (get-from-list places place-no) (get-from-list answers question-no)))
+	     (return-from run-convo)))
+    (format t "~%The conversation ends.~%") (reset-convo)))
+
+(defun parse-input (input)
+  (loop
+     (case (read-from-string input)
+	 (1 (return-from parse-input 1))
+	 (2 (return-from parse-input 2))
+	 (3 (return-from parse-input 3))
+	 (otherwise (progn (format t "~%Please choose a valid option.~%") (setf input (read-line)))))))
+
+(defun get-from-list (lname item-no)
+  (let ((no 1))
+    (loop for i in lname do
+	 (if (eq no item-no) (return-from get-from-list i) ())
+	 (setf no (1+ no)))))
+
+(defun ssc (arg1 arg2)
+  (if (stringp arg1) () (setq arg1 (write-to-string arg1)))
+  (if (stringp arg2) () (setq arg2 (write-to-string arg2)))
+  ; concatenate
+  (return-from ssc (concatenate 'string arg1 arg2)))
+
+
+(defmacro run-convo-helper (character place question-no)
+  `(access-convo-all ,character ',place ',question-no))
+     
 
 (defun access-convo-all (character dialog-name item-list)
   (loop for i in character do
@@ -353,7 +417,7 @@ The bathroom is up the stairs.")
 	   (loop for j in (cdr i) do
 		(if (eq (car j) item-list) (exec-list (cdr j)) ())) ())))
 
-(defun access-convo-action (character dialog-name item-list item-no)
+(defun access-convo-resp (character dialog-name item-list item-no)
   (loop for i in character do
        (if (eq (car i) dialog-name)
 	   (loop for j in (cdr i) do
@@ -370,6 +434,8 @@ The bathroom is up the stairs.")
 	   (if (eq number no)
 	       (return-from exec-list-specific (funcall i)) ())
 	   (setf no (1+ no))))))
+
+
 
 ;;;;;;;;;;;
 ; Riddles ;
@@ -434,7 +500,7 @@ The bathroom is up the stairs.")
   (loop for i in struct-name do
        (if (eq (car i) group-name)
 	   (loop for j in (cdr i) do
-		(if (eq (car j) item) (return-from access-struct (funcall (cadr j))) ())) ())))
+		(if (eq (car j) item) (return-from access-struct (funcall (eval (cadr j)))) ())) ())))
 
 ;;(defun answer-test-riddle ()
 ;;  (return-from answer-test-riddle 1))
