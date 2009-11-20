@@ -169,7 +169,7 @@
                          (inventory pouch)))
   (defparameter characters '(
 			     (police ((describe "The police officer")
-				      (state 0)
+				      (state 1)
 				      (talk nil)))
 			     (married-couple ((describe "The married couple")
 					      (state 0)
@@ -203,7 +203,8 @@
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (case state
 				(0 (format t "Police Officer: \"I got here as soon as I got the call.\"~%"))
-				(1 (format t "I've sent everyone up to their rooms, if you find out more information, let me know."))
+				(1 (progn (format t "I've sent everyone up to their rooms, if you find out more information, let me know.")
+					  (access-convo-all convo-police 'lobby-1 'q-01)))
 				(otherwise (format t "Police Officer: \"I am here to ensure everyone's safety.\"~%"))))))
 
   (set-prop (get-prop characters 'married-couple) 'talk
@@ -244,13 +245,9 @@
 				(displayname "the lobby")
 				(describe (cond 
 					    ((= (get-prop (get-prop rooms 'lobby) 'state) 0)
-					     "A dead person lays on the ground.  It seems as if he was stabbed numerous times.  
-The police officer, young rich widow, fat pompous bastard, butler, and married couple are all in the room. 
-The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
+					     "A dead person lays on the ground.  It seems as if he was stabbed numerous times.~%The police officer, young rich widow, fat pompous bastard, butler, and married couple are all in the room.~%The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
 					    ((= (get-prop (get-prop rooms 'lobby) 'state) 1) 
-					      "A dead person lays on the ground.  It seems as if he was stabbed numerous times.  
-The police officer stands next to the body with a stern look on his face.  
-The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
+					      "A dead person lays on the ground.  It seems as if he was stabbed numerous times.~%The police officer stands next to the body with a stern look on his face.~%The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
 					    (t
 					      "Where did the dead guy go?  There are no traces of his body.
 The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")))
@@ -261,8 +258,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                                 (contents (police butler young-rich-widow married-couple fat-pompous-bastard))
 				))
 			(kitchen ((displayname "the kitchen")
-				  (describe "A gorgeous kitchen with top-of-the-line kitchenware.  Doesn't look like anyone tampered with anything here.  
-The lobby is to the right.")
+				  (describe "A gorgeous kitchen with top-of-the-line kitchenware.  Doesn't look like anyone tampered with anything here.~%The lobby is to the right.")
 				  (east lobby)))
 			(ballroom ((displayname "the ballroom")
 				   (describe "A ballroom large enough to fit a hundred people.  
@@ -284,73 +280,53 @@ The bathroom is up the stairs.")
 				   (second hallway2)
 				   (third hallway3)))
 			(hallway2 ((displayname "the second floor hallway")
-				   (describe "The second floor hallway.
-Your room is to the right and there is another room to the left.  The hallway extends north.")
+				   (describe "The second floor hallway.~%Your room is to the right and there is another room to the left.  The hallway extends north.")
 				   (north hallway2north)
 				   (east yourroom)
 				   (west vacantroom1)
 				   (south elevator)))
 			(hallway2north ((displayname "the north-side of the second floor hallway")
-					(describe "The north-side of the second floor hallway.  Huge paintings are on the sides of the walls.
-There is a room to the right and a room at the end of the hall.")
+					(describe "The north-side of the second floor hallway.  Huge paintings are on the sides of the walls.~%There is a room to the right and a room at the end of the hall.")
 					(north yrwroom)
 					(east fpbroom)
 					(south hallway2)))
 			(yrwroom ((displayname "the young rich widow's room")
-				  (describe "The young rich widow's room.
-The hallway is behind you.")
-				  (south hallway2north)
-				  (contents (young-rich-woman))
-				  ))
+				  (describe "The young rich widow's room.~%The hallway is behind you.")
+				  (south hallway2north)))
 			(fpbroom ((displayname "the fat pompous bastard's room")
-				  (describe "It stenches of alcohol.  Empty bottles lie on the ground throughout the room.
-The hallway is to the left.")
-				  (west hallway2north)
-				  (contents (fat-pompous-bastard))
-				  ))
+				  (describe "It stenches of alcohol.  Empty bottles lie on the ground throughout the room.~%The hallway is to the left.")
+				  (west hallway2north)))
 			(yourroom ((displayname "your room")
 				   (describe "Your room.")
 				   (west hallway2)))
 			(vacantroom1((displayname "a vacant room")
-				     (description "A vacant room.
-The hallway is to the right.")
+				     (description "A vacant room.~%The hallway is to the right.")
 				     (east hallway2)))
 			(hallway3 ((displayname "the third floor hallway")
-				   (describe "The third floor hallway.
-There are two rooms to the left and right.  The hallway extends north.")
+				   (describe "The third floor hallway.~%There are two rooms to the left and right.  The hallway extends north.")
 				   (north hallway3north)
 				   (east mcroom)
 				   (west broom)
 				   (south elevator)))
 			(hallway3north ((displayname "the north side of the third floor hallway")
-					(describe "The north-side of the third floor hallway.
-There is a room to the right and a room at the end of the hall.")
+					(describe "The north-side of the third floor hallway.~%There is a room to the right and a room at the end of the hall.")
 					(east vacantroom2)
 					(north storageroom)))
 			(vacantroom2 ((displayname "a vacant room")
-				      (describe "A vacant room.
-The hallway is to the left.")
+				      (describe "A vacant room.~%The hallway is to the left.")
 				      (west hallway3north)))
 			(storageroom ((displayname "the storage room")
-				      (describe "A large storage room.  It looks messy.
-The hallway is behind you.")
+				      (describe "A large storage room.  It looks messy.~%The hallway is behind you.")
 				      (south hallway3north)
 				      (north attic)))
 			(mcroom ((displayname "the married couple's room")
-				 (describe "The married couple's room.
-The hallway is to the left.")
-				 (west hallway3)
-				 (contents (married-couple))
-				 ))
+				 (describe "The married couple's room.~%The hallway is to the left.")
+				 (west hallway3)))
 			(broom ((displayname "the butler's room")
-				(describe "The butler's room.
-The hallway is to the right.")
-				(east hallway3)
-				(contents (butler))
-				))
+				(describe "The butler's room.~%The hallway is to the right.")
+				(east hallway3)))
 			(attic ((displayname "the attic")
-				(describe "The mansion's attic.  The entrance was left open.
-The storage room back down.")
+				(describe "The mansion's attic.  The entrance was left open.~%The storage room back down.")
 				(south storageroom)))
 			)))
 
@@ -359,18 +335,81 @@ The storage room back down.")
 ; End Global Objects ;
 ;;;;;;;;;;;;;;;;;;;;;;
 
-(defparameter convo-police
+(defparameter police
   '(
-    (lobby-1
-     (q-01
+    (place-1
+     (q-1
       (lambda () (format t "Police officer: Did you find anything useful?~%~%You say:~%")))
-     (r-01
-      (lambda () (format t "(1) Do you have anything helpful?~%"))
-      (lambda () (format t "(2) No, nothing substantial, yet.~%")))
-     (a-01
-      (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%"))
-      (lambda () (format t "I am gay.~%"))))
+     (a-1
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Do you have anything helpful?~%"))
+      (lambda () (format t "(3) No, nothing substantial, yet.~%")))
+     (r-1
+      (lambda () -1)
+      (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%") (end-convo))
+      (lambda () (format t "I am gay.~%") (end-convo))))
 ))
+
+(defun end-convo ()
+  (setf convo nil))
+
+(defun reset-convo ()
+  (setf convo nil))
+
+;; Conversation boolean
+(setf convo T)
+
+
+(setf places '(place-1 place-2 place-3))
+(setf questions '(q-1 q-2 q-3 q-4 q-5))
+(setf answers '(a-1 a-2 a-3 a-4 a-5))
+(setf responses '(r-1 r-2 r-3 r-4 r-5))
+
+; e.g., (run-convo police (char-get-prop police 'state))
+
+(defun run-convo (convo-char place-no)
+  (let ((question-no 1) (input 0))
+    ;(setq place-no (char-get-prop convo-char 'state))
+    ; First iteration
+    (access-convo-all convo-char (get-from-list places place-no) (get-from-list questions question-no))
+    (access-convo-all convo-char (get-from-list places place-no) (get-from-list answers question-no))
+    ; Start conversation
+    ; The first option always ends the conversation
+    (loop while (> (setf input (parse-input (read-line))) 1) do
+	 (access-convo-resp convo-char (get-from-list places place-no) (get-from-list responses question-no) input)
+	 (if convo
+	     (progn
+	       ; Update counters
+	       (setf question-no (1+ question-no))
+	       (access-convo-all convo-char (get-from-list places place-no) (get-from-list questions question-no))
+	       (access-convo-all convo-char (get-from-list places place-no) (get-from-list answers question-no)))
+	     (return-from run-convo)))
+    (format t "~%The conversation ends.~%") (reset-convo)))
+
+(defun parse-input (input)
+  (loop
+     (case (read-from-string input)
+	 (1 (return-from parse-input 1))
+	 (2 (return-from parse-input 2))
+	 (3 (return-from parse-input 3))
+	 (otherwise (progn (format t "~%Please choose a valid option.~%") (setf input (read-line)))))))
+
+(defun get-from-list (lname item-no)
+  (let ((no 1))
+    (loop for i in lname do
+	 (if (eq no item-no) (return-from get-from-list i) ())
+	 (setf no (1+ no)))))
+
+(defun ssc (arg1 arg2)
+  (if (stringp arg1) () (setq arg1 (write-to-string arg1)))
+  (if (stringp arg2) () (setq arg2 (write-to-string arg2)))
+  ; concatenate
+  (return-from ssc (concatenate 'string arg1 arg2)))
+
+
+(defmacro run-convo-helper (character place question-no)
+  `(access-convo-all ,character ',place ',question-no))
+     
 
 (defun access-convo-all (character dialog-name item-list)
   (loop for i in character do
@@ -378,7 +417,7 @@ The storage room back down.")
 	   (loop for j in (cdr i) do
 		(if (eq (car j) item-list) (exec-list (cdr j)) ())) ())))
 
-(defun access-convo-action (character dialog-name item-list item-no)
+(defun access-convo-resp (character dialog-name item-list item-no)
   (loop for i in character do
        (if (eq (car i) dialog-name)
 	   (loop for j in (cdr i) do
@@ -386,15 +425,17 @@ The storage room back down.")
 
 (defun exec-list (inlist)
   (loop for i in inlist do
-       (funcall i)))
+       (funcall (eval i))))
 
 (defun exec-list-specific (inlist number)
   (let ((no 1))
     (loop for i in inlist do
 	 (progn
 	   (if (eq number no)
-	       (return-from exec-list-specific (funcall i)) ())
+	       (return-from exec-list-specific (funcall (eval i))) ())
 	   (setf no (1+ no))))))
+
+
 
 ;;;;;;;;;;;
 ; Riddles ;
@@ -459,7 +500,7 @@ The storage room back down.")
   (loop for i in struct-name do
        (if (eq (car i) group-name)
 	   (loop for j in (cdr i) do
-		(if (eq (car j) item) (return-from access-struct (funcall (cadr j))) ())) ())))
+		(if (eq (car j) item) (return-from access-struct (funcall (eval (cadr j)))) ())) ())))
 
 ;;(defun answer-test-riddle ()
 ;;  (return-from answer-test-riddle 1))
@@ -548,9 +589,11 @@ The storage room back down.")
 
 (defun describe-room (&optional (room nil))
   "Describes the contents of a room"
-  (if room
-      (format t "~A~%~%" (eval (get-prop (get-prop rooms room) 'describe)))
-      (format t "~A~%~%" (eval (get-prop (get-current-room) 'describe)))))
+      (format t (eval (get-prop (if room
+                                    (get-prop rooms room)
+                                    (get-current-room))
+                                'describe)))
+      (format t "~%~%"))
 
 
 (defun get-current-room (&optional (property nil))
@@ -563,13 +606,13 @@ The storage room back down.")
   "Handles user input"
   (cond
     ;; Commands
-    ((find input '("win game" "win") :test #'equalp)
+    ((search-string "win" input)
      (format t "You won!")
      (reset-state) t)
-    ((find input '("quit" "exit" "q") :test #'equalp)
+    ((search-string "quit exit q" input)
      (format t "You Fail the Game!~%")
      (reset-state) t)
-    ((find input '("look" "l") :test #'equalp)
+    ((search-string "look l" input)
      (describe-room))
     ((search "talk" input)
      (talk (string-left-trim "talk " input)))
@@ -586,13 +629,13 @@ The storage room back down.")
     ((find input '("eval") :test #'equalp)
      (format t "~A~%" (eval (read-from-string (read-line)))))
     ;; Directions
-    ((find input '("N" "north" "up") :test #'equalp)
+    ((search-string "n north up" input)
      (move 'north))
-    ((find input '("S" "south" "down") :test #'equalp)
+    ((search-string "s south down" input)
      (move 'south))
-    ((find input '("E" "east" "right") :test #'equalp)
+    ((search-string "e east right" input)
      (move 'east))
-    ((find input '("W" "west" "left") :test #'equalp)
+    ((search-string "w west left" input)
      (move 'west))
     ;; Elevator
     ((and (equalp input "1") (equalp (get-prop game-state 'current-room) 'elevator))
@@ -658,7 +701,7 @@ The storage room back down.")
 
 (defun show-intro ()
   "Shows introduction when game starts"
-  (format t "Welcome to Mystery Mansion!~%(To progress through the dialogue, press ENTER whenever you see '...'.  To skip the dialogue, type \"skip\")")
+  (format t "Welcome to Mystery Mansion!~%(To progress through the dialogue, press ENTER whenever you see '...'.  To skip the dialogue, type \"skip\")~%")
   (if (enter-to-continue) (return-from show-intro))
   (format t "~%It is a dark and stormy night.  Although you are celebrating at a party in a large and elegant mansion, for some reason you can't shake off this feeling of uneasiness.  As the night progresses, you feel a chill run down your back as if someone has been watching you the entire time.  Guests begin to leave and you notice that your friend has left without you.  The host asks you where your friend went and you explain your situation.  The host smiles and offers a room to stay for the night.  Seeing that you have no other means of returning you gladly accept the offer.  As you enter the room , you feel extremely exhausted from all the chatter and head right to bed.~%")
   (if (enter-to-continue) (return-from show-intro))
@@ -668,17 +711,28 @@ The storage room back down.")
 
 (defun show-intro2 ()
   "Shows the second part of the introduction when you try to leave the lobby"
-  (format t "~%You try to exit the lobby when the young rich widow screams, \"Where do you think you're going?!  Trying to hide the evidence?!  HE'S THE KILLER!!\"")(if (enter-to-continue) (return-from show-intro2))
-  (format t "Startled, you retort, \"I'm no killer!  And nothing's going to get accomplished just standing here!  I'm gonna get to the bottom of this!\"")(if (enter-to-continue) (return-from show-intro2))
-  (format t "\"Hold on guys, calm down.\" says the police officer.  \"I got some bad news.  I just called for backup and it seems that due to the storm, they won't be able to send anyone up until next morning...\"")(if (enter-to-continue) (return-from show-intro2)) 
-  (format t "\"Wait a minute.. Are you saying that we have to sleep here overnight with the killer still in this house?!\" yelled the wife of the married couple.  \"I'm sorry but that's not possible!  I'm leaving now!\"")(if (enter-to-continue) (return-from show-intro2))
-  (format t "As the wife heads towards the elevator, the officer walks right in front of her path.  \"I'm sorry ma'am.  But I'm afraid I cannot let you go.\"")(if (enter-to-continue) (return-from show-intro2))
-  (format t "\"AND WHY IS THAT?!\" demanded the wife.")(if (enter-to-continue) (return-from show-intro2))
-  (format t "Seeing how bad the storm has gotten, I'm afraid I can't let you go.  Also, I would like for everyone to remain in this house to gather eye-witnesses or clues for this murder.")(if (enter-to-continue) (return-from show-intro2))
-  (format t "\"So are you telling me to stay here and DIE?!\" screamed the wife.")(if (enter-to-continue) (return-from show-intro2))
-  (format t "\"No.  But I do say that the probably of that happening is higher if you left this mansion now, ma'am.  Seeing how the killer is still on the loose, it's more likely that he's waiting for us to panic and leave the house.  I think it's better if we all go back into our rooms, and if anything happens, I'll be here.\" calmly said the officer.")(if (enter-to-continue) (return-from show-intro2))
-  (format t "With that, everyone somewhat agreed to return to their rooms and meet in the lobby the next morning.")(if (enter-to-continue) (return-from show-intro2))
-  (format t "You, on the other hand, couldn't shake this feeling that the killer was someone in the room.  You had to find out who did it and why.")(if (enter-to-continue) (return-from show-intro2))
+  (format t "~%You try to exit the lobby when the young rich widow screams, \"Where do you think you're going?!  Trying to hide the evidence?!  HE'S THE KILLER!!\"~%")
+  (if (enter-to-continue) (return-from show-intro2))
+  (format t "Startled, you retort, \"I'm no killer!  And nothing's going to get accomplished just standing here!  I'm gonna get to the bottom of this!\"~%")
+  (if (enter-to-continue) (return-from show-intro2))
+  (format t "\"Hold on guys, calm down.\" says the police officer.  \"I got some bad news.  I just called for backup and it seems that due to the storm, they won't be able to send anyone up until next morning...\"~%")
+  (if (enter-to-continue) (return-from show-intro2))
+  (format t "\"Wait a minute.. Are you saying that we have to sleep here overnight with the killer still in this house?!\" yelled the wife of the married couple.  \"I'm sorry but that's not possible!  I'm leaving now!\"~%")
+  (if (enter-to-continue) (return-from show-intro2))
+  (format t "As the wife heads towards the elevator, the officer walks right in front of her path.  \"I'm sorry ma'am.  But I'm afraid I cannot let you go.\"~%")
+  (if (enter-to-continue) (return-from show-intro2))
+  (format t "\"AND WHY IS THAT?!\" demanded the wife.~%")
+  (if (enter-to-continue) (return-from show-intro2))
+  (format t "Seeing how bad the storm has gotten, I'm afraid I can't let you go.  Also, I would like for everyone to remain in this house to gather eye-witnesses or clues for this murder.~%")
+  (if (enter-to-continue) (return-from show-intro2))
+  (format t "\"So are you telling me to stay here and DIE?!\" screamed the wife.~%")
+  (if (enter-to-continue) (return-from show-intro2))
+  (format t "\"No.  But I do say that the probably of that happening is higher if you left this mansion now, ma'am.  Seeing how the killer is still on the loose, it's more likely that he's waiting for us to panic and leave the house.  I think it's better if we all go back into our rooms, and if anything happens, I'll be here.\" calmly said the officer.~%")
+  (if (enter-to-continue) (return-from show-intro2))
+  (format t "With that, everyone somewhat agreed to return to their rooms and meet in the lobby the next morning.~%")
+  (if (enter-to-continue) (return-from show-intro2))
+  (format t "You, on the other hand, couldn't shake this feeling that the killer was someone in the room.  You had to find out who did it and why.~%")
+  (if (enter-to-continue) (return-from show-intro2))
 )
 
 (defun reset-state()
