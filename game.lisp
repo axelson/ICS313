@@ -204,7 +204,7 @@
 			      (case state
 				(0 (format t "Police Officer: \"I got here as soon as I got the call.\"~%"))
 				(1 (progn (format t "I've sent everyone up to their rooms, if you find out more information, let me know.")
-					  (access-convo-all convo-police 'lobby-1 'q-01)))
+					  (access-convo-all police 'lobby-1 'q-01)))
 				(otherwise (format t "Police Officer: \"I am here to ensure everyone's safety.\"~%"))))))
 
   (set-prop (get-prop characters 'married-couple) 'talk
@@ -349,6 +349,11 @@ The bathroom is up the stairs.")
       (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%") (end-convo))
       (lambda () (format t "I am gay.~%") (end-convo))))
 ))
+(defparameter convo nil)
+(defparameter places nil)
+(defparameter questions nil)
+(defparameter answers nil)
+(defparameter responses nil)
 
 (defun end-convo ()
   (setf convo nil))
@@ -390,10 +395,10 @@ The bathroom is up the stairs.")
   (loop
      (case (if (string= input "")
                nil
-               (read-from-string input))
-	 (1 (return-from parse-input 1))
-	 (2 (return-from parse-input 2))
-	 (3 (return-from parse-input 3))
+               (progn (format t "input:[~A]" input) (parse-integer input)))
+	 (1 (return 1))
+	 (2 (return 2))
+	 (3 (return 3))
 	 (otherwise (progn (format t "~%Please choose a valid option.~%") (setf input (read-line)))))))
 
 (defun get-from-list (lname item-no)
