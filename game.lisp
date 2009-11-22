@@ -826,6 +826,7 @@ The bathroom is up the stairs.")
       (t (format t "Sorry, there is nothing special to examine about that.~%")))))
 
 (defun find-character (character-string)
+  "Matches user input with characters" 
   (cond
     ((not (stringp character-string)) (format t "this requires a string~%"))
     ((search-string "police officer" character-string) 'police)
@@ -837,8 +838,9 @@ The bathroom is up the stairs.")
     ))
 
 (defun find-item (item-string)
+  "Matches user input with items" 
   (cond
-    ((not (stringp item-string)) (format t"this requires a string~%"))
+    ((not (stringp item-string)) (format t "this requires a string~%"))
     ((search-string "newspaper" item-string) 'newspaper)
     ((search-string "writing wall" item-string) 'writing-on-wall)
     ((search-string "ice" item-string) 'ice)
