@@ -241,7 +241,7 @@
   (set-prop (get-prop characters 'butler) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (case state
-				(0 (format t "Butler: \"Hello sir, may I be of service to you?\""))
+				(0 (format t "Butler: \"Hello sir, may I be of service to you?\"~%"))
 				(otherwise (format t "Butler: \"I used to take care of Batman.\"~%"))))))
 
   (set-prop (get-prop characters 'poo) 'talk
@@ -732,7 +732,7 @@ The bathroom is up the stairs.")
 (defun describe-room (&optional (room nil))
   "Describes the contents of a room"
       (format t (eval (get-prop (if room
-                                    (get-prop rooms room)
+                                    (get-room room)
                                     (get-current-room))
                                 'describe)))
       (format t "~%~%"))
@@ -855,7 +855,7 @@ The bathroom is up the stairs.")
 	   (if (y-or-n-p)
 	       (progn
 		 (show-intro2)
-		 (set-prop (get-prop rooms 'lobby) 'state 1)
+		 (set-prop (get-room 'lobby) 'state 1)
 		 (set-prop (get-room 'lobby) 'contents '(police))
 		 )
 	       )
@@ -915,7 +915,7 @@ The bathroom is up the stairs.")
 )
 
 (defun reset-state()
-  (set-prop (get-prop rooms 'lobby) 'state 0)
+  (set-prop (get-room 'lobby) 'state 0)
   (set-prop (get-room 'lobby) 'contents '(police butler married-couple fat-pompous-bastard young-rich-widow))
   )
 
