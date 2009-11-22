@@ -204,7 +204,7 @@
 			      (case state
 				(0 (format t "Police Officer: \"I got here as soon as I got the call.\"~%"))
 				(1 (progn (format t "I've sent everyone up to their rooms, if you find out more information, let me know.")
-					  (access-convo-all police 'lobby-1 'q-01)))
+					  (conv-engine police 1 1)))
 				(otherwise (format t "Police Officer: \"I am here to ensure everyone's safety.\"~%"))))))
 
   (set-prop (get-prop characters 'married-couple) 'talk
