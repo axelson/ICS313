@@ -795,12 +795,11 @@ The bathroom is up the stairs.")
      (format t "I don't know what to do with this command: ~A~%Maybe you should try running \"help\"~%" input))))
 
 (defun check-inventory ()
+  "Shows user what is contained in their inventory"
   (if (get-prop pouch 'contents)
       (progn
-	(format t "You have ~(~A~) in your inventory.~%"  (get-prop pouch 'contents))
-	)
-      (format t "There is nothing in your inventory.~%"))
-)
+	(format t "You have ~(~A~) in your inventory.~%"  (get-prop pouch 'contents)))
+      (format t "There is nothing in your inventory.~%")))
 
 (defun talk (character-string)
   "Try to talk to the specified character"
