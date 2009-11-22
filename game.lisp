@@ -806,9 +806,11 @@ The bathroom is up the stairs.")
   (cond
     ((= 0 (length character-string))
      (format t "You talk to the wall, the wall does not talk back, perhaps you should try talking to a person~%"))
-    ((contains? (get-current-room) (find-character character-string))
-     (char-talkf (find-character character-string)))
-    (t (format t "Sorry, \"~A\" cannot hear through walls~%" character-string))))
+    ((find-character character-string)  ;Trying to talk to a character
+     (if (contains? (get-current-room) (find-character character-string))
+         (char-talkf (find-character character-string)) ;Talk to character
+         (format t "Sorry, \"~A\" cannot hear through walls~%" character-string)))
+    (t (format t "Your imaginary friend ~A responds!~%" character-string))))
 
 (defun examine (item-string)
   "Describes the item that is in a room"
