@@ -345,15 +345,114 @@ The bathroom is up the stairs.")
       (lambda () (format t "(2) Do you have anything helpful?~%"))
       (lambda () (format t "(3) No, nothing substantial, yet.~%")))
      (r-1
-      (lambda () -1)
-      (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%") (end-convo))
-      (lambda () (format t "I am gay.~%") (end-convo))))
-))
 (defparameter convo nil)
 (defparameter places nil)
 (defparameter questions nil)
 (defparameter answers nil)
 (defparameter responses nil)
+      (lambda () (convo-end))
+      (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%"))
+      (lambda () (format t "Well, it may be best to stay in your room.  It could be dangerous wandering about.~%")))
+)))
+
+(defparameter married-couple
+  '(
+    (place-1
+     (q-1
+      (lambda () (format t "Married couple: Oh, it's you.  What gives you the right to wander around?~%~%You say:~%")))
+     (a-1
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) I am sorry to bother you, but I was looking for some answers.~%"))
+      (lambda () (format t "(3) Let me in, please.~%")))
+     (r-1
+      (lambda () (convo-end))
+      (lambda () (format t "Married couple: So are we.~%") (conv-engine married-couple 1 2))
+      (lambda () (format t "Excuse me? I do not think it would be wise of us to let you in.  Our first concern is our safety.  Please leave.~%")))
+     (q-2
+      (lambda () (format t "Married couple: But our first and utmost concern is on keeping our family safe.~%~%You say:~%")))
+     (a-2
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Do you think there is any way I can help?~%"))
+      (lambda () (format t "(3) I think if I had a look around I could dig up something.~%")))
+     (r-2
+      (lambda () (convo-end))
+      (lambda () (format t "Married couple: I think you should leave that to the police officer, it is his job after all.~%"))
+      (lambda () (format t "Married couple: Let you in?!~%") (conv-engine married-couple 1 3)))
+     (q-3
+      (lambda () (format t "Married couple: How does that go along with us trying to keep safe?~%~%You say:~%")))
+     (a-3
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) It will if I find out who is behind this!  I need to search your room.~%"))
+      (lambda () (format t "(3) You have to trust me.~%")))
+     (r-3
+      (lambda () (convo-end))
+      (lambda () (conv-engine married-couple 1 4))
+      (lambda () (format t "I think you should stay put and keep yourself safe.. besides, the killer is out there.~%")))
+     (q-4
+      (lambda () (format t "Married couple: Before we let you in, you have to show that you have concern for our family.~%~%You say:~%")))
+     (a-4
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Please, continue, anything you wish.~%"))
+      (lambda () (format t "(3) Okay, only if it is a riddle!~%")))
+     (r-4
+      (lambda () (convo-end))
+      (lambda () (format t "Married couple: Wow.. you seem a little too eager. Sorry, we do not want to jeopardize our safety!~%"))
+      (lambda () (format t "Married couple: Ooh!  We love riddles!  We have just the one.~%") (format t "Riddle here.")))
+      
+)))
+
+;(defparameter fat-pompous-bastard)
+
+;(defparameter young-rich-widow)
+
+;(defparameter butler)
+
+(defparameter poo
+  '(
+    (place-1
+     (q-1
+      (lambda () (format t "Poo: Hello kind sir, would you like to produce some company for me?~%~%You say:~%")))
+     (a-1
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Oh! A talking shit!~%"))
+      (lambda () (format t "(3) I may not be able to produce a friend for you, but will my company do?~%")))
+     (r-1
+      (lambda () (convo-end))
+      (lambda () (format t "The poo looks insulted.~%Although you are distracted by the smell and the fact that it has no face, you notice it crinkle its brow.~%Obligingly, the poo continues...~%~%") (conv-engine poo 1 2))
+      (lambda () (conv-engine poo 1 3)))
+     (q-2
+      (lambda () (format t "Do you believe the presence of power yields the power of persuasion?~%~%You say:~%")))
+     (a-2
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) What nonsense!~%"))
+      (lambda () (format t "(3) I am not too sure what that means.. please tell me more.~%")))
+     (r-2
+      (lambda () (convo-end))
+      (lambda () (format t "Poo: Fine, you suck.~%"))
+      (lambda () (format t "Poo: So you are curious...~%") (conv-engine poo 1 4)))
+     (q-3
+      (lambda () (format t "How kind. Please sit down.~%~%You say:~%")))
+     (a-3
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Sure thing, poop!~%"))
+      (lambda () (format t "(3) No thanks, I have more important things to do.~%")))
+     (r-3
+      (lambda () (convo-end))
+      (lambda () (format t "You sit down on the cold porcelain throne making sure to leave enough light for the poo.~%") (conv-engine poo 1 4))
+      (lambda () (format t "Well at least I tried.~%")))
+     (q-4
+      (lambda () (format t "Poo: Well I have a nice little riddle for you.~%Considering I have no brain, I have been baffled ever since my father made me here and left me with the question he was mumbling to himself as he walked out.~%~%You say:~%")))
+     (a-4
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) I apologize poo, I have realize a sad truth in all this.~%Talking to a piece of poo jeopardizes my sanity.~%I better leave quickly and carry on with the investigation!~%"))
+      (lambda () (format t "(3) Sure, poo.~%It will be interesting to see where this leads.~%")))
+     (r-4
+      (lambda () (convo-end))
+      (lambda () (format t "Poo: Well thank you for your patience.  Good luck on your endeavors.~%"))
+      (lambda () (format t "Riddle goes here."))))))
+
+(defun convo-end ()
+    (format t "The conversation ends.~%"))
 
 (defun end-convo ()
   (setf convo nil))
@@ -364,11 +463,10 @@ The bathroom is up the stairs.")
 ;; Conversation boolean
 (setf convo T)
 
-
 (setf places '(place-1 place-2 place-3))
-(setf questions '(q-1 q-2 q-3 q-4 q-5))
-(setf answers '(a-1 a-2 a-3 a-4 a-5))
-(setf responses '(r-1 r-2 r-3 r-4 r-5))
+(setf questions '(q-1 q-2 q-3 q-4 q-5 q-6 q-7 q-8 q-9))
+(setf answers '(a-1 a-2 a-3 a-4 a-5 a-6 a-7 a-8 a-9))
+(setf responses '(r-1 r-2 r-3 r-4 r-5 r-6 r-7 r-8 r-9))
 
 ; e.g., (run-convo police (char-get-prop police 'state))
 
@@ -390,6 +488,15 @@ The bathroom is up the stairs.")
 	       (access-convo-all convo-char (get-from-list places place-no) (get-from-list answers question-no)))
 	     (return-from run-convo)))
     (format t "~%The conversation ends.~%") (reset-convo)))
+
+(defun conv-engine (character place-no &optional (question-no 1))
+  ; Execute question
+  (access-convo-all character (get-from-list places place-no) (get-from-list questions question-no))
+  ; Execute corresponding set of answers
+  (access-convo-all character (get-from-list places place-no) (get-from-list answers question-no))
+  ; Execute corresponding response
+  (access-convo-resp character (get-from-list places place-no) (get-from-list responses question-no) (parse-input (read-line))))
+
 
 (defun parse-input (input)
   (loop
