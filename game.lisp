@@ -169,7 +169,7 @@
                          (inventory pouch)))
   (defparameter characters '(
 			     (police ((describe "The police officer")
-				      (state 1)
+				      (state 0)
 				      (talk nil)))
 			     (married-couple ((describe "The married couple")
 					      (state 0)
@@ -181,7 +181,7 @@
 						(state 0)
 						(talk nil)))
 			     (butler ((describe "The butler")
-				      (state 1)
+				      (state 0)
 				      (talk nil)))
 			     (poo ((describe "A rancid smell")
 				   (state 1)
