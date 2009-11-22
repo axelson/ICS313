@@ -813,14 +813,16 @@ The bathroom is up the stairs.")
 
 (defun examine (item-string)
   "Describes the item that is in a room"
-  (cond
-    ((= 0 (length item-string))
-     (format t "You examine nothing, and look stupid doing it.~%"))
-    ((or (contains? (get-current-room) (find-item item-string)) (contains? pouch (find-item item-string)))
-     (funcall (eval (get-prop (get-prop items (find-item item-string)) 'describe))))
-    (t (format t "Sorry, there is nothing special to examine about that.~%"))
-    )
-)
+  (let ((item (find-item item-string)))
+    (cond
+      ((= 0 (length item-string))
+       (format t "You examine nothing, and look stupid doing it.~%"))
+      ((contains? (get-current-room) item)
+       (funcall (eval (get-prop (get-prop items item) 'describe))))
+      ((player-has? item)
+       (format t "You rummage about your pouch and see an item~%")
+       (funcall (eval (get-prop (get-prop items item) 'describe))))
+      (t (format t "Sorry, there is nothing special to examine about that.~%")))))
 
 (defun find-character (character-string)
   (cond
