@@ -158,6 +158,17 @@
 ; Global Objects ;
 ;;;;;;;;;;;;;;;;;;
 
+;; Conversation boolean
+(defparameter convo T)
+
+(defparameter places '(place-1 place-2 place-3))
+(defparameter questions '(q-1 q-2 q-3 q-4 q-5 q-6 q-7 q-8 q-9))
+(defparameter answers '(a-1 a-2 a-3 a-4 a-5 a-6 a-7 a-8 a-9))
+(defparameter responses '(r-1 r-2 r-3 r-4 r-5 r-6 r-7 r-8 r-9))
+
+(defparameter riddles nil)
+
+
 (progn
   (defparameter game-state '((door1-opened t)
 			     (current-room lobby)
@@ -355,6 +366,7 @@ The bathroom is up the stairs.")
     )
 )
 
+
 ;;;;;;;;;;;;;;;;;;;;;;
 ; End Global Objects ;
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -478,14 +490,6 @@ The bathroom is up the stairs.")
 
 (defun reset-convo ()
   (setf convo nil))
-
-;; Conversation boolean
-(defparameter convo T)
-
-(defparameter places '(place-1 place-2 place-3))
-(defparameter questions '(q-1 q-2 q-3 q-4 q-5 q-6 q-7 q-8 q-9))
-(defparameter answers '(a-1 a-2 a-3 a-4 a-5 a-6 a-7 a-8 a-9))
-(defparameter responses '(r-1 r-2 r-3 r-4 r-5 r-6 r-7 r-8 r-9))
 
 ; e.g., (run-convo police (char-get-prop police 'state))
 
