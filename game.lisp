@@ -771,7 +771,7 @@ The bathroom is up the stairs.")
      (format t "~%---ACTIONS---~%")
      (format t "1. Look/Check the current room - \"look\"~%")
      (format t "2. Initiate a conversation with a character in the room - \"talk\" + character description (i.e. \"talk to young widow\")~%")
-     (format t "3. Examine an item/object in the room - \"examine\" + item description (i.e. \"examine newspaper\")"))
+     (format t "3. Examine an item/object in the room - \"examine\" + item description (i.e. \"examine newspaper\")~%"))
     ((find input '("eval") :test #'equalp)
      (format t "~A~%" (eval (read-from-string (read-line)))))
     ;; Directions
