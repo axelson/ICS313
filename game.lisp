@@ -369,11 +369,6 @@ The bathroom is up the stairs.")
       (lambda () (format t "(2) Do you have anything helpful?~%"))
       (lambda () (format t "(3) No, nothing substantial, yet.~%")))
      (r-1
-(defparameter convo nil)
-(defparameter places nil)
-(defparameter questions nil)
-(defparameter answers nil)
-(defparameter responses nil)
       (lambda () (convo-end))
       (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%"))
       (lambda () (format t "Well, it may be best to stay in your room.  It could be dangerous wandering about.~%")))
@@ -485,12 +480,12 @@ The bathroom is up the stairs.")
   (setf convo nil))
 
 ;; Conversation boolean
-(setf convo T)
+(defparameter convo T)
 
-(setf places '(place-1 place-2 place-3))
-(setf questions '(q-1 q-2 q-3 q-4 q-5 q-6 q-7 q-8 q-9))
-(setf answers '(a-1 a-2 a-3 a-4 a-5 a-6 a-7 a-8 a-9))
-(setf responses '(r-1 r-2 r-3 r-4 r-5 r-6 r-7 r-8 r-9))
+(defparameter places '(place-1 place-2 place-3))
+(defparameter questions '(q-1 q-2 q-3 q-4 q-5 q-6 q-7 q-8 q-9))
+(defparameter answers '(a-1 a-2 a-3 a-4 a-5 a-6 a-7 a-8 a-9))
+(defparameter responses '(r-1 r-2 r-3 r-4 r-5 r-6 r-7 r-8 r-9))
 
 ; e.g., (run-convo police (char-get-prop police 'state))
 
