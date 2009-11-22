@@ -163,8 +163,8 @@
 			     (current-room lobby)
 			     (age 7)
 			     (hair-color yellow)))
-  (defparameter pouch '((description "a small coin pouch")
-			(contents (coins marbles))))
+  (defparameter pouch '((describe "a small pouch")
+			(contents ())))
   (defparameter player '((age 9)
                          (inventory pouch)))
   (defparameter characters '(
@@ -224,7 +224,7 @@
   (set-prop (get-prop characters 'young-rich-widow) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (case state
-				(0 (format t "Young Rich Widow: \"Do you anymore information about what is going on?\"~%"))
+				(0 (format t "Young Rich Widow: \"Do you know anymore information about what is going on?\"~%"))
 				(1 (format t "Young Rich Widow: \"Excuse me, may I help you?\"~%"))
 				(otherwise (format t "Young Rich Widow: \"I may need some comforting.\"~%"))))))
   (set-prop (get-prop characters 'butler) 'talk
@@ -258,7 +258,8 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                                 (contents (police butler young-rich-widow married-couple fat-pompous-bastard))
 				))
 			(kitchen ((displayname "the kitchen")
-				  (describe "A gorgeous kitchen with top-of-the-line kitchenware.  Doesn't look like anyone tampered with anything here.~%The lobby is to the right.")
+				  (describe "A gorgeous kitchen with top-of-the-line kitchenware.  Doesn't look like anyone tampered with anything here.~%You notice a newspaper on the table.~%The lobby is to the right.")
+				  (contents (newspaper))
 				  (east lobby)))
 			(ballroom ((displayname "the ballroom")
 				   (describe "A ballroom large enough to fit a hundred people.  
@@ -330,6 +331,29 @@ The bathroom is up the stairs.")
 				(south storageroom)))
 			)))
 
+
+(defparameter items
+  '(
+    (newspaper ((describe (lambda () (format t "The headline says, \"Suicide or Murder?! Police stumped at death of hanging man!\"~%")
+				  (format t "Read on? ")
+				  (if (y-or-n-p)
+				      (progn
+					(access-struct riddles 'ice-riddle 'riddle)
+					(if (access-struct riddles 'ice-riddle 'answer)
+					    (progn
+					      (format t "I got it!  He stood on ice with a rope around his neck and waited for the ice to melt!~%As you thought this, ice appeared in your pouch.~%")
+					      (set-prop pouch 'contents '(ice))
+					      )
+					    (format t "Hm.. I don't think that could've been possible.  I guess I'll give up for now.~%")
+					    )
+					nil
+					)
+				      nil)
+				  ))))
+    (writing-on-wall ((describe (lambda () (format t "If life had a reset button, it would be in the ballroom.~%")))))
+    (ice ((describe (lambda () (format t "This would be great for making cold drinks.~%")))))
+    )
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ; End Global Objects ;
@@ -565,8 +589,10 @@ The bathroom is up the stairs.")
 				   (format t "A hint string"))))
 			; First floor riddles
 			(Ice-Riddle
-			 (Riddle (lambda () (format t "A man is found hanging in a room 30 feet off the ground. There is nothing else in the room except for a large puddle of water on the ground. The police can't see any way the man could have climbed the walls to get to where he is hanging.~%How did this man hang himself?")))
-			 (Answer (lambda () '(Ice)))
+			 (Riddle (lambda () (format t "\"A man was found hanging in a room 30 feet off the ground. There wass nothing else in the room except for a large puddle of water on the ground. At this point, investigators can't see any way the man could have climbed the walls to get to where he is hanging without it being a murder, but there are no signs of resistance.\"~%~%You think about the riddle for awhile and realize that it had to be suicide!  But how did the victim do it?~%Your answer: ")))
+			 (Answer (lambda ()
+					 (setf ice-answer (read-line))
+					 (if (search "ice" ice-answer) 1)))
 			 (Hint (lambda () (format t "Think."))))
 			(Birthday-Riddle
 			 (Riddle (lambda () (format t "What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?")))
@@ -657,9 +683,10 @@ The bathroom is up the stairs.")
 (defun search-string (key-list search-string)
   "Searches search-string for words matching string-list"
   (let ((matches 0))
-    (loop for item in (string-split " " key-list)
-       do (if (search item search-string)
-              (incf matches)))
+    (loop for key in (string-split " " key-list)
+       do (loop for string in (string-split " " search-string)
+		do (if (equalp key string)
+		    (incf matches))))
     (if (= 0 matches)
         nil
         matches)))
@@ -709,7 +736,6 @@ The bathroom is up the stairs.")
                                 'describe)))
       (format t "~%~%"))
 
-
 (defun get-current-room (&optional (property nil))
   "Gets the the current room object, with an optional property"
   (if property
@@ -726,6 +752,10 @@ The bathroom is up the stairs.")
     ((search-string "quit exit q" input)
      (format t "You Fail the Game!~%")
      (reset-state) t)
+    ((search-string "inventory i" input)
+     (check-inventory))
+    ((search-string "examine" input)
+     (examine input))
     ((search-string "look l" input)
      (describe-room))
     ((search "talk" input)
@@ -739,7 +769,8 @@ The bathroom is up the stairs.")
      (format t "4. Head West - \"W\", \"west\", \"left\"~%")
      (format t "~%---ACTIONS---~%")
      (format t "1. Look/Check the current room - \"look\"~%")
-     (format t "2. Initiate a conversation with a character in the room - \"talk\" + character description (i.e. \"talk to young widow\")~%"))
+     (format t "2. Initiate a conversation with a character in the room - \"talk\" + character description (i.e. \"talk to young widow\")~%")
+     (format t "3. Examine an item/object in the room - \"examine\" + item description (i.e. \"examine newspaper\")"))
     ((find input '("eval") :test #'equalp)
      (format t "~A~%" (eval (read-from-string (read-line)))))
     ;; Directions
@@ -761,6 +792,14 @@ The bathroom is up the stairs.")
     (t
      (format t "I don't know what to do with this command: ~A~%Maybe you should try running \"help\"~%" input))))
 
+(defun check-inventory ()
+  (if (get-prop pouch 'contents)
+      (progn
+	(format t "You have ~(~A~) in your inventory.~%"  (get-prop pouch 'contents))
+	)
+      (format t "There is nothing in your inventory.~%"))
+)
+
 (defun talk (character-string)
   "Try to talk to the specified character"
   (cond
@@ -770,6 +809,17 @@ The bathroom is up the stairs.")
      (char-talkf (find-character character-string)))
     (t (format t "Sorry, \"~A\" cannot hear through walls~%" character-string))))
 
+(defun examine (item-string)
+  "Describes the item that is in a room"
+  (cond
+    ((= 0 (length item-string))
+     (format t "You examine nothing, and look stupid doing it.~%"))
+    ((or (contains? (get-current-room) (find-item item-string)) (contains? pouch (find-item item-string)))
+     (funcall (eval (get-prop (get-prop items (find-item item-string)) 'describe))))
+    (t (format t "Sorry, there is nothing special to examine about that.~%"))
+    )
+)
+
 (defun find-character (character-string)
   (cond
     ((not (stringp character-string)) (format t "this requires a string~%"))
@@ -778,6 +828,14 @@ The bathroom is up the stairs.")
     ((search-string "young rich widow" character-string) 'young-rich-widow)
     ((search-string "married couple" character-string) 'married-couple)
     ((search-string "butler" character-string) 'butler)
+    ))
+
+(defun find-item (item-string)
+  (cond
+    ((not (stringp item-string)) (format t"this requires a string~%"))
+    ((search-string "newspaper" item-string) 'newspaper)
+    ((search-string "writing wall" item-string) 'writing-on-wall)
+    ((search-string "ice" item-string) 'ice)
     ))
 
 (defun move (direction)
@@ -837,11 +895,11 @@ The bathroom is up the stairs.")
   (if (enter-to-continue) (return-from show-intro2))
   (format t "\"AND WHY IS THAT?!\" demanded the wife.~%")
   (if (enter-to-continue) (return-from show-intro2))
-  (format t "Seeing how bad the storm has gotten, I'm afraid I can't let you go.  Also, I would like for everyone to remain in this house to gather eye-witnesses or clues for this murder.~%")
+  (format t "\"Seeing how bad the storm has gotten, I'm afraid I can't let you go.  Also, I would like for everyone to remain in this house to gather eye-witnesses or clues for this murder.\"~%")
   (if (enter-to-continue) (return-from show-intro2))
   (format t "\"So are you telling me to stay here and DIE?!\" screamed the wife.~%")
   (if (enter-to-continue) (return-from show-intro2))
-  (format t "\"No.  But I do say that the probably of that happening is higher if you left this mansion now, ma'am.  Seeing how the killer is still on the loose, it's more likely that he's waiting for us to panic and leave the house.  I think it's better if we all go back into our rooms, and if anything happens, I'll be here.\" calmly said the officer.~%")
+  (format t "\"No.  But I do say that the probably of that happening is higher if you left this mansion now, ma'am.  With the killer is still on the loose, it's more likely that he's waiting for us to panic and leave the house.  I think it's better if we all go back into our rooms, and if anything happens, I'll be here.\" calmly said the officer.~%")
   (if (enter-to-continue) (return-from show-intro2))
   (format t "With that, everyone somewhat agreed to return to their rooms and meet in the lobby the next morning.~%")
   (if (enter-to-continue) (return-from show-intro2))
