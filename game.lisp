@@ -593,18 +593,24 @@ The bathroom is up the stairs.")
                                    (format t "I got it!  He stood on ice with a rope around his neck and waited for the ice to melt!~%As you thought this, ice appeared in your pouch.~%")
                                    (set-prop pouch 'contents '(ice)))))
 			(Birthday-Riddle
-			 (Riddle (lambda () (format t "What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?")))
-			 (Answer (lambda () '(23)))
+			 (Riddle (lambda () (format t "What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?~%Your answer: ")))
+			 (Answer (lambda () "23"))
+			 (Result (lambda ()
+				   (format t "That's correct!~%")))
 			 (Hint (lambda () (format t "What is the general formula for finding the probability that no people in the room have the same birthday?"))))
 			(Rainy-Day-Riddle
-			 (Riddle (lambda () (format t "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way. Why does he do this?")))
-			 (Answer (lambda () '(Umbrella)))
+			 (Riddle (lambda () (format t "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way.~%Why does he do this? ")))
+			 (Answer (lambda () "Umbrella"))
+			 (Result (lambda ()
+				   (format t "That's correct!~%")))
 			 (Hint (lambda () (format t "Think."))))
 			(Quarter-Dime-Riddle
 			 (Riddle (lambda () (format t "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter. What are the two coins?")))
-			 (Answer (lambda () '(Quarter Dime)))
+			 (Answer (lambda () "Quarter Dime"))
+			 (Result (lambda ()
+				   (format t "That's correct!~%")))
 			 (Hint (lambda () (format t "Think."))))
-			; Second floor riddles
+			;; Second floor riddles
 			(Children-Age-Riddle
 			 (Riddle (lambda () (format t "A deliveryman comes to a house to drop off a package. He asks the woman who lives there how many children she has.~%\"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at the house number nailed to the front of her house. \"I need another hint,\" he says.~%The woman thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.~%The deliveryman's eyes light up and he tells her the ages of her three children.~%What are their ages? ")))
 			 (Answer (lambda () "1 6 6"))
@@ -612,12 +618,16 @@ The bathroom is up the stairs.")
 			 (Hint (lambda () (format t "Think."))))
 			(Second-Place-Riddle
 			 (Riddle (lambda () (format t "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")))
-			 (Answer (lambda () '(Second)))
+			 (Answer (lambda () "Second"))
+			 (Result (lambda ()
+				   (format t "That's correct!~%")))
 			 (Hint (lambda () (format t "Think."))))
-			; Third floor riddles
+			;; Third floor riddles
 			(Twins-Riddle
 			 (Riddle (lambda () (format t "Two girls are born to the same mother, on the same day, at the same time, in the same month and year and yet they're not twins. How can this be?")))
-			 (Answer (lambda () '(Triplets)))
+			 (Answer (lambda () "Triplets"))
+			 (Result (lambda ()
+				   (format t "That's correct!~%")))
 			 (Hint (lambda () (format t "Think."))))))
 
 ;; Riddle accessor function
