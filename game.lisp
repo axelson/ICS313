@@ -929,7 +929,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 	  (access-struct riddles riddle 'result)
 	  t)
 	;; Answer was incorrect
-	(format t "Hmmm... I don't think that's .  I guess I'll give up for now.~%"))))
+	(format t "Hmmm... I don't think that's correct.  I guess I'll give up for now.~%"))))
 
 ;;;;;;;;;;;;;;;;;
 ; End Functions ;
