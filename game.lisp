@@ -1154,10 +1154,10 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
              (set-prop game-state 'current-room (get-prop (get-current-room) direction))
              (format t "You moved to the ~A FLOOR, you are now in ~A.~%" direction (eval (get-prop (get-current-room) 'displayname)))
              )
-            ;; trying to move to locked/hidden basement
+            ;; Trying to move to locked/hidden basement
             ((and (equalp destination 'basement) (= (get-prop rooms 'bathroom 'locked) 1))
              (move-error))
-            ;; trying to move to locked attic
+            ;; Trying to move to locked attic
             ((and (equalp destination 'attic) (= (get-prop rooms 'attic 'locked) 1))
              (format t "The attic is locked.~%There is a keyhole and scribble on the door that says, \"Access is given to only those who have bad luck...\"~%"))
             ;; End game stuck in lobby
