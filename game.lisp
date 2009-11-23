@@ -465,8 +465,8 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) No, nothing substantial, yet.~%")))
      (r-1
       (lambda () (convo-end))
-      (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%"))
-      (lambda () (format t "Well, it may be best to stay in your room.  It could be dangerous wandering about.~%")))
+      (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%") (set-conv-state police conv-place-1 -1))
+      (lambda () (format t "Well, it may be best to stay in your room.  It could be dangerous wandering about.~%") (set-conv-state police conv-place-1 -1)))
 )))
 
 (defparameter married-couple
@@ -511,7 +511,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-4
       (lambda () (convo-end))
       (lambda () (format t "Married couple: Wow.. you seem a little too eager. Sorry, we do not want to jeopardize our safety!~%") (set-prop (get-prop characters 'married-couple) 'conv-place-1 -1))
-      (lambda () (format t "Married couple: Ooh!  We love riddles!  We have just the one.~%") (format t "Riddle here.")))
+      (lambda () (format t "Married couple: Ooh!  We love riddles!  We have just the one.~%") (access-struct riddles 'Children-age-riddles 'riddle) (try-answer-riddle 'children-age-riddle)))
       
 )))
 
@@ -556,7 +556,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) I am really not sure.. now that you ask.~%")))
      (r-4
       (lambda () (convo-end))
-      (lambda () (format t "Something good goes here."))
+      (lambda () (access-struct riddles 'second-place-riddle 'riddle) (try-answer-riddle 'second-place-riddle))
       (lambda () (format t "Fat pompous bastard: You insolent fool!  Get out of my sight!~%") (set-prop (get-prop characters 'fat-pompous-bastard) 'conv-place-1 -1)))
 )))
      
@@ -613,7 +613,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-5
       (lambda () (convo-end))
       (lambda () (format t "Young rich widow: Well, if you are not interested, I don't think I can help you.~$") (set-conv-state young-rich-widow conv-place-1 -1))
-      (lambda () (format t "Riddle goes here.")))
+      (lambda () (access-struct riddles 'twins-riddle 'riddle) (try-answer-riddle 'twins-riddle)))
 )))
 
 
@@ -678,7 +678,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) I am not too interested in a diary passage, how about telling me something about the suspects.~%")))
      (r-6
       (lambda () (convo-end))
-      (lambda () (format t "Butler: It seemed to be a riddle, for those who weren't familiar with the peculiar situation.") (format t "Riddle goes here."))
+      (lambda () (format t "Butler: It seemed to be a riddle, for those who weren't familiar with the peculiar situation.") (access-struct riddles 'rainy-day-riddle 'riddle) (try-answer-riddle 'rainy-day-riddle))
       (lambda () (format t "Butler: I am sorry then, sir, I do not have any other useful information.  Good night.~%")) (set-conv-state butler conv-place-1 -1))
 )))
 
@@ -716,15 +716,16 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "You sit down on the cold porcelain throne making sure to leave enough light for the poo.~%") (conv-engine poo 1 4))
       (lambda () (format t "Well at least I tried.~%")))
      (q-4
-      (lambda () (format t "Poo: Well I have a nice little riddle for you.~%Considering I have no brain, I have been baffled ever since my father made me here and left me with the question he was mumbling to himself as he walked out.~%~%You say:~%")))
+      (lambda () (format t "Poo: Well I have a nice little riddle for you.  Considering I have no brain, I have been baffled ever since my father made me here and left me with the question he was mumbling to himself as he walked out.~%~%You say:~%")))
      (a-4
       (lambda () (format t "(1) **Leave**~%"))
-      (lambda () (format t "(2) I apologize poo, I have realize a sad truth in all this.~%Talking to a piece of poo jeopardizes my sanity.~%I better leave quickly and carry on with the investigation!~%"))
-      (lambda () (format t "(3) Sure, poo.~%It will be interesting to see where this leads.~%")))
+      (lambda () (format t "(2) I apologize poo, I have realize a sad truth in all this.  Talking to a piece of poo jeopardizes my sanity.  I better leave quickly and carry on with the investigation!~%"))
+      (lambda () (format t "(3) Sure, poo.  It will be interesting to see where this leads.~%")))
      (r-4
       (lambda () (convo-end))
       (lambda () (format t "Poo: Well thank you for your patience.  Good luck on your endeavors.~%"))
-      (lambda () (format t "Riddle goes here."))))))
+      (lambda () (access-struct riddles 'quarter-dime-riddle 'riddle) (try-answer-riddle 'quarter-dime-riddle)))
+)))
 
 (defmacro set-conv-state (character conversation state)
   `(set-prop (get-prop characters ',character) ',conversation ,state))
@@ -851,9 +852,9 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 			 (Hint (lambda () (format t "Think."))))
 			;; Second floor riddles
 			(Children-Age-Riddle
-			 (Riddle (lambda () (format t "A deliveryman comes to a house to drop off a package. He asks the woman who lives there how many children she has.~%\"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at the house number nailed to the front of her house. \"I need another hint,\" he says.~%The woman thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.~%The deliveryman's eyes light up and he tells her the ages of her three children.~%What are their ages? ")))
+			 (Riddle (lambda () (format t "The husband continues, \"A deliveryman came to our house to drop off a package. He asks my wife how many children she has.  \"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at our house number nailed to the front of the house. \"I need another hint,\" he says.~%My wife thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.  The deliveryman's eyes light up and he tells us the ages of our three children.  Can you guess their ages?")))
 			 (Answer (lambda () "1 6 6"))
-			 (Result (lambda () (format t "that's right!~%")))
+			 (Result (lambda () (format t "That's right!~%")))
 			 (Hint (lambda () (format t "Think."))))
 			(Second-Place-Riddle
 			 (Riddle (lambda () (format t "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")))
@@ -863,7 +864,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 			 (Hint (lambda () (format t "Think."))))
 			;; Third floor riddles
 			(Twins-Riddle
-			 (Riddle (lambda () (format t "Two girls are born to the same mother, on the same day, at the same time, in the same month and year and yet they're not twins. How can this be?")))
+			 (Riddle (lambda () (format t "My sister and I were born to the same mother, on the same day, at the same time, in the same month, in the same year, and yet, we are not twins!  How can this be?")))
 			 (Answer (lambda () "Triplets"))
 			 (Result (lambda ()
 				   (format t "That's correct!~%")))
