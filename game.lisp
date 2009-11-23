@@ -679,7 +679,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 )))
 
 (defmacro set-conv-state (character conversation state)
-  `(set-prop (get-prop characters ',character) ',conversation ,state))
+  `(set-prop (get-prop characters ',character) ',conversation ',state))
 
 (defun convo-end ()
     (format t "The conversation ends.~%"))
@@ -687,17 +687,17 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 (defun reset-conv-state ()
   (let ((reset 0))
     (if (equal -1 (char-get-prop police 'conv-place-1))
-	(set-conv-state police 'place-1 0) (setq reset 1))
+	(progn (set-conv-state police conv-place-1 0) (setq reset 1)) ())
     (if (equal -1 (char-get-prop married-couple 'conv-place-1))
-	(set-conv-state married-couple 'conv-place-1 0) (setq reset 1))
+	(progn (set-conv-state married-couple conv-place-1 0) (setq reset 1)) ())
     (if (equal -1 (char-get-prop fat-pompous-bastard 'conv-place-1))
-	(set-conv-state fat-pompous-bastard 'conv-place-1 0) (setq reset 1))
+	(progn (set-conv-state fat-pompous-bastard conv-place-1 0) (setq reset 1)) ())
     (if (equal -1 (char-get-prop young-rich-widow 'conv-place-1))
-	(set-conv-state young-rich-widow 'conv-place-1 0) (setq reset 1))
+	(progn (set-conv-state young-rich-widow conv-place-1 0) (setq reset 1)) ())
     (if (equal -1 (char-get-prop butler 'conv-place-1))
-	(set-conv-state butler 'conv-place-1 0) (setq reset 1))
+	(progn (set-conv-state butler conv-place-1 0) (setq reset 1)) ())
     (if (equal -1 (char-get-prop poo 'conv-place-1))
-	(set-conv-state poo 'conv-place-1 0) (setq reset 1))
+	(progn (set-conv-state poo conv-place-1 0) (setq reset 1)) ())
     (if (equal reset 1)
 	(format t "You get this feeling that second chances are possible.~%") ()))) 
 
@@ -1080,7 +1080,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     ((search-string "poo" input) 'poo)
     ;; Items
     ((search-string "newspaper news" input) 'newspaper)
-    ((search-string "writing wall" input) 'writing-on-wall)
+    ((search-string "scribble writing wall" input) 'writing-on-wall)
     ((search-string "ice" input) 'ice)
     ((search-string "note" input) 'note)
     ((search-string "written note" input) 'written-note)
@@ -1109,6 +1109,11 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                    (update-all-state 1)
                    (set-prop (get-room 'lobby) 'state 1)
                    (set-prop (get-room 'lobby) 'contents '(police)))))
+	    ;;Reset mistakes in ballroom
+	    ((equalp destination 'ballroom) 
+	     (reset-conv-state)
+	     (set-prop game-state 'current-room (get-prop (get-current-room) direction))
+             (format t "You moved ~A, you are now in ~A.~%" direction (eval (get-prop (get-current-room) 'displayname))))
             ;; Elevator is locked
             ((and (equalp destination 'elevator) (or (= (get-prop player 'ice-riddle) 0) (= (get-prop player 'birthday-riddle) 0)))
              (format t "It appears the elevator is locked...~%"))
