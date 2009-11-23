@@ -261,9 +261,9 @@
 			(lobby ((state 0)
 				(displayname "the lobby")
 				(describe (cond 
-					    ((= (get-prop (get-prop rooms 'lobby) 'state) 0)
+					    ((= (get-prop rooms 'lobby 'state) 0)
 					     "A dead person lays on the ground.  It seems as if he was stabbed numerous times.~%The police officer, young rich widow, fat pompous bastard, butler, and married couple are all in the room.~%The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
-					    ((= (get-prop (get-prop rooms 'lobby) 'state) 1) 
+					    ((= (get-prop rooms 'lobby 'state) 1)
 					      "A dead person lays on the ground.  It seems as if he was stabbed numerous times.~%The police officer stands next to the body with a stern look on his face.~%The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
 					    (t
 					      "Where did the dead guy go?  There are no traces of his body.
@@ -709,7 +709,7 @@ The bathroom is up the stairs.")
   (do-action (get-prop characters character) 'talk))
 
 (defmacro char-get-prop (character property)
-  `(get-prop (get-prop characters ',character) ,property))
+  `(get-prop characters ',character ,property))
 
 (defmacro char-set-prop (character property value)
   `(set-prop (get-prop characters ,character) ,property ,value))
@@ -825,10 +825,10 @@ The bathroom is up the stairs.")
       ((= 0 (length item-string))
        (format t "You examine nothing, and look stupid doing it.~%"))
       ((contains? (get-current-room) item)
-       (funcall (eval (get-prop (get-prop items item) 'describe))))
+       (funcall (eval (get-prop items item 'describe))))
       ((player-has? item)
        (format t "You rummage about your pouch and see an item~%")
-       (funcall (eval (get-prop (get-prop items item) 'describe))))
+       (funcall (eval (get-prop items item 'describe))))
       (t (format t "Sorry, there is nothing special to examine about that.~%")))))
 
 (defun find-character (character-string)
