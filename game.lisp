@@ -191,7 +191,7 @@
 			      (case state
 				(0 (format t "Police officer: \"I got here as soon as I got the call.\"~%"))
 				(1 (progn
-				     (format t "Police officer: I've sent everyone up to their rooms.  If you find anymore information, let me know...~%") (read-line)
+				     (format t "Police officer: I've sent everyone up to their rooms.  If you find any more information, let me know~%") (enter-to-continue)
 				     (if (equal 0 (eval (char-get-prop police 'conv-place-1)))
                                          (conv-engine police state)
                                          (format t "Police officer: I am here to ensure everyone's safety.~%")
