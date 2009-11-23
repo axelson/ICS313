@@ -217,22 +217,34 @@
   (defparameter characters '(
 			     (police ((describe "The police officer")
 				      (state 0)
-				      (talk nil)))
+				      (talk nil)
+				      (conv-place-1 0)
+				      (conv-place-2 0)))
 			     (married-couple ((describe "The married couple")
 					      (state 0)
-					      (talk nil)))
+					      (talk nil)
+					      (conv-place-1 0)
+					      (conv-place-2 0)))
 			     (fat-pompous-bastard ((describe "The fat, pompous bastard")
 						   (state 0)
-						   (talk nil)))
+						   (talk nil)
+						   (conv-place-1 0)
+						   (conv-place-2 0)))
 			     (young-rich-widow ((describe "The young, rich widow")
 						(state 0)
-						(talk nil)))
+						(talk nil)
+						(conv-place-1 0)
+						(conv-place-2 0)))
 			     (butler ((describe "The butler")
 				      (state 0)
-				      (talk nil)))
+				      (talk nil)
+				      (conv-place-1 0)
+				      (conv-place-2 0)))
 			     (poo ((describe "A rancid smell")
-				   (state 1)
-				   (talk nil)))
+				   (state 0)
+				   (talk nil)
+				   (conv-place-1 0)
+				   (conv-place-2 0)))
 			      ))
 
 ; Interative sctructure
@@ -249,43 +261,76 @@
   (set-prop (get-prop characters 'police) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (case state
-				(0 (format t "Police Officer: \"I got here as soon as I got the call.\"~%"))
-				(1 (progn (format t "I've sent everyone up to their rooms, if you find out more information, let me know.")
-					  (conv-engine police 1 1)))
-				(otherwise (format t "Police Officer: \"I am here to ensure everyone's safety.\"~%"))))))
+				(0 (format t "Police officer: \"I got here as soon as I got the call.\"~%"))
+				(1 (progn
+				     (format t "Police officer: I've sent everyone up to their rooms.  If you find anymore information, let me know...~%") (read-line)
+				     (if (equal 0 (eval (char-get-prop police 'conv-place-1)))
+					      (conv-engine police state)
+					      (format t "Police officer: I am here to ensure everyone's safety.~%")
+					      )))
+				(2 (progn (if (equal 0 (eval (char-get-prop police 'conv-place-2)))
+					      (conv-engine police state)
+					      (format t "Police officer: Suck it.~%"))))
+				(otherwise (format t "Police officer: I am here to ensure everyone's safety.~%"))))))
 
   (set-prop (get-prop characters 'married-couple) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (case state
-				(0 (format t "Married Couple: \"We were just about to go to bed when we heard the commotion.\"~%"))
-				(1 (format t "Excuse me, should you be looking around?"))
-				(otherwise (format t "Married Couple: \"I am just worried about the safety of my family.\"~%"))))))
+				(0 (format t "Married couple: \"We were just about to go to bed when we heard the commotion.\"~%"))
+				(1 (progn (if (equal 0 (eval (char-get-prop married-couple 'conv-place-1)))
+					      (conv-engine married-couple state)
+					      (if (equal -1 (eval (char-get-prop married-couple 'conv-place-1)))
+						  (format t "Married couple: Excuse me, should you be looking around?")
+						  (format t "Married couple: \"I am just worried about the safety of my family.\"~%")))))
+				(2 (progn (if (equal 0 (eval (char-get-prop married-couple 'conv-place-2)))
+					      (conv-engine married-couple state)
+					      (format t "Married couple: Default line.~%"))))))))
 
   (set-prop (get-prop characters 'fat-pompous-bastard) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (case state
-				(0 (format t "Fat Pompous Bastard: \"I did not come down here to chit chat with you.\"~%"))
-				(1 (format t "Fat Pompous Bastard: \"Oh, you again.\"~%"))
-				(otherwise (format t "Fat Pompous Bastard: \"I just got this new suit.\"~%"))))))
+				(0 (format t "Fat pompous bastard: \"I did not come down here to chit chat with you.\"~%"))
+				(1 (progn (if (equal 0 (eval (char-get-prop fat-pompous-bastard 'conv-place-1)))
+					      (conv-engine fat-pompous-bastard state)
+					      (if (equal -1 (eval (char-get-prop fat-pompous-bastard 'conv-place-1)))
+						  (format t "Fat pompous bastard: Go away, I do not wish to be bothered!~%")
+						  (format t "Fat pompous bastard: \"Oh, you again.. I have already answered your questions!\"~%")))))
+				(2 (if (equal 0 (eval (char-get-prop fat-pompous-bastard 'conv-place-2)))
+				       (conv-engine fat-pompous-bastard state)
+				       (format t "Fat pompous bastard: Default line.~%")))))))
 
   (set-prop (get-prop characters 'young-rich-widow) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (case state
-				(0 (format t "Young Rich Widow: \"Do you know anymore information about what is going on?\"~%"))
-				(1 (format t "Young Rich Widow: \"Excuse me, may I help you?\"~%"))
-				(otherwise (format t "Young Rich Widow: \"I may need some comforting.\"~%"))))))
+				(0 (format t "Young rich widow: \"Do you know anymore information about what is going on?\"~%"))
+				(1 (if (equal 0 (eval (char-get-prop young-rich-widow 'conv-place-1)))
+				       (conv-engine young-rich-widow state)
+				       (if (equal -1 (eval (char-get-prop young-rich-widow 'conv-place-1)))
+					   (format t "Young rich widow: Please, stay away from me!~%")
+					   (format t "Young rich widow: \"Excuse me, may I help you?\"~%"))))
+				(2 (if (equal 0 (eval (char-get-prop young-rich-widow 'conv-place-2)))
+				       (conv-engine young-rich-widow state)
+				       (format t "Young rich widow: I may need some comforting.~%")))))))
+
   (set-prop (get-prop characters 'butler) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (case state
 				(0 (format t "Butler: \"Hello sir, may I be of service to you?\"~%"))
-				(otherwise (format t "Butler: \"I used to take care of Batman.\"~%"))))))
+				(1 (if (equal 0 (eval (char-get-prop butler 'conv-place-1)))
+				       (conv-engine butler state)
+				       (if (equal -1 (eval (char-get-prop butler 'conv-place-1)))
+					   (format t "Butler: Sorry sir, I lack a certain courage to talk to you.~%")
+					   (format t "Butler: \"I used to take care of Batman.\"~%"))))
+				(2 (if (equal 0 (eval (char-get-prop butler 'conv-place-2)))
+				       (conv-engine butler state)
+				       (format t "Butler: Default line.~")))))))
 
   (set-prop (get-prop characters 'poo) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
-			      (cond
-				((= state 0) (format t "Poo: \"Hello!\"~%"))
-				((= state 1) (access-struct riddles 'Quarter-Dime-Riddle 'riddle))
-				(t (format t "Poo: \"I want a friend, please!\"~%"))))))
+			      (case state
+				(0 (format t "Poo: \"Hello!\"~%"))
+				(1 (conv-engine poo state))
+				(otherwise (format t "Poo: \"I want a friend, please!\"~%"))))))
 
   (defparameter rooms '(
 			(lobby ((state 0)
@@ -442,7 +487,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-1
       (lambda () (convo-end))
       (lambda () (format t "Married couple: So are we.~%") (conv-engine married-couple 1 2))
-      (lambda () (format t "Excuse me? I do not think it would be wise of us to let you in.  Our first concern is our safety.  Please leave.~%")))
+      (lambda () (format t "Excuse me? I do not think it would be wise of us to let you in.  Our first concern is our safety.  Please leave.~%") (set-prop (get-prop characters 'married-couple) 'conv-place-1 -1)))
      (q-2
       (lambda () (format t "Married couple: But our first and utmost concern is on keeping our family safe.~%~%You say:~%")))
      (a-2
@@ -451,7 +496,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) I think if I had a look around I could dig up something.~%")))
      (r-2
       (lambda () (convo-end))
-      (lambda () (format t "Married couple: I think you should leave that to the police officer, it is his job after all.~%"))
+      (lambda () (format t "Married couple: I think you should leave that to the police officer, it is his job after all.~%") (set-prop (get-prop characters 'married-couple) 'conv-place-1 -1))
       (lambda () (format t "Married couple: Let you in?!~%") (conv-engine married-couple 1 3)))
      (q-3
       (lambda () (format t "Married couple: How does that go along with us trying to keep safe?~%~%You say:~%")))
@@ -462,7 +507,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-3
       (lambda () (convo-end))
       (lambda () (conv-engine married-couple 1 4))
-      (lambda () (format t "I think you should stay put and keep yourself safe.. besides, the killer is out there.~%")))
+      (lambda () (format t "I think you should stay put and keep yourself safe.. besides, the killer is out there.~%") (set-prop (get-prop characters 'married-couple) 'conv-place-1 -1)))
      (q-4
       (lambda () (format t "Married couple: Before we let you in, you have to show that you have concern for our family.~%~%You say:~%")))
      (a-4
@@ -471,7 +516,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) Okay, only if it is a riddle!~%")))
      (r-4
       (lambda () (convo-end))
-      (lambda () (format t "Married couple: Wow.. you seem a little too eager. Sorry, we do not want to jeopardize our safety!~%"))
+      (lambda () (format t "Married couple: Wow.. you seem a little too eager. Sorry, we do not want to jeopardize our safety!~%") (set-prop (get-prop characters 'married-couple) 'conv-place-1 -1))
       (lambda () (format t "Married couple: Ooh!  We love riddles!  We have just the one.~%") (format t "Riddle here.")))
       
 )))
@@ -488,7 +533,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-1
       (lambda () (convo-end))
       (lambda () (format t "Fat pompous bastard: Finally, someone who is doing something about this situation.") (conv-engine fat-pompous-bastard 1 2))
-      (lambda () (format t "Fat pompous bastard: Well my mood isn't the best right now, and frankly I will give you more trouble you can handle, especially if you are not looking for any.~%")))
+      (lambda () (format t "Fat pompous bastard: Well my mood isn't the best right now, and frankly I will give you more trouble you can handle, especially if you are not looking for any.~%") (set-prop (get-prop characters 'fat-pompous-bastard) 'conv-place-1 -1)))
      (q-2
       (lambda () (format t "Fat pompous bastard: Well, get me some damn whisky.~%~%You say:~%")))
      (a-2
@@ -497,7 +542,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) Why would you need whisky, you have some in your hand already!~%")))
      (r-2
       (lambda () (convo-end))
-      (lambda () (format t "Fat pompous bastard: I am not helping you unless you have some chilled whisky to offer.~%"))
+      (lambda () (format t "Fat pompous bastard: I am not helping you unless you have some chilled whisky to offer.~%") (set-prop (get-prop characters 'fat-pompous-bastard) 'conv-place-1 -1))
       (lambda () (conv-engine fat-pompous-bastard 1 3)))
      (q-3
       (lambda () (format t "Fat pompous bastard: Warm whisky is not my brand of whisky.~%~%You say:~%")))
@@ -508,7 +553,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-3
       (lambda () (convo-end))
       (lambda () (if (player-has? 'ice) (progn (format t "<You give the fat pompous bastard some ice>~%") (conv-engine fat-pompus-bastard 1 4)) (format t "You have nothing to give.~%")))
-      (lambda () (format t "Give me a break, I don't have to listen to you!~%<Door slams>~%")))
+      (lambda () (format t "Give me a break, I don't have to listen to you!~%<Door slams>~%") (set-prop (get-prop characters 'fat-pompous-bastard) 'conv-place-1 -1)))
      (q-4
       (lambda () (format t "Fat pompus bastard: Ah!  It's nice to finally get a drink, now what do you want?~%~%You say:~%")))
      (a-4
@@ -518,7 +563,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-4
       (lambda () (convo-end))
       (lambda () (format t "Something good goes here."))
-      (lambda () (format t "Fat pompous bastard: You insolent fool!  Get out of my sight!~%")))
+      (lambda () (format t "Fat pompous bastard: You insolent fool!  Get out of my sight!~%") (set-prop (get-prop characters 'fat-pompous-bastard) 'conv-place-1 -1)))
 )))
      
 
@@ -534,7 +579,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-1
       (lambda () (convo-end))
       (lambda () (conv-engine young-rich-widow 1 2))
-      (lambda () (format t "I'm sorry, maybe you should come back when you're in a good mood.~%")))
+      (lambda () (format t "I'm sorry, maybe you should come back when you're in a good mood.~%") (set-conv-state young-rich-widow conv-place-1 -1)))
      (q-2
       (lambda () (format t "Young rich widow: Did you have any answers?~%~%You say:~%")))
      (a-2
@@ -544,7 +589,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-2
       (lambda () (convo-end))
       (lambda () (conv-engine young-rich-widow 1 3))
-      (lambda () (format t "Young rich widow: Sorry, I am not sure I can trust you just yet.. I just wanted to apologize.~%")))
+      (lambda () (format t "Young rich widow: Sorry, I am not sure I can trust you just yet.. I just wanted to apologize.~%") (set-conv-state young-rich-widow conv-place-1 -1)))
      (q-3
       (lambda () (format t "Young rich widow: What did you need?")))
      (a-3
@@ -554,7 +599,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-3
       (lambda () (convo-end))
       (lambda () (conv-engine young-rich-widow 1 4))
-      (lambda () (format t "Young rich widow: No.~%")))
+      (lambda () (format t "Young rich widow: No.~%") (set-conv-state young-rich-widow conv-place-1 -1)))
      (q-4
       (lambda () (format t "Young rich widow: Well I need to know if I can trust you.~%~%You say:~%")))
      (a-4
@@ -564,7 +609,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-4
       (lambda () (convo-end))
       (lambda () (conv-engine young-rich-widow 1 5))
-      (lambda () (format t "Young rich widow: Wow, that's not a smart thing to say..")))
+      (lambda () (format t "Young rich widow: Wow, that's not a smart thing to say..") (set-conv-state young-rich-widow conv-place-1 -1)))
      (q-5
       (lambda () (format t "Young rich widow: You guessed it.. I have a riddle for you, cutie!~%~%You say:~%")))
      (a-5
@@ -573,7 +618,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) Sure, if that's how to gain your trust.")))
      (r-5
       (lambda () (convo-end))
-      (lambda () (format t "Young rich widow: Well, if you are not interested, I don't think I can help you.~$"))
+      (lambda () (format t "Young rich widow: Well, if you are not interested, I don't think I can help you.~$") (set-conv-state young-rich-widow conv-place-1 -1))
       (lambda () (format t "Riddle goes here.")))
 )))
 
@@ -590,7 +635,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-1
       (lambda () (convo-end))
       (lambda () (conv-engine butler 1 2))
-      (lambda () (format t "Butler: We lose our those luxuries when the result is in the loss of life.  Good night.~%")))
+      (lambda () (format t "Butler: We lose our those luxuries when the result is in the loss of life.  Good night.~%") (set-conv-state butler conv-place-1 -1)))
      (q-2
       (lambda () (format t "Butler: Calm down sir, although I may be hesitant, may I be of service?~%~%You say;~%")))
      (a-2
@@ -600,7 +645,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-2
       (lambda () (convo-end))
       (lambda () (conv-engine butler 1 3))
-      (lambda () (format t "Butler: That, sir, I am very hesitant to do, and will decide against it.~%")))
+      (lambda () (format t "Butler: That, sir, I am very hesitant to do, and will decide against it.~%") (set-conv-state butler conv-place-1 -1)))
      (q-3
       (lambda () (format t "Butler: I see it ill-advisable to encourage you, sir.~%~%You say:~%")))
      (a-3
@@ -610,7 +655,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-3
       (lambda () (convo-end))
       (lambda () (conv-engine butler 1 4))
-      (lambda () (format t "Butler: Thank you for taking my advice.  Good night, sir.~%")))
+      (lambda () (format t "Butler: Thank you for taking my advice.  Good night, sir.~%") (set-conv-state butler conv-place-1 -1)))
      (q-4
       (lambda () (format t "Butler: I agree.  If you are the guilty, I would have no choice anyway.~%~%You say:~%")))
      (a-4
@@ -619,7 +664,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) You do not have to sound so grim, sir.~%")))
      (r-4
       (lambda () (convo-end))
-      (lambda () (format t "Not if I'm quick!~%<Door slams>~%"))
+      (lambda () (format t "Not if I'm quick!~%<Door slams>~%") (set-conv-state butler conv-place-1 -1))
       (lambda () (conv-engine butler 1 5)))
      (q-5
       (lambda () (format t "Butler: That's encouraging, let me be of service.~%~%You say:~%")))
@@ -640,7 +685,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-6
       (lambda () (convo-end))
       (lambda () (format t "Butler: It seemed to be a riddle, for those who weren't familiar with the peculiar situation.") (format t "Riddle goes here."))
-      (lambda () (format t "Butler: I am sorry then, sir, I do not have any other useful information.  Good night.~%")))
+      (lambda () (format t "Butler: I am sorry then, sir, I do not have any other useful information.  Good night.~%")) (set-conv-state butler conv-place-1 -1))
 )))
 
 (defparameter poo
@@ -687,35 +732,11 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "Poo: Well thank you for your patience.  Good luck on your endeavors.~%"))
       (lambda () (format t "Riddle goes here."))))))
 
+(defmacro set-conv-state (character conversation state)
+  `(set-prop (get-prop characters ',character) ',conversation ,state))
+
 (defun convo-end ()
     (format t "The conversation ends.~%"))
-
-(defun end-convo ()
-  (setf convo nil))
-
-(defun reset-convo ()
-  (setf convo nil))
-
-; e.g., (run-convo police (char-get-prop police 'state))
-
-(defun run-convo (convo-char place-no)
-  (let ((question-no 1) (input 0))
-    ;(setq place-no (char-get-prop convo-char 'state))
-    ; First iteration
-    (access-convo-all convo-char (get-from-list places place-no) (get-from-list questions question-no))
-    (access-convo-all convo-char (get-from-list places place-no) (get-from-list answers question-no))
-    ; Start conversation
-    ; The first option always ends the conversation
-    (loop while (> (setf input (parse-input (read-line))) 1) do
-	 (access-convo-resp convo-char (get-from-list places place-no) (get-from-list responses question-no) input)
-	 (if convo
-	     (progn
-	       ; Update counters
-	       (setf question-no (1+ question-no))
-	       (access-convo-all convo-char (get-from-list places place-no) (get-from-list questions question-no))
-	       (access-convo-all convo-char (get-from-list places place-no) (get-from-list answers question-no)))
-	     (return-from run-convo)))
-    (format t "~%The conversation ends.~%") (reset-convo)))
 
 (defun conv-engine (character place-no &optional (question-no 1))
   ; Execute question
@@ -777,6 +798,18 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 	       (return-from exec-list-specific (funcall (eval i))) ())
 	   (setf no (1+ no))))))
 
+
+
+ (defmacro update-char-state (character state-no)
+   `(set-prop (get-prop characters ',character) 'state ,state-no))
+
+(defun update-all-state (new-state)
+  (update-char-state police new-state)
+  (update-char-state married-couple new-state)
+  (update-char-state fat-pompous-bastard new-state)
+  (update-char-state young-rich-widow new-state)
+  (update-char-state butler new-state)
+  (update-char-state poo new-state))
 
 
 ;;;;;;;;;;;
