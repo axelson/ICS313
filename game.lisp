@@ -158,18 +158,29 @@
 ; Global Objects ;
 ;;;;;;;;;;;;;;;;;;
 
+;; Conversation boolean
+(defparameter convo T)
+
+(defparameter places '(place-1 place-2 place-3))
+(defparameter questions '(q-1 q-2 q-3 q-4 q-5 q-6 q-7 q-8 q-9))
+(defparameter answers '(a-1 a-2 a-3 a-4 a-5 a-6 a-7 a-8 a-9))
+(defparameter responses '(r-1 r-2 r-3 r-4 r-5 r-6 r-7 r-8 r-9))
+
+(defparameter riddles nil)
+
+
 (progn
   (defparameter game-state '((door1-opened t)
 			     (current-room lobby)
 			     (age 7)
 			     (hair-color yellow)))
-  (defparameter pouch '((description "a small coin pouch")
-			(contents (coins marbles))))
+  (defparameter pouch '((describe "a small pouch")
+			(contents ())))
   (defparameter player '((age 9)
                          (inventory pouch)))
   (defparameter characters '(
 			     (police ((describe "The police officer")
-				      (state 1)
+				      (state 0)
 				      (talk nil)))
 			     (married-couple ((describe "The married couple")
 					      (state 0)
@@ -181,7 +192,7 @@
 						(state 0)
 						(talk nil)))
 			     (butler ((describe "The butler")
-				      (state 1)
+				      (state 0)
 				      (talk nil)))
 			     (poo ((describe "A rancid smell")
 				   (state 1)
@@ -204,7 +215,7 @@
 			      (case state
 				(0 (format t "Police Officer: \"I got here as soon as I got the call.\"~%"))
 				(1 (progn (format t "I've sent everyone up to their rooms, if you find out more information, let me know.")
-					  (access-convo-all convo-police 'lobby-1 'q-01)))
+					  (conv-engine police 1 1)))
 				(otherwise (format t "Police Officer: \"I am here to ensure everyone's safety.\"~%"))))))
 
   (set-prop (get-prop characters 'married-couple) 'talk
@@ -224,13 +235,13 @@
   (set-prop (get-prop characters 'young-rich-widow) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (case state
-				(0 (format t "Young Rich Widow: \"Do you anymore information about what is going on?\"~%"))
+				(0 (format t "Young Rich Widow: \"Do you know anymore information about what is going on?\"~%"))
 				(1 (format t "Young Rich Widow: \"Excuse me, may I help you?\"~%"))
 				(otherwise (format t "Young Rich Widow: \"I may need some comforting.\"~%"))))))
   (set-prop (get-prop characters 'butler) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
 			      (case state
-				(0 (format t "Butler: \"Hello sir, may I be of service to you?\""))
+				(0 (format t "Butler: \"Hello sir, may I be of service to you?\"~%"))
 				(otherwise (format t "Butler: \"I used to take care of Batman.\"~%"))))))
 
   (set-prop (get-prop characters 'poo) 'talk
@@ -258,7 +269,8 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                                 (contents (police butler young-rich-widow married-couple fat-pompous-bastard))
 				))
 			(kitchen ((displayname "the kitchen")
-				  (describe "A gorgeous kitchen with top-of-the-line kitchenware.  Doesn't look like anyone tampered with anything here.~%The lobby is to the right.")
+				  (describe "A gorgeous kitchen with top-of-the-line kitchenware.  Doesn't look like anyone tampered with anything here.~%You notice a newspaper on the table.~%The lobby is to the right.")
+				  (contents (newspaper))
 				  (east lobby)))
 			(ballroom ((displayname "the ballroom")
 				   (describe "A ballroom large enough to fit a hundred people.  
@@ -331,6 +343,19 @@ The bathroom is up the stairs.")
 			)))
 
 
+(defparameter items
+  '(
+    (newspaper ((describe (lambda () (format t "The headline says, \"Suicide or Murder?! Police stumped at death of hanging man!\"~%")
+				  (format t "Read on? ")
+				  (if (y-or-n-p)
+                                      (try-answer-riddle 'ice-riddle))
+                                  ))))
+    (writing-on-wall ((describe (lambda () (format t "If life had a reset button, it would be in the ballroom.~%")))))
+    (ice ((describe (lambda () (format t "This would be great for making cold drinks.~%")))))
+    )
+)
+
+
 ;;;;;;;;;;;;;;;;;;;;;;
 ; End Global Objects ;
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -345,25 +370,115 @@ The bathroom is up the stairs.")
       (lambda () (format t "(2) Do you have anything helpful?~%"))
       (lambda () (format t "(3) No, nothing substantial, yet.~%")))
      (r-1
-      (lambda () -1)
-      (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%") (end-convo))
-      (lambda () (format t "I am gay.~%") (end-convo))))
-))
+      (lambda () (convo-end))
+      (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%"))
+      (lambda () (format t "Well, it may be best to stay in your room.  It could be dangerous wandering about.~%")))
+)))
+
+(defparameter married-couple
+  '(
+    (place-1
+     (q-1
+      (lambda () (format t "Married couple: Oh, it's you.  What gives you the right to wander around?~%~%You say:~%")))
+     (a-1
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) I am sorry to bother you, but I was looking for some answers.~%"))
+      (lambda () (format t "(3) Let me in, please.~%")))
+     (r-1
+      (lambda () (convo-end))
+      (lambda () (format t "Married couple: So are we.~%") (conv-engine married-couple 1 2))
+      (lambda () (format t "Excuse me? I do not think it would be wise of us to let you in.  Our first concern is our safety.  Please leave.~%")))
+     (q-2
+      (lambda () (format t "Married couple: But our first and utmost concern is on keeping our family safe.~%~%You say:~%")))
+     (a-2
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Do you think there is any way I can help?~%"))
+      (lambda () (format t "(3) I think if I had a look around I could dig up something.~%")))
+     (r-2
+      (lambda () (convo-end))
+      (lambda () (format t "Married couple: I think you should leave that to the police officer, it is his job after all.~%"))
+      (lambda () (format t "Married couple: Let you in?!~%") (conv-engine married-couple 1 3)))
+     (q-3
+      (lambda () (format t "Married couple: How does that go along with us trying to keep safe?~%~%You say:~%")))
+     (a-3
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) It will if I find out who is behind this!  I need to search your room.~%"))
+      (lambda () (format t "(3) You have to trust me.~%")))
+     (r-3
+      (lambda () (convo-end))
+      (lambda () (conv-engine married-couple 1 4))
+      (lambda () (format t "I think you should stay put and keep yourself safe.. besides, the killer is out there.~%")))
+     (q-4
+      (lambda () (format t "Married couple: Before we let you in, you have to show that you have concern for our family.~%~%You say:~%")))
+     (a-4
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Please, continue, anything you wish.~%"))
+      (lambda () (format t "(3) Okay, only if it is a riddle!~%")))
+     (r-4
+      (lambda () (convo-end))
+      (lambda () (format t "Married couple: Wow.. you seem a little too eager. Sorry, we do not want to jeopardize our safety!~%"))
+      (lambda () (format t "Married couple: Ooh!  We love riddles!  We have just the one.~%") (format t "Riddle here.")))
+      
+)))
+
+;(defparameter fat-pompous-bastard)
+
+;(defparameter young-rich-widow)
+
+;(defparameter butler)
+
+(defparameter poo
+  '(
+    (place-1
+     (q-1
+      (lambda () (format t "Poo: Hello kind sir, would you like to produce some company for me?~%~%You say:~%")))
+     (a-1
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Oh! A talking shit!~%"))
+      (lambda () (format t "(3) I may not be able to produce a friend for you, but will my company do?~%")))
+     (r-1
+      (lambda () (convo-end))
+      (lambda () (format t "The poo looks insulted.~%Although you are distracted by the smell and the fact that it has no face, you notice it crinkle its brow.~%Obligingly, the poo continues...~%~%") (conv-engine poo 1 2))
+      (lambda () (conv-engine poo 1 3)))
+     (q-2
+      (lambda () (format t "Do you believe the presence of power yields the power of persuasion?~%~%You say:~%")))
+     (a-2
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) What nonsense!~%"))
+      (lambda () (format t "(3) I am not too sure what that means.. please tell me more.~%")))
+     (r-2
+      (lambda () (convo-end))
+      (lambda () (format t "Poo: Fine, you suck.~%"))
+      (lambda () (format t "Poo: So you are curious...~%") (conv-engine poo 1 4)))
+     (q-3
+      (lambda () (format t "How kind. Please sit down.~%~%You say:~%")))
+     (a-3
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Sure thing, poop!~%"))
+      (lambda () (format t "(3) No thanks, I have more important things to do.~%")))
+     (r-3
+      (lambda () (convo-end))
+      (lambda () (format t "You sit down on the cold porcelain throne making sure to leave enough light for the poo.~%") (conv-engine poo 1 4))
+      (lambda () (format t "Well at least I tried.~%")))
+     (q-4
+      (lambda () (format t "Poo: Well I have a nice little riddle for you.~%Considering I have no brain, I have been baffled ever since my father made me here and left me with the question he was mumbling to himself as he walked out.~%~%You say:~%")))
+     (a-4
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) I apologize poo, I have realize a sad truth in all this.~%Talking to a piece of poo jeopardizes my sanity.~%I better leave quickly and carry on with the investigation!~%"))
+      (lambda () (format t "(3) Sure, poo.~%It will be interesting to see where this leads.~%")))
+     (r-4
+      (lambda () (convo-end))
+      (lambda () (format t "Poo: Well thank you for your patience.  Good luck on your endeavors.~%"))
+      (lambda () (format t "Riddle goes here."))))))
+
+(defun convo-end ()
+    (format t "The conversation ends.~%"))
 
 (defun end-convo ()
   (setf convo nil))
 
 (defun reset-convo ()
   (setf convo nil))
-
-;; Conversation boolean
-(setf convo T)
-
-
-(setf places '(place-1 place-2 place-3))
-(setf questions '(q-1 q-2 q-3 q-4 q-5))
-(setf answers '(a-1 a-2 a-3 a-4 a-5))
-(setf responses '(r-1 r-2 r-3 r-4 r-5))
 
 ; e.g., (run-convo police (char-get-prop police 'state))
 
@@ -386,19 +501,30 @@ The bathroom is up the stairs.")
 	     (return-from run-convo)))
     (format t "~%The conversation ends.~%") (reset-convo)))
 
+(defun conv-engine (character place-no &optional (question-no 1))
+  ; Execute question
+  (access-convo-all character (get-from-list places place-no) (get-from-list questions question-no))
+  ; Execute corresponding set of answers
+  (access-convo-all character (get-from-list places place-no) (get-from-list answers question-no))
+  ; Execute corresponding response
+  (access-convo-resp character (get-from-list places place-no) (get-from-list responses question-no) (parse-input (read-line))))
+
+
 (defun parse-input (input)
   (loop
-     (case (read-from-string input)
-	 (1 (return-from parse-input 1))
-	 (2 (return-from parse-input 2))
-	 (3 (return-from parse-input 3))
-	 (otherwise (progn (format t "~%Please choose a valid option.~%") (setf input (read-line)))))))
+     (case (if (string= input "")
+               nil
+               (progn (format t "input:[~A]" input) (parse-integer input)))
+       (1 (return 1))
+       (2 (return 2))
+       (3 (return 3))
+       (otherwise (progn (format t "~%Please choose a valid option.~%") (setf input (read-line)))))))
 
 (defun get-from-list (lname item-no)
   (let ((no 1))
     (loop for i in lname do
-	 (if (eq no item-no) (return-from get-from-list i) ())
-	 (setf no (1+ no)))))
+	 (if (eq no item-no) (return i) ())
+	 (incf no))))
 
 (defun ssc (arg1 arg2)
   (if (stringp arg1) () (setq arg1 (write-to-string arg1)))
@@ -451,9 +577,12 @@ The bathroom is up the stairs.")
 				   (format t "A hint string"))))
 			; First floor riddles
 			(Ice-Riddle
-			 (Riddle (lambda () (format t "A man is found hanging in a room 30 feet off the ground. There is nothing else in the room except for a large puddle of water on the ground. The police can't see any way the man could have climbed the walls to get to where he is hanging.~%How did this man hang himself?")))
-			 (Answer (lambda () '(Ice)))
-			 (Hint (lambda () (format t "Think."))))
+			 (Riddle (lambda () (format t "\"A man was found hanging in a room 30 feet off the ground. There wass nothing else in the room except for a large puddle of water on the ground. At this point, investigators can't see any way the man could have climbed the walls to get to where he is hanging without it being a murder, but there are no signs of resistance.\"~%~%You think about the riddle for awhile and realize that it had to be suicide!  But how did the victim do it?~%Your answer: ")))
+			 (Answer (lambda () "Ice"))
+			 (Hint (lambda () (format t "Think.")))
+                         (Result (lambda ()
+                                   (format t "I got it!  He stood on ice with a rope around his neck and waited for the ice to melt!~%As you thought this, ice appeared in your pouch.~%")
+                                   (set-prop pouch 'contents '(ice)))))
 			(Birthday-Riddle
 			 (Riddle (lambda () (format t "What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?")))
 			 (Answer (lambda () '(23)))
@@ -543,12 +672,25 @@ The bathroom is up the stairs.")
 (defun search-string (key-list search-string)
   "Searches search-string for words matching string-list"
   (let ((matches 0))
-    (loop for item in (string-split " " key-list)
-       do (if (search item search-string)
-              (incf matches)))
+    (loop for key in (string-split " " key-list)
+       do (loop for string in (string-split " " search-string)
+		do (if (equalp key string)
+		    (incf matches))))
     (if (= 0 matches)
         nil
         matches)))
+
+;; Riddle functions
+(defun try-answer-riddle (riddle)
+  "User can try to answer the riddle"
+  ;; Show riddle
+  (access-struct riddles riddle 'riddle)
+  (if (search-string (access-struct riddles riddle 'answer)
+                     (read-line))
+      ;; Execute result of getting riddle correct
+      (access-struct riddles riddle 'result)
+      ;; Answer was incorrect
+      (format t "Hm.. I don't think that could've been possible.  I guess I'll give up for now.~%")))
 
 ;;;;;;;;;;;;;;;;;
 ; End Functions ;
@@ -590,11 +732,10 @@ The bathroom is up the stairs.")
 (defun describe-room (&optional (room nil))
   "Describes the contents of a room"
       (format t (eval (get-prop (if room
-                                    (get-prop rooms room)
+                                    (get-room room)
                                     (get-current-room))
                                 'describe)))
       (format t "~%~%"))
-
 
 (defun get-current-room (&optional (property nil))
   "Gets the the current room object, with an optional property"
@@ -612,6 +753,10 @@ The bathroom is up the stairs.")
     ((search-string "quit exit q" input)
      (format t "You Fail the Game!~%")
      (reset-state) t)
+    ((search-string "inventory i" input)
+     (check-inventory))
+    ((search-string "examine" input)
+     (examine input))
     ((search-string "look l" input)
      (describe-room))
     ((search "talk" input)
@@ -625,7 +770,9 @@ The bathroom is up the stairs.")
      (format t "4. Head West - \"W\", \"west\", \"left\"~%")
      (format t "~%---ACTIONS---~%")
      (format t "1. Look/Check the current room - \"look\"~%")
-     (format t "2. Initiate a conversation with a character in the room - \"talk\" + character description (i.e. \"talk to young widow\")~%"))
+     (format t "2. Initiate a conversation with a character in the room - \"talk\" + character description (i.e. \"talk to young widow\")~%")
+     (format t "3. Examine an item/object in the room - \"examine\" + item description (i.e. \"examine newspaper\")~%")
+     (format t "4. Look at what is in your inventory - \"inventory\"~%"))
     ((find input '("eval") :test #'equalp)
      (format t "~A~%" (eval (read-from-string (read-line)))))
     ;; Directions
@@ -647,16 +794,39 @@ The bathroom is up the stairs.")
     (t
      (format t "I don't know what to do with this command: ~A~%Maybe you should try running \"help\"~%" input))))
 
+(defun check-inventory ()
+  "Shows user what is contained in their inventory"
+  (if (get-prop pouch 'contents)
+      (progn
+	(format t "You have ~(~A~) in your inventory.~%"  (get-prop pouch 'contents)))
+      (format t "There is nothing in your inventory.~%")))
+
 (defun talk (character-string)
   "Try to talk to the specified character"
   (cond
     ((= 0 (length character-string))
      (format t "You talk to the wall, the wall does not talk back, perhaps you should try talking to a person~%"))
-    ((contains? (get-current-room) (find-character character-string))
-     (char-talkf (find-character character-string)))
-    (t (format t "Sorry, \"~A\" cannot hear through walls~%" character-string))))
+    ((find-character character-string)  ;Trying to talk to a character
+     (if (contains? (get-current-room) (find-character character-string))
+         (char-talkf (find-character character-string)) ;Talk to character
+         (format t "Sorry, \"~A\" cannot hear through walls~%" character-string)))
+    (t (format t "Your imaginary friend ~A responds!~%" character-string))))
+
+(defun examine (item-string)
+  "Describes the item that is in a room"
+  (let ((item (find-item item-string)))
+    (cond
+      ((= 0 (length item-string))
+       (format t "You examine nothing, and look stupid doing it.~%"))
+      ((contains? (get-current-room) item)
+       (funcall (eval (get-prop (get-prop items item) 'describe))))
+      ((player-has? item)
+       (format t "You rummage about your pouch and see an item~%")
+       (funcall (eval (get-prop (get-prop items item) 'describe))))
+      (t (format t "Sorry, there is nothing special to examine about that.~%")))))
 
 (defun find-character (character-string)
+  "Matches user input with characters" 
   (cond
     ((not (stringp character-string)) (format t "this requires a string~%"))
     ((search-string "police officer" character-string) 'police)
@@ -664,6 +834,17 @@ The bathroom is up the stairs.")
     ((search-string "young rich widow" character-string) 'young-rich-widow)
     ((search-string "married couple" character-string) 'married-couple)
     ((search-string "butler" character-string) 'butler)
+    (t nil)
+    ))
+
+(defun find-item (item-string)
+  "Matches user input with items" 
+  (cond
+    ((not (stringp item-string)) (format t "this requires a string~%"))
+    ((search-string "newspaper" item-string) 'newspaper)
+    ((search-string "writing wall" item-string) 'writing-on-wall)
+    ((search-string "ice" item-string) 'ice)
+    (t nil)
     ))
 
 (defun move (direction)
@@ -676,7 +857,7 @@ The bathroom is up the stairs.")
 	   (if (y-or-n-p)
 	       (progn
 		 (show-intro2)
-		 (set-prop (get-prop rooms 'lobby) 'state 1)
+		 (set-prop (get-room 'lobby) 'state 1)
 		 (set-prop (get-room 'lobby) 'contents '(police))
 		 )
 	       )
@@ -723,11 +904,11 @@ The bathroom is up the stairs.")
   (if (enter-to-continue) (return-from show-intro2))
   (format t "\"AND WHY IS THAT?!\" demanded the wife.~%")
   (if (enter-to-continue) (return-from show-intro2))
-  (format t "Seeing how bad the storm has gotten, I'm afraid I can't let you go.  Also, I would like for everyone to remain in this house to gather eye-witnesses or clues for this murder.~%")
+  (format t "\"Seeing how bad the storm has gotten, I'm afraid I can't let you go.  Also, I would like for everyone to remain in this house to gather eye-witnesses or clues for this murder.\"~%")
   (if (enter-to-continue) (return-from show-intro2))
   (format t "\"So are you telling me to stay here and DIE?!\" screamed the wife.~%")
   (if (enter-to-continue) (return-from show-intro2))
-  (format t "\"No.  But I do say that the probably of that happening is higher if you left this mansion now, ma'am.  Seeing how the killer is still on the loose, it's more likely that he's waiting for us to panic and leave the house.  I think it's better if we all go back into our rooms, and if anything happens, I'll be here.\" calmly said the officer.~%")
+  (format t "\"No.  But I do say that the probably of that happening is higher if you left this mansion now, ma'am.  With the killer is still on the loose, it's more likely that he's waiting for us to panic and leave the house.  I think it's better if we all go back into our rooms, and if anything happens, I'll be here.\" calmly said the officer.~%")
   (if (enter-to-continue) (return-from show-intro2))
   (format t "With that, everyone somewhat agreed to return to their rooms and meet in the lobby the next morning.~%")
   (if (enter-to-continue) (return-from show-intro2))
@@ -736,7 +917,7 @@ The bathroom is up the stairs.")
 )
 
 (defun reset-state()
-  (set-prop (get-prop rooms 'lobby) 'state 0)
+  (set-prop (get-room 'lobby) 'state 0)
   (set-prop (get-room 'lobby) 'contents '(police butler married-couple fat-pompous-bastard young-rich-widow))
   )
 
