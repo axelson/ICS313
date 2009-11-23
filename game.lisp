@@ -679,15 +679,16 @@ The bathroom is up the stairs.")
         while pos))
 
 (defun search-string (key-list search-string)
-  "Searches search-string for words matching string-list"
+  "Searches search-string for words matching string-list and returns number of matches"
   (let ((matches 0))
     (loop for key in (string-split " " key-list)
        do (loop for string in (string-split " " search-string)
-		do (if (equalp key string)
-		    (incf matches))))
+	     do (when (equalp key string)
+		  (incf matches)
+		  (return))))
     (if (= 0 matches)
         nil
-        matches)))
+	matches)))
 
 ;; Riddle functions
 (defun try-answer-riddle (riddle)
