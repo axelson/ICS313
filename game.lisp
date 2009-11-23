@@ -872,7 +872,7 @@ The bathroom is up the stairs.")
           else collect (subseq string n)
         while pos))
 
-(defun search-string (key-list search-string)
+(defun search-string (key-list search-string &key return-zero-no-matches)
   "Searches search-string for words matching string-list and returns number of matches"
   (let ((matches 0))
     (loop for key in (string-split " " key-list)
@@ -881,7 +881,7 @@ The bathroom is up the stairs.")
 		  (incf matches)
 		  (return))))
     (if (= 0 matches)
-        nil
+        (if return-zero-no-matches 0 nil)
 	matches)))
 
 ;; Riddle functions
@@ -891,7 +891,7 @@ The bathroom is up the stairs.")
   (access-struct riddles riddle 'riddle)
   (let ((riddle-answer (access-struct riddles riddle 'answer)))
     (if (= (length (string-split " " riddle-answer))
-	   (search-string riddle-answer (read-line)))
+	   (search-string riddle-answer (read-line) :return-zero-no-matches t))
 	;; Execute result of getting riddle correct
 	(access-struct riddles riddle 'result)
 	;; Answer was incorrect
@@ -968,17 +968,7 @@ The bathroom is up the stairs.")
     ((search "talk" input)
      (talk (string-left-trim "talk " input)))
     ((equalp input "help")
-     (format t "COMMAND LIST:~%")
-     (format t "---DIRECTIONS---~%")
-     (format t "1. Head North - \"N\", \"north\", \"up\"~%")
-     (format t "2. Head South - \"S\", \"south\", \"down\"~%")
-     (format t "3. Head East - \"E\", \"east\", \"right\"~%")
-     (format t "4. Head West - \"W\", \"west\", \"left\"~%")
-     (format t "~%---ACTIONS---~%")
-     (format t "1. Look/Check the current room - \"look\"~%")
-     (format t "2. Initiate a conversation with a character in the room - \"talk\" + character description (i.e. \"talk to young widow\")~%")
-     (format t "3. Examine an item/object in the room - \"examine\" + item description (i.e. \"examine newspaper\")~%")
-     (format t "4. Look at what is in your inventory - \"inventory\"~%"))
+     (show-help))
     ((find input '("eval") :test #'equalp)
      (format t "~A~%" (eval (read-from-string (read-line)))))
     ;; Directions
@@ -1012,15 +1002,15 @@ The bathroom is up the stairs.")
   (cond
     ((= 0 (length character-string))
      (format t "You talk to the wall, the wall does not talk back, perhaps you should try talking to a person~%"))
-    ((find-character character-string)  ;Trying to talk to a character
-     (if (contains? (get-current-room) (find-character character-string))
-         (char-talkf (find-character character-string)) ;Talk to character
+    ((translate-input character-string)  ;Trying to talk to a character
+     (if (contains? (get-current-room) (translate-input character-string))
+         (char-talkf (translate-input character-string)) ;Talk to character
          (format t "Sorry, \"~A\" cannot hear through walls~%" character-string)))
     (t (format t "Your imaginary friend ~A responds!~%" character-string))))
 
 (defun examine (item-string)
   "Describes the item that is in a room"
-  (let ((item (find-item item-string)))
+  (let ((item (translate-input item-string)))
     (cond
       ((= 0 (length item-string))
        (format t "You examine nothing, and look stupid doing it.~%"))
@@ -1031,26 +1021,21 @@ The bathroom is up the stairs.")
        (funcall (eval (get-prop items item 'describe))))
       (t (format t "Sorry, there is nothing special to examine about that.~%")))))
 
-(defun find-character (character-string)
+(defun translate-input (input)
   "Matches user input with characters" 
   (cond
-    ((not (stringp character-string)) (format t "this requires a string~%"))
-    ((search-string "police officer" character-string) 'police)
-    ((search-string "fat pompous bastard" character-string) 'fat-pompous-bastard)
-    ((search-string "young rich widow" character-string) 'young-rich-widow)
-    ((search-string "married couple" character-string) 'married-couple)
-    ((search-string "butler" character-string) 'butler)
-    (t nil)
-    ))
-
-(defun find-item (item-string)
-  "Matches user input with items" 
-  (cond
-    ((not (stringp item-string)) (format t "this requires a string~%"))
-    ((search-string "newspaper" item-string) 'newspaper)
-    ((search-string "writing wall" item-string) 'writing-on-wall)
-    ((search-string "ice" item-string) 'ice)
-    ((search-string "note" item-string) 'note)
+    ;; Characters
+    ((not (stringp input)) (format t "this requires a string~%"))
+    ((search-string "police officer" input) 'police)
+    ((search-string "fat pompous bastard" input) 'fat-pompous-bastard)
+    ((search-string "young rich widow" input) 'young-rich-widow)
+    ((search-string "married couple" input) 'married-couple)
+    ((search-string "butler" input) 'butler)
+    ;; Items
+    ((search-string "newspaper" input) 'newspaper)
+    ((search-string "writing wall" input) 'writing-on-wall)
+    ((search-string "ice" input) 'ice)
+    ((search-string "note" input) 'note)
     ((search-string "written note" item-string) 'written-note)
     (t nil)
     ))
@@ -1103,6 +1088,20 @@ The bathroom is up the stairs.")
 (defun move-error ()
   "Shows user error when they try to move in a restricted direction"
   (format t "There is a wall.  You cannot go in that direction.~%"))
+
+(defun show-help ()
+  "Shows help for the user"
+  (format t "COMMAND LIST:~%")
+  (format t "---DIRECTIONS---~%")
+  (format t "1. Head North - \"N\", \"north\", \"up\"~%")
+  (format t "2. Head South - \"S\", \"south\", \"down\"~%")
+  (format t "3. Head East - \"E\", \"east\", \"right\"~%")
+  (format t "4. Head West - \"W\", \"west\", \"left\"~%")
+  (format t "~%---ACTIONS---~%")
+  (format t "1. Look/Check the current room - \"look\"~%")
+  (format t "2. Initiate a conversation with a character in the room - \"talk\" + character description (i.e. \"talk to young widow\")~%")
+  (format t "3. Examine an item/object in the room - \"examine\" + item description (i.e. \"examine newspaper\")~%")
+  (format t "4. Look at what is in your inventory - \"inventory\"~%"))
 
 (defun show-intro ()
   "Shows introduction when game starts"
