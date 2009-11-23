@@ -1044,6 +1044,15 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 	(format t "You have the following items in your inventory:~%~A~%"  (get-prop pouch 'contents)))
       (format t "There is nothing in your inventory.~%")))
 
+(defun use-item (item-string)
+  "Use an item from your inventory"
+  (let ((item (translate-input item-string)))
+    (if (player-has? item)
+        (progn (format t "You are using: ~A~%" item)
+               (if (get-prop items item 'use)
+                   (funcall (eval (get-prop items item 'use)))))
+        (format t "You don't have a \"~A\" in your inventory~%Maybe you should try the \"inventory\" command.~%" item))))
+
 (defun skip-first-floor ()
   (try-answer-riddle 'ice-riddle t)
   (try-answer-riddle 'birthday-riddle t)
