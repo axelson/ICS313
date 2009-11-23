@@ -30,11 +30,17 @@
   (length obj))
 
 ;; Define a function or macro (get-prop obj property) which returns the value of a property.
-(defun get-prop (obj property)
+(defun get-prop (obj &rest properties)
   "Gets property of object"
-  (cadr (find-if #'(lambda (x) (eql x property))
-           obj
-           :key #'car)))
+  (if (listp (car properties))
+      (setf properties (car properties)))
+  (let ((value
+	 (cadr (find-if #'(lambda (x) (eql x (car properties)))
+			obj
+			:key #'car))))
+    (if (= (length properties) 1)
+	value
+	(get-prop value (cdr properties)))))
 
 
 ;; Define a function or macro (set-prop obj property value) which will set the value of a property.
