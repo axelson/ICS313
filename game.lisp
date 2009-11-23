@@ -695,12 +695,13 @@ The bathroom is up the stairs.")
   "User can try to answer the riddle"
   ;; Show riddle
   (access-struct riddles riddle 'riddle)
-  (if (search-string (access-struct riddles riddle 'answer)
-                     (read-line))
-      ;; Execute result of getting riddle correct
-      (access-struct riddles riddle 'result)
-      ;; Answer was incorrect
-      (format t "Hm.. I don't think that could've been possible.  I guess I'll give up for now.~%")))
+  (let ((riddle-answer (access-struct riddles riddle 'answer)))
+    (if (= (length (string-split " " riddle-answer))
+	   (search-string riddle-answer (read-line)))
+	;; Execute result of getting riddle correct
+	(access-struct riddles riddle 'result)
+	;; Answer was incorrect
+	(format t "Hm.. I don't think that could've been possible.  I guess I'll give up for now.~%"))))
 
 ;;;;;;;;;;;;;;;;;
 ; End Functions ;
