@@ -443,11 +443,172 @@ The bathroom is up the stairs.")
       
 )))
 
-;(defparameter fat-pompous-bastard)
+(defparameter fat-pompous-bastard
+  '(
+    (place-1
+     (q-1
+      (lambda () (format t "Fat pompous bastard: Oh it's you! Looking for trouble?~%~%You say:~%")))
+     (a-1
+      (lambda () (format t "(1) **Leave**~"))
+      (lambda () (format t "(2) Yes, you bastard!~%"))
+      (lambda () (format t "(3) No sir.~%")))
+     (r-1
+      (lambda () (convo-end))
+      (lambda () (format t "Fat pompous bastard: Finally, someone who is doing something about this situation.") (conv-engine fat-pompous-bastard 1 2))
+      (lambda () (format t "Fat pompous bastard: Well my mood isn't the best right now, and frankly I will give you more trouble you can handle, especially if you are not looking for any.~%")))
+     (q-2
+      (lambda () (format t "Fat pompous bastard: Well, get me some damn whisky.~%~%You say:~%")))
+     (a-2
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Sir, I have better things to do.  I need to search your place.~%"))
+      (lambda () (format t "(3) Why would you need whisky, you have some in your hand already!~%")))
+     (r-2
+      (lambda () (convo-end))
+      (lambda () (format t "Fat pompous bastard: I am not helping you unless you have some chilled whisky to offer.~%"))
+      (lambda () (conv-engine fat-pompous-bastard 1 3)))
+     (q-3
+      (lambda () (format t "Fat pompous bastard: Warm whisky is not my brand of whisky.~%~%You say:~%")))
+     (a-3
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) I may have what you are looking for.~%"))
+      (lambda () (format t "(3) Give me a break, we have a murder to solve!~%")))
+     (r-3
+      (lambda () (convo-end))
+      (lambda () (if (player-has? 'ice) (progn (format t "<You give the fat pompous bastard some ice>~%") (conv-engine fat-pompus-bastard 1 4)) (format t "You have nothing to give.~%")))
+      (lambda () (format t "Give me a break, I don't have to listen to you!~%<Door slams>~%")))
+     (q-4
+      (lambda () (format t "Fat pompus bastard: Ah!  It's nice to finally get a drink, now what do you want?~%~%You say:~%")))
+     (a-4
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Let me look around.~%"))
+      (lambda () (format t "(3) I am really not sure.. now that you ask.~%")))
+     (r-4
+      (lambda () (convo-end))
+      (lambda () (format t "Something good goes here."))
+      (lambda () (format t "Fat pompous bastard: You insolent fool!  Get out of my sight!~%")))
+)))
+     
 
-;(defparameter young-rich-widow)
+(defparameter young-rich-widow
+  '(
+    (place-1
+     (q-1
+      (lambda () (format t "Young rich widow: Hello there, I was hesitant to answer the door, but I wanted to apologize for my outburst downstairs.~%~%You say:~%")))
+     (a-1
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Oh that's no problem, I know we're all confused and just want a sure answer.~%"))
+      (lambda () (format t "(3) Well, I was just walking away, you didn't have to accuse me.~%")))
+     (r-1
+      (lambda () (convo-end))
+      (lambda () (conv-engine young-rich-widow 1 2))
+      (lambda () (format t "I'm sorry, maybe you should come back when you're in a good mood.~%")))
+     (q-2
+      (lambda () (format t "Young rich widow: Did you have any answers?~%~%You say:~%")))
+     (a-2
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) None that are sound.  I was hoping I could find some by speaking with you.~%"))
+      (lambda () (format t "(3) I wanted to look around your room.~%")))
+     (r-2
+      (lambda () (convo-end))
+      (lambda () (conv-engine young-rich-widow 1 3))
+      (lambda () (format t "Young rich widow: Sorry, I am not sure I can trust you just yet.. I just wanted to apologize.~%")))
+     (q-3
+      (lambda () (format t "Young rich widow: What did you need?")))
+     (a-3
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Is there any way I could search your room?~%"))
+      (lambda () (format t "(3) I need to know if you know anything or anyone who may know that they know something about this, you know?")))
+     (r-3
+      (lambda () (convo-end))
+      (lambda () (conv-engine young-rich-widow 1 4))
+      (lambda () (format t "Young rich widow: No.~%")))
+     (q-4
+      (lambda () (format t "Young rich widow: Well I need to know if I can trust you.~%~%You say:~%")))
+     (a-4
+      (lambda () (format t "(1) **Leave**"))
+      (lambda () (format t "(2) Please let me know how I can do that."))
+      (lambda () (format t "(3) Well I won't rob you, that's for sure.")))
+     (r-4
+      (lambda () (convo-end))
+      (lambda () (conv-engine young-rich-widow 1 5))
+      (lambda () (format t "Young rich widow: Wow, that's not a smart thing to say..")))
+     (q-5
+      (lambda () (format t "Young rich widow: You guessed it.. I have a riddle for you, cutie!~%~%You say:~%")))
+     (a-5
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) No! Not another riddle!"))
+      (lambda () (format t "(3) Sure, if that's how to gain your trust.")))
+     (r-5
+      (lambda () (convo-end))
+      (lambda () (format t "Young rich widow: Well, if you are not interested, I don't think I can help you.~$"))
+      (lambda () (format t "Riddle goes here.")))
+)))
 
-;(defparameter butler)
+
+(defparameter butler
+  '(
+    (place-1
+     (q-1
+      (lambda () (format t "Butler: Hello sir, I do not think it is advisible to be wandering around, especially since any one of us could be the killer.~%~%You say:~%")))
+     (a-1
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Holy shit!  It's you!~%"))
+      (lambda () (format t "(3) I think it is my right to walk around.~%")))
+     (r-1
+      (lambda () (convo-end))
+      (lambda () (conv-engine butler 1 2))
+      (lambda () (format t "Butler: We lose our those luxuries when the result is in the loss of life.  Good night.~%")))
+     (q-2
+      (lambda () (format t "Butler: Calm down sir, although I may be hesitant, may I be of service?~%~%You say;~%")))
+     (a-2
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) I think I can find out who is behind this.~%"))
+      (lambda () (format t "(3) Will you let me search your room?~%")))
+     (r-2
+      (lambda () (convo-end))
+      (lambda () (conv-engine butler 1 3))
+      (lambda () (format t "Butler: That, sir, I am very hesitant to do, and will decide against it.~%")))
+     (q-3
+      (lambda () (format t "Butler: I see it ill-advisable to encourage you, sir.~%~%You say:~%")))
+     (a-3
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Passivity rarely leads to answers, sir.~%"))
+      (lambda () (format t "(3) I strongly agree with you.~%")))
+     (r-3
+      (lambda () (convo-end))
+      (lambda () (conv-engine butler 1 4))
+      (lambda () (format t "Butler: Thank you for taking my advice.  Good night, sir.~%")))
+     (q-4
+      (lambda () (format t "Butler: I agree.  If you are the guilty, I would have no choice anyway.~%~%You say:~%")))
+     (a-4
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) I'm afraid you're right.~%"))
+      (lambda () (format t "(3) You do not have to sound so grim, sir.~%")))
+     (r-4
+      (lambda () (convo-end))
+      (lambda () (format t "Not if I'm quick!~%<Door slams>~%"))
+      (lambda () (conv-engine butler 1 5)))
+     (q-5
+      (lambda () (format t "Butler: That's encouraging, let me be of service.~%~%You say:~%")))
+     (a-5
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) I just want some information.~%"))
+      (lambda () (format t "(3) Tell me a little about the host and any on anyone who might have wanted this to happen.~%")))
+     (r-5
+      (lambda () (convo-end))
+      (lambda () (conv-engine butler 1 6))
+      (lambda () (conv-engine butler 1 6)))
+     (q-6
+      (lambda () (format t "Butler: The man who owned this house was a mysterious man.  I found an interesting narrative in his diary just now, did you want to here it?~%~%You say:~%")))
+     (a-6
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) Yes, anything will help.~%"))
+      (lambda () (format t "(3) I am not too interested in a diary passage, how about telling me something about the suspects.~%")))
+     (r-6
+      (lambda () (convo-end))
+      (lambda () (format t "Butler: It seemed to be a riddle, for those who weren't familiar with the peculiar situation.") (format t "Riddle goes here."))
+      (lambda () (format t "Butler: I am sorry then, sir, I do not have any other useful information.  Good night.~%")))
+)))
 
 (defparameter poo
   '(
