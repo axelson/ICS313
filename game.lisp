@@ -191,11 +191,11 @@
 			      (case state
 				(0 (format t "Police officer: \"I got here as soon as I got the call.\"~%"))
 				(1 (progn
-				     (format t "Police officer: I've sent everyone up to their rooms.  If you find any more information, let me know~%") (enter-to-continue)
+				     (format t "Police officer: I've sent everyone up to their rooms.  If you find anymore information, let me know...~%") (read-line)
 				     (if (equal 0 (eval (char-get-prop police 'conv-place-1)))
-                                         (conv-engine police state)
-                                         (format t "Police officer: I am here to ensure everyone's safety.~%")
-                                         )))
+					      (conv-engine police state)
+					      (format t "Police officer: I am here to ensure everyone's safety.~%")
+					      )))
 				(2 (progn (if (equal 0 (eval (char-get-prop police 'conv-place-2)))
 					      (conv-engine police state)
 					      (format t "Police officer: Suck it.~%"))))
@@ -293,8 +293,9 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 				   (south lobby)))
 			(bathroom ((locked 1)
 				   (displayname "the bathroom")
-				   (describe "A luxurious bathroom.  Something smells odd...~%The lobby is to the left.")
+				   (describe "A luxurious bathroom.  Something smells odd...~%There is some scribble on the wall.~%The lobby is to the left.")
 				   (west lobby)
+				   (contents (writing-on-wall))
 				   (south basement)
 				   (contents (poo))))
 			(basement ((displayname "the basement")
@@ -360,7 +361,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 				(east hallway3)))
 			(attic ((locked 1)
 				(displayname "the attic")
-				(describe "The mansion's attic.  You notice a numerous amount of riches, ranging from one-of-a-kind paintings to golden statues.~%You notice a phone and a phone log on a desk.~%The storage room is behind you.")
+				(describe "The mansion's attic.  You find a numerous amount of riches, ranging from one-of-a-kind paintings to golden statues.~%You notice a phone and a phone log on a desk.~%The storage room is behind you.")
 				(contents (phone-log))
 				(south storageroom)))
 			)))
@@ -389,6 +390,10 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 			    (set-prop (get-room 'lobby) 'contents '(police butler married-couple fat-pompous-bastard rich-young-widow))
 			    )
 			  )))
+    (attic-key ((describe (lambda () (format t "A golden key.  Hopefully this will let me in the attic..~%")))))
+    (umbrella ((describe (lambda () (format t "This would be really useful outside, but you know what they say about opening umbrellas indoors..~%")))))
+    (will ((describe (lambda () (format t "A will stating how all of the late owner's property and riches will go to his eldest son.~%")))))
+    (video-tape ((describe (lambda () (format t "A security video tape proving no one left or entered the house the entire night.~%")))))
     )
 )
 
@@ -987,9 +992,6 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (format t "Skipping first floor~%")
      (skip-first-floor)
      nil)
-    ((search-string "reset" input)
-     (reset-state)
-     (format t "State of game has been reset~%"))
     ;; Commands
     ((search-string "quit exit q" input)
      (format t "You Fail the Game!~%")
@@ -1084,6 +1086,11 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     ((search-string "written note" input) 'written-note)
     ((search-string "shiny object garbage" input) 'knife)
     ((search-string "phone log" input) 'phone-log)
+    ((search-string "attic key" input) 'attic-key)
+    ((search-string "umbrella" input) 'umbrella)
+    ((search-string "video tape" input) 'video-tape)
+    ((search-string "will" input) 'will)
+    ((search-string "knife" input) 'knife)
     (t nil)
     ))
 
@@ -1133,7 +1140,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 
 (defun move-error ()
   "Shows user error when they try to move in a restricted direction"
-  (format t "There is a wall. You cannot go in that direction.~%"))
+  (format t "There is a wall bob. You cannot go in that direction.~%"))
 
 (defun show-help ()
   "Shows help for the user"
@@ -1155,7 +1162,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
   (if (enter-to-continue) (return-from show-intro))
   (format t "~%It is a dark and stormy night.  Although you are celebrating at a party in a large and elegant mansion, for some reason you can't shake off this feeling of uneasiness.  As the night progresses, you feel a chill run down your back as if someone has been watching you the entire time.  Guests begin to leave and you notice that your friend has left without you.  The host asks you where your friend went and you explain your situation.  The host smiles and offers a room to stay for the night.  Seeing that you have no other means of returning you gladly accept the offer.  As you enter the room , you feel extremely exhausted from all the chatter and head right to bed.~%")
   (if (enter-to-continue) (return-from show-intro))
-  (format t "~%A sharp shriek resonates throughout the hallways, startling you from your sleep.  You dash out of the room to investigate what had happened and as you walk into the lobby you gasp in terror as you see the host, dead on the floor.  A woman, dressed in black, is on the floor trembling as if she had seen a ghost.  A couple also gasp as they enter the lobby.  You hear a snort next to you, and a somewhat fat, pompous bastard begins ranting about how the host had it coming to him.  The butler comes in, looks at the host's dead body frantically and rushes right back out.  Not much time passes when you hear a knock on the door and a policeman walks in.  The policeman explains that due to the heavy rain and wind, there will be no backup for awhile.  Ten minutes later the butler bursts through the lobby door and says that the cameras did not catch anyone entering or exiting the premises during the night.  You ask the butler if there is anyone else in the mansion, and he replies that everyone here is all that is left from yesterday's party.  A cold silence.  Eyes begin searching throughout the room, as if judging who could have been the killer.~%")
+  (format t "~%A sharp shriek resonates throughout the hallways, startling you from your sleep.  You dash out of the room to investigate what had happened and as you walk into the lobby you gasp in terror as you see the host, dead on the floor.  A woman, dressed in black, is on the floor trembling as if she had seen a ghost.  A couple also gasp as they enter the lobby.  You hear a snort next to you, and a somewhat fat, pompous bastard begins ranting about how the host had it coming to him.  The butler comes in, looks at the host's dead body frantically, calls the police and rushes right back out.  Not much time passes when you hear a knock on the door and a policeman walks in.  The policeman explains that due to the heavy rain and wind, there will be no backup for awhile.  Ten minutes later the butler bursts through the lobby door and says that the cameras did not catch anyone entering or exiting the premises during the night.  You ask the butler if there is anyone else in the mansion, and he replies that everyone here is all that is left from yesterday's party.  A cold silence.  Eyes begin searching throughout the room, as if judging who could have been the killer.~%")
   (if (enter-to-continue) (return-from show-intro))
   )
 
