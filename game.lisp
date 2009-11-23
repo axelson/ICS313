@@ -679,6 +679,23 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 (defun convo-end ()
     (format t "The conversation ends.~%"))
 
+(defun reset-conv-state ()
+  (let ((reset 0))
+    (if (equal -1 (char-get-prop police 'conv-place-1))
+	(set-conv-state police 'place-1 0) (setp reset 1))
+    (if (equal -1 (char-get-prop married-couple 'conv-place-1))
+	(set-conv-state married-couple 'conv-place-1 0) (setp reset 1))
+    (if (equal -1 (char-get-prop fat-pompous-bastard 'conv-place-1))
+	(set-conv-state fat-pompous-bastard 'conv-place-1 0) (setp reset 1))
+    (if (equal -1 (char-get-prop young-rich-widow 'conv-place-1))
+	(set-conv-state young-rich-widow 'conv-place-1 0) (setp reset 1))
+    (if (equal -1 (char-get-prop butler 'conv-place-1))
+	(set-conv-state butler 'conv-place-1 0) (setp reset 1))
+    (if (equal -1 (char-get-prop poo 'conv-place-1))
+	(set-conv-state poo 'conv-place-1 0) (setp reset 1))
+    (if (equal reset 1)
+	(format t "You get this feeling that second chances are possible.~%") ()))) 
+
 (defun conv-engine (character place-no &optional (question-no 1))
   ;; Execute question
   (access-convo-all character (get-from-list places place-no) (get-from-list questions question-no))
