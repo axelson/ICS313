@@ -245,15 +245,6 @@
 				   (conv-place-2 0)))
 			      ))
 
-; Interative sctructure
-;; (defparameter conversation-engine
-;;   '(
-;;     ;Police
-;;     (Police
-;;      ('(a b) (lambda () (let ((mood (char-get-prop Police 'mood)))
-;; 			  (cond
-;; 			    ((= mood 0) (format t "I am happy."))
-
 ;; Character talk functions
 
   (set-prop (get-prop characters 'police) 'talk
