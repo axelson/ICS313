@@ -295,9 +295,8 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 				   (displayname "the bathroom")
 				   (describe "A luxurious bathroom.  Something smells odd...~%There is some scribble on the wall.~%The lobby is to the left.")
 				   (west lobby)
-				   (contents (writing-on-wall))
 				   (south basement)
-				   (contents (poo))))
+				   (contents (poo writing-on-wall))))
 			(basement ((displayname "the basement")
 				   (describe "Why was this door hidden?  You notice a shiny object in the garbage can.~%The bathroom is up the stairs.")
 				   (contents (knife))
@@ -377,12 +376,23 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                                   ))))
     (note ((describe (lambda ()
 		       (if (try-answer-riddle 'birthday-riddle)
-			   (remove-from-container 'note (get-room 'ballroom)))))))
-    (writing-on-wall ((describe (lambda () (format t "If life had a reset button, it would be in the ballroom.~%")))))
+			   (remove-from-container 'note (get-room 'ballroom)))))
+           (describe-inventory (lambda ()
+                                 (format t "A note that has the number 23 on it.~%")))))
+    (writing-on-wall ((describe (lambda () (format t "Slowly you decipher the writing on the wall: \"If life had a reset button, it would be in the ballroom.\"~%")))))
     (ice ((describe (lambda () (format t "This would be great for making cold drinks.~%")))))
+<<<<<<< HEAD
     (written-note ((describe (lambda () (format t "A note that has the number 23 on it.~%")))))
+=======
+>>>>>>> 2bc2783e0c5287359ed4159ec5417335b33f3ff4
     (safe ((describe (lambda () (format t "It looks like someone tampered with the safe.  Seems like only one more number is needed.~%")))))
-    (knife ((describe (lambda () (format t "A bloody knife.  This is what the killer must have used!~%")))))
+    (knife ((describe (lambda ()
+                        (format t "You take a closer look at the garbage can.~%You find a bloody knife.  This must be what the killer must have used!~%")
+                        (format t "I should take this with me, I can use it as evidence.~%")
+                        (add-inventory 'knife)
+                        (remove-from-container 'knife (get-room 'basement))))
+            (describe-inventory (lambda ()
+                                  (format t "A bloody knife. This might be what the killer used~%")))))
     (phone-log ((describe (lambda ()
 			    (show-attic-scene)
 			    (set-prop game-state 'current-room 'lobby)
@@ -803,7 +813,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                  (Hint (lambda () (format t "What is the general formula for finding the probability that no people in the room have the same birthday?")))
                  (Result (lambda ()
                            (format t "The answer has to be at least 23 people!~%Hmm... There must be a reason for this note.  I guess I'll keep it for now.~%You wrote on the note and put it in your pouch.~%")
-                           (add-inventory written-note)
+                           (add-inventory note)
                            (set-prop player 'birthday-riddle 1)
                            )))
                 (Rainy-Day-Riddle
@@ -923,11 +933,15 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 	  (access-struct riddles riddle 'result)
 	  t)
 	;; Answer was incorrect
+<<<<<<< HEAD
 	(progn
 	  (format t "Hm.. I don't think that could've been possible.  Should I try again?~%")
 	  (if (y-or-n-p)
 	      (try-answer-riddle riddle))))))
   
+=======
+	(format t "Hmmm... I don't think that's correct.  I guess I'll give up for now.~%"))))
+>>>>>>> 2bc2783e0c5287359ed4159ec5417335b33f3ff4
 
 ;;;;;;;;;;;;;;;;;
 ; End Functions ;
@@ -1037,7 +1051,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
   "Shows user what is contained in their inventory"
   (if (get-prop pouch 'contents)
       (progn
-	(format t "You have ~(~A~) in your inventory.~%"  (get-prop pouch 'contents)))
+	(format t "You have the following items in your inventory:~%~A~%"  (get-prop pouch 'contents)))
       (format t "There is nothing in your inventory.~%")))
 
 (defun skip-first-floor ()
@@ -1068,7 +1082,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
        (funcall (eval (get-prop items item 'describe))))
       ((player-has? item)
        (format t "You rummage about your pouch and see an item~%")
-       (funcall (eval (get-prop items item 'describe))))
+       (funcall (eval (get-prop items item 'describe-inventory))))
       (t (format t "Sorry, there is nothing special to examine about that.~%")))))
 
 (defun translate-input (input)
@@ -1087,7 +1101,6 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     ((search-string "scribble writing wall" input) 'writing-on-wall)
     ((search-string "ice" input) 'ice)
     ((search-string "note" input) 'note)
-    ((search-string "written note" input) 'written-note)
     ((search-string "shiny object garbage" input) 'knife)
     ((search-string "phone log" input) 'phone-log)
     ((search-string "attic key" input) 'attic-key)
@@ -1149,7 +1162,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 
 (defun move-error ()
   "Shows user error when they try to move in a restricted direction"
-  (format t "There is a wall bob. You cannot go in that direction.~%"))
+  (format t "There is a wall. You cannot go in that direction.~%"))
 
 (defun show-help ()
   "Shows help for the user"
