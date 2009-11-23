@@ -199,9 +199,7 @@
 
 (progn
   (defparameter game-state '((door1-opened t)
-			     (current-room lobby)
-			     (age 7)
-			     (hair-color yellow)))
+			     (current-room lobby)))
   (defparameter pouch '((describe "a small pouch")
 			(contents ())))
   (defparameter player '((age 9)
