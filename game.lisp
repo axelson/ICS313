@@ -1095,7 +1095,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     ((search-string "married couple" input) 'married-couple)
     ((search-string "butler" input) 'butler)
     ;; Items
-    ((search-string "newspaper" input) 'newspaper)
+    ((search-string "newspaper news" input) 'newspaper)
     ((search-string "writing wall" input) 'writing-on-wall)
     ((search-string "ice" input) 'ice)
     ((search-string "note" input) 'note)
