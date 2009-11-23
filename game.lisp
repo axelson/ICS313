@@ -136,10 +136,10 @@
 
 (defparameter riddles nil)
 
+(defparameter game-state '((door1-opened t)
+                           (current-room lobby)))
 
 (progn
-  (defparameter game-state '((door1-opened t)
-			     (current-room lobby)))
   (defparameter pouch '((describe "a small pouch")
 			(contents ())))
   (defparameter player '((age 9)
