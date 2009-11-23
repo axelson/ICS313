@@ -1012,6 +1012,8 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     ((search-string "look l" input)
      (format t "~%")
      (describe-room))
+    ((search-string "use" input)
+     (use-item input))
     ((search "talk" input)
      (talk (string-left-trim "talk " input)))
     ((equalp input "help")
