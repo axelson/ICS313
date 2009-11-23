@@ -377,6 +377,12 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     (note ((describe (lambda ()
 		       (if (try-answer-riddle 'birthday-riddle)
 			   (remove-from-container 'note (get-room 'ballroom)))))
+           (use (lambda ()
+                  (if (equal (get-state 'current-room) 'hostroom)
+                      (progn
+                        (format t "You use the number on the note to open the safe~%Inside the safe you find a key to the attic~%")
+                        (add-inventory attic-key))
+                      (format t "You cannot use the note here~%"))))
            (describe-inventory (lambda ()
                                  (format t "A note that has the number 23 on it.~%")))))
     (writing-on-wall ((describe (lambda () (format t "Slowly you decipher the writing on the wall: \"If life had a reset button, it would be in the ballroom.\"~%")))))
