@@ -744,7 +744,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
   (loop
      (case (if (string= input "")
                nil
-               (progn (format t "input:[~A]" input) (parse-integer input)))
+               (progn (parse-integer input)))
        (1 (return 1))
        (2 (return 2))
        (3 (return 3))
