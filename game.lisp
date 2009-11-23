@@ -309,7 +309,10 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 				  (contents (newspaper))
 				  (east lobby)))
 			(ballroom ((displayname "the ballroom")
-				   (describe "A ballroom large enough to fit a hundred people.~%There is a note stuck behind a painting.~%The lobby is behind you.")
+				   (describe (concatenate 'string "A ballroom large enough to fit a hundred people.~%"
+							  (if (contains? (get-room 'ballroom) 'note)
+							      "There is a note stuck behind a painting.~%")
+							  "The lobby is behind you."))
 				   (contents (note))
 				   (south lobby)))
 			(bathroom ((displayname "the bathroom")
