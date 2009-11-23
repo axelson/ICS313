@@ -323,7 +323,7 @@
 					   (format t "Butler: \"I used to take care of Batman.\"~%"))))
 				(2 (if (equal 0 (eval (char-get-prop butler 'conv-place-2)))
 				       (conv-engine butler state)
-				       (format t "Butler: Default line.~")))))))
+				       (format t "Butler: Default line.~%")))))))
 
   (set-prop (get-prop characters 'poo) 'talk
 	    #'(lambda (obj) (let ((state (get-prop obj 'state)))
