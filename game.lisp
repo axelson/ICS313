@@ -868,7 +868,7 @@ The bathroom is up the stairs.")
           else collect (subseq string n)
         while pos))
 
-(defun search-string (key-list search-string)
+(defun search-string (key-list search-string &key return-zero-no-matches)
   "Searches search-string for words matching string-list and returns number of matches"
   (let ((matches 0))
     (loop for key in (string-split " " key-list)
@@ -877,7 +877,7 @@ The bathroom is up the stairs.")
 		  (incf matches)
 		  (return))))
     (if (= 0 matches)
-        nil
+        (if return-zero-no-matches 0 nil)
 	matches)))
 
 ;; Riddle functions
