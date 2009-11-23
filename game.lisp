@@ -340,7 +340,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 				   (south elevator)))
 			(hallway3north ((displayname "the north side of the third floor hallway")
 					(describe "The north-side of the third floor hallway.~%There is a room to the right and a room at the end of the hall.")
-					(east vacantroom2)
+					(east hostroom)
 					(north storageroom)))
 			(hostroom ((displayname "the host's room")
 				   (describe "An elegant and beautiful room.~%There is a small safe in the corner of the room.~%The hallway is to the left.")
