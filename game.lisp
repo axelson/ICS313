@@ -387,10 +387,6 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                                  (format t "A note that has the number 23 on it.~%")))))
     (writing-on-wall ((describe (lambda () (format t "Slowly you decipher the writing on the wall: \"If life had a reset button, it would be in the ballroom.\"~%")))))
     (ice ((describe (lambda () (format t "This would be great for making cold drinks.~%")))))
-<<<<<<< HEAD
-    (written-note ((describe (lambda () (format t "A note that has the number 23 on it.~%")))))
-=======
->>>>>>> 2bc2783e0c5287359ed4159ec5417335b33f3ff4
     (safe ((describe (lambda () (format t "It looks like someone tampered with the safe.  Seems like only one more number is needed.~%")))))
     (knife ((describe (lambda ()
                         (format t "You take a closer look at the garbage can.~%You find a bloody knife.  This must be what the killer must have used!~%")
@@ -942,15 +938,11 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 	  (access-struct riddles riddle 'result)
 	  t)
 	;; Answer was incorrect
-<<<<<<< HEAD
 	(progn
-	  (format t "Hm.. I don't think that could've been possible.  Should I try again?~%")
+          (format t "Hmmm... I don't think that's correct.  I guess I'll give up for now.~%")
 	  (if (y-or-n-p)
 	      (try-answer-riddle riddle))))))
   
-=======
-	(format t "Hmmm... I don't think that's correct.  I guess I'll give up for now.~%"))))
->>>>>>> 2bc2783e0c5287359ed4159ec5417335b33f3ff4
 
 ;;;;;;;;;;;;;;;;;
 ; End Functions ;
