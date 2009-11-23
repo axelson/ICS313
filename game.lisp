@@ -178,7 +178,7 @@
 				      (conv-place-1 0)
 				      (conv-place-2 0)))
 			     (poo ((describe "A rancid smell")
-				   (state 0)
+				   (state 1)
 				   (talk nil)
 				   (conv-place-1 0)
 				   (conv-place-2 0)))
@@ -667,7 +667,10 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-4
       (lambda () (convo-end))
       (lambda () (format t "Poo: Well thank you for your patience.  Good luck on your endeavors.~%"))
-      (lambda () (access-struct riddles 'quarter-dime-riddle 'riddle) (try-answer-riddle 'quarter-dime-riddle)))
+      (lambda () (when (try-answer-riddle 'quarter-dime-riddle)
+                   (format t "Poo: You know, I think there's an entrance to the basement south of here~%")
+                   (format t "Suddenly you realize that the wall is not a wall, how zen of you~%")
+                   (set-prop (get-current-room) 'locked 0))))
 )))
 
 (defmacro set-conv-state (character conversation state)
@@ -788,7 +791,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                            (format t "That's correct!~%")))
                  (Hint (lambda () (format t "Think."))))
                 (Quarter-Dime-Riddle
-                 (Riddle (lambda () (format t "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter. What are the two coins?")))
+                 (Riddle (lambda () (format t "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter.~%What are the two coins? ")))
                  (Answer (lambda () "Quarter Dime"))
                  (Result (lambda ()
                            (format t "That's correct!~%")))
