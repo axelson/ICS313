@@ -166,9 +166,16 @@
 ;; Returns nil if item is not removed, t if it is removed
 (defun remove-inventory (item)
   "Removes an item from the player's inventory"
-  (when (contains? pouch item)
-    (set-prop pouch 'contents (remove item (get-prop pouch 'contents) :count 1))
-    t))
+  (remove-from-container item pouch))
+
+;; Returns nil if item is not removed, t if it is removed
+(defun remove-from-container (item container)
+  "Removes an item from a container"
+  (cond
+    ((containerp container)
+     (when (contains? container item)
+       (set-prop container 'contents (remove item (get-prop container 'contents) :count 1))))
+    (t (format t "remove-from-container requires a container"))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;
