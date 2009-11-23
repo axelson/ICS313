@@ -163,6 +163,21 @@
   "Adds an item to the player's inventory"
   `(set-prop pouch 'contents (append (get-prop pouch 'contents) '(,item))))
 
+;; Returns nil if item is not removed, t if it is removed
+(defun remove-inventory (item)
+  "Removes an item from the player's inventory"
+  (remove-from-container item pouch))
+
+;; Returns nil if item is not removed, t if it is removed
+(defun remove-from-container (item container)
+  "Removes an item from a container"
+  (cond
+    ((containerp container)
+     (when (contains? container item)
+       (set-prop container 'contents (remove item (get-prop container 'contents) :count 1))))
+    (t (format t "remove-from-container requires a container"))))
+
+
 ;;;;;;;;;;;;;;;;;;;;;
 ; End Assignment 05 ;
 ;;;;;;;;;;;;;;;;;;;;;
@@ -294,7 +309,10 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 				  (contents (newspaper))
 				  (east lobby)))
 			(ballroom ((displayname "the ballroom")
-				   (describe "A ballroom large enough to fit a hundred people.~%There is a note stuck behind a painting.~%The lobby is behind you.")
+				   (describe (concatenate 'string "A ballroom large enough to fit a hundred people.~%"
+							  (if (contains? (get-room 'ballroom) 'note)
+							      "There is a note stuck behind a painting.~%")
+							  "The lobby is behind you."))
 				   (contents (note))
 				   (south lobby)))
 			(bathroom ((locked 1)
@@ -374,7 +392,9 @@ The bathroom is up the stairs.")
 				  (if (y-or-n-p)
                                       (try-answer-riddle 'ice-riddle))
                                   ))))
-    (note ((describe (lambda () (try-answer-riddle 'birthday-riddle)))))
+    (note ((describe (lambda ()
+		       (if (try-answer-riddle 'birthday-riddle)
+			   (remove-from-container 'note (get-room 'ballroom)))))))
     (writing-on-wall ((describe (lambda () (format t "If life had a reset button, it would be in the ballroom.~%")))))
     (ice ((describe (lambda () (format t "This would be great for making cold drinks.~%")))))
     (written-note ((describe (lambda () (format t "A note that has the number 23 on it.")))))
@@ -895,7 +915,9 @@ The bathroom is up the stairs.")
     (if (= (length (string-split " " riddle-answer))
 	   (search-string riddle-answer (read-line) :return-zero-no-matches t))
 	;; Execute result of getting riddle correct
-	(access-struct riddles riddle 'result)
+	(progn
+	  (access-struct riddles riddle 'result)
+	  t)
 	;; Answer was incorrect
 	(format t "Hm.. I don't think that could've been possible.  I guess I'll give up for now.~%"))))
 
@@ -929,9 +951,14 @@ The bathroom is up the stairs.")
 ;;;;;;;;
 
 (defun game ()
-  "Runs RPG game"
+  "Starts RPG game"
+  (reset-state)
   (show-intro)
   ; Process following commands
+  (run-game))
+
+(defun run-game ()
+  "Runs RPG Game"
   (loop
      do (format t "What now? ")
      until (handle-input (read-line))))
@@ -956,10 +983,10 @@ The bathroom is up the stairs.")
     ;; Commands
     ((search-string "win" input)
      (format t "You won!")
-     (reset-state) t)
+     t)
     ((search-string "quit exit q" input)
      (format t "You Fail the Game!~%")
-     (reset-state) t)
+     t)
     ((search-string "inventory i" input)
      (check-inventory))
     ((search-string "examine x" input)
