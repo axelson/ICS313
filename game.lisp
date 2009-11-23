@@ -454,7 +454,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-4
       (lambda () (convo-end))
       (lambda () (format t "Married couple: Wow.. you seem a little too eager. Sorry, we do not want to jeopardize our safety!~%") (set-prop (get-prop characters 'married-couple) 'conv-place-1 -1))
-      (lambda () (format t "Married couple: Ooh!  We love riddles!  We have just the one.~%") (access-struct riddles 'Children-age-riddles 'riddle) (try-answer-riddle 'children-age-riddle)))
+      (lambda () (format t "Married couple: Ooh!  We love riddles!  We have just the one.~%") (try-answer-riddle 'children-age-riddle)))
       
 )))
 
@@ -499,7 +499,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) I am really not sure.. now that you ask.~%")))
      (r-4
       (lambda () (convo-end))
-      (lambda () (access-struct riddles 'second-place-riddle 'riddle) (try-answer-riddle 'second-place-riddle))
+      (lambda () (try-answer-riddle 'second-place-riddle))
       (lambda () (format t "Fat pompous bastard: You insolent fool!  Get out of my sight!~%") (set-prop (get-prop characters 'fat-pompous-bastard) 'conv-place-1 -1)))
 )))
      
@@ -556,7 +556,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-5
       (lambda () (convo-end))
       (lambda () (format t "Young rich widow: Well, if you are not interested, I don't think I can help you.~$") (set-conv-state young-rich-widow conv-place-1 -1))
-      (lambda () (access-struct riddles 'twins-riddle 'riddle) (try-answer-riddle 'twins-riddle)))
+      (lambda () (try-answer-riddle 'twins-riddle)))
 )))
 
 
@@ -621,7 +621,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) I am not too interested in a diary passage, how about telling me something about the suspects.~%")))
      (r-6
       (lambda () (convo-end))
-      (lambda () (format t "Butler: It seemed to be a riddle, for those who weren't familiar with the peculiar situation.") (access-struct riddles 'rainy-day-riddle 'riddle) (try-answer-riddle 'rainy-day-riddle))
+      (lambda () (format t "Butler: It seemed to be a riddle, for those who weren't familiar with the peculiar situation.") (try-answer-riddle 'rainy-day-riddle))
       (lambda () (format t "Butler: I am sorry then, sir, I do not have any other useful information.  Good night.~%")) (set-conv-state butler conv-place-1 -1))
 )))
 
