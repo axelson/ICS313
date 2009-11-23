@@ -515,16 +515,16 @@ The bathroom is up the stairs.")
      (case (if (string= input "")
                nil
                (progn (format t "input:[~A]" input) (parse-integer input)))
-	 (1 (return 1))
-	 (2 (return 2))
-	 (3 (return 3))
-	 (otherwise (progn (format t "~%Please choose a valid option.~%") (setf input (read-line)))))))
+       (1 (return 1))
+       (2 (return 2))
+       (3 (return 3))
+       (otherwise (progn (format t "~%Please choose a valid option.~%") (setf input (read-line)))))))
 
 (defun get-from-list (lname item-no)
   (let ((no 1))
     (loop for i in lname do
-	 (if (eq no item-no) (return-from get-from-list i) ())
-	 (setf no (1+ no)))))
+	 (if (eq no item-no) (return i) ())
+	 (incf no))))
 
 (defun ssc (arg1 arg2)
   (if (stringp arg1) () (setq arg1 (write-to-string arg1)))
