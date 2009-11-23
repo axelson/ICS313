@@ -821,7 +821,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 				   (format t "A hint string"))))
 			; First floor riddles
 			(Ice-Riddle
-			 (Riddle (lambda () (format t "\"A man was found hanging in a room 30 feet off the ground. There wass nothing else in the room except for a large puddle of water on the ground. At this point, investigators can't see any way the man could have climbed the walls to get to where he is hanging without it being a murder, but there are no signs of resistance.\"~%~%You think about the riddle for awhile and realize that it had to be suicide!  But how did the victim do it?~%Your answer: ")))
+			 (Riddle (lambda () (format t "\"A man was found hanging in a room 30 feet off the ground. There was nothing else in the room except for a large puddle of water on the ground. At this point, investigators can't see any way the man could have climbed the walls to get to where he is hanging without it being a murder, but there are no signs of resistance.\"~%~%You think about the riddle for awhile and realize that it had to be suicide!  But how did the victim do it?~%Your answer: ")))
 			 (Answer (lambda () "Ice"))
 			 (Hint (lambda () (format t "Think.")))
                          (Result (lambda ()
@@ -942,13 +942,14 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 	matches)))
 
 ;; Riddle functions
-(defun try-answer-riddle (riddle)
+(defun try-answer-riddle (riddle &optional (skip nil))
   "User can try to answer the riddle"
   ;; Show riddle
   (access-struct riddles riddle 'riddle)
   (let ((riddle-answer (access-struct riddles riddle 'answer)))
-    (if (= (length (string-split " " riddle-answer))
-	   (search-string riddle-answer (read-line) :return-zero-no-matches t))
+    (if (or skip
+	    (= (length (string-split " " riddle-answer))
+	       (search-string riddle-answer (read-line) :return-zero-no-matches t)))
 	;; Execute result of getting riddle correct
 	(progn
 	  (access-struct riddles riddle 'result)
@@ -1019,6 +1020,10 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     ((search-string "win" input)
      (format t "You won!")
      t)
+    ((search-string "skip" input)
+     (format t "Skipping first floor~%")
+     (skip-first-floor)
+     nil)
     ((search-string "quit exit q" input)
      (format t "You Fail the Game!~%")
      t)
@@ -1061,6 +1066,13 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (progn
 	(format t "You have ~(~A~) in your inventory.~%"  (get-prop pouch 'contents)))
       (format t "There is nothing in your inventory.~%")))
+
+(defun skip-first-floor ()
+  (try-answer-riddle 'ice-riddle t)
+  (try-answer-riddle 'birthday-riddle t)
+  (set-prop (get-room 'lobby) 'state 1)
+  (set-prop (get-room 'lobby) 'contents '(police))
+  )
 
 (defun talk (character-string)
   "Try to talk to the specified character"
