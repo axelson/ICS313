@@ -1087,7 +1087,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (t (format t "Sorry, there is nothing special to examine about that.~%")))))
 
 (defun translate-input (input)
-  "Matches user input with characters" 
+  "Matches user input with characters, returns object matched, or nil if no match"
   (cond
     ;; Characters
     ((not (stringp input)) (format t "this requires a string~%"))
@@ -1109,6 +1109,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     ((search-string "video tape" input) 'video-tape)
     ((search-string "will" input) 'will)
     ((search-string "knife" input) 'knife)
+    ;; Nil means that there was no match
     (t nil)
     ))
 
