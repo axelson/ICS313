@@ -429,8 +429,24 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-1
       (lambda () (convo-end))
       (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%") (set-conv-state police conv-place-1 -1))
-      (lambda () (format t "Well, it may be best to stay in your room.  It could be dangerous wandering about.~%") (set-conv-state police conv-place-1 -1)))
-)))
+      (lambda () (format t "Well, it may be best to stay in your room.  It could be dangerous wandering about.~%") (set-conv-state police conv-place-1 -1))))
+    (place-2
+     (q-1
+      (lambda () (format t "Police officer: So, thought you could solve this all by yourself?~%~%You say:~%")))
+     (a-1
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) I did!  It was you!~%"))
+      (lambda () (format t "(3) Ok! I'm dead!")))
+     (r-1
+      (lambda () (format t "You foolishly make a mad dash to the elevator.  You turn your head around only to see the cop draw his gun...~%"))
+      (lambda () (conv-engine police 2 2))
+      (lambda () (format t "Police officer: Not even worth my time...~%")))
+     (q-2
+      (lambda () (format t "Police officer: The only thing you did was show me the way to my dead brother's fortune!~%~%You say:~%")))
+     (a-2
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2)"))))
+    ))
 
 (defparameter married-couple
   '(
@@ -444,7 +460,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-1
       (lambda () (convo-end))
       (lambda () (format t "Married couple: So are we.~%") (conv-engine married-couple 1 2))
-      (lambda () (format t "Married couple: Excuse me? I do not think it would be wise of us to let you in.  Our first concern is our safety.  Please leave.~%") (set-prop (get-prop characters 'married-couple) 'conv-place-1 -1)))
+      (lambda () (format t "Excuse me? I do not think it would be wise of us to let you in.  Our first concern is our safety.  Please leave.~%") (set-prop (get-prop characters 'married-couple) 'conv-place-1 -1)))
      (q-2
       (lambda () (format t "Married couple: But our first and utmost concern is on keeping our family safe.~%~%You say:~%")))
      (a-2
@@ -464,7 +480,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-3
       (lambda () (convo-end))
       (lambda () (conv-engine married-couple 1 4))
-      (lambda () (format t "Married couple: I think you should stay put and keep yourself safe.. besides, the killer is out there.~%") (set-prop (get-prop characters 'married-couple) 'conv-place-1 -1)))
+      (lambda () (format t "I think you should stay put and keep yourself safe.. besides, the killer is out there.~%") (set-prop (get-prop characters 'married-couple) 'conv-place-1 -1)))
      (q-4
       (lambda () (format t "Married couple: Before we let you in, you have to show that you have concern for our family.~%~%You say:~%")))
      (a-4
@@ -510,7 +526,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-3
       (lambda () (convo-end))
       (lambda () (if (player-has? 'ice) (progn (format t "<You give the fat pompous bastard some ice>~%") (conv-engine fat-pompous-bastard 1 4)) (format t "You have nothing to give.~%")))
-      (lambda () (format t "Fat pompous bastard: Give me a break, I don't have to listen to you!~%<Door slams>~%") (set-prop (get-prop characters 'fat-pompous-bastard) 'conv-place-1 -1)))
+      (lambda () (format t "Give me a break, I don't have to listen to you!~%<Door slams>~%") (set-prop (get-prop characters 'fat-pompous-bastard) 'conv-place-1 -1)))
      (q-4
       (lambda () (format t "Fat pompous bastard: Ah!  It's nice to finally get a drink, now what do you want?~%~%You say:~%")))
      (a-4
@@ -519,7 +535,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) I am really not sure.. now that you ask.~%")))
      (r-4
       (lambda () (convo-end))
-      (lambda () (try-answer-riddle 'second-place-riddle))
+      (lambda () (format t "Fat pompous bastard: Answer this first!") (try-answer-riddle 'second-place-riddle))
       (lambda () (format t "Fat pompous bastard: You insolent fool!  Get out of my sight!~%") (set-prop (get-prop characters 'fat-pompous-bastard) 'conv-place-1 -1)))
 )))
      
@@ -659,7 +675,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "The poo looks insulted.~%Although you are distracted by the smell and the fact that it has no face, you notice it crinkle its brow.~%Obligingly, the poo continues...~%~%") (conv-engine poo 1 2))
       (lambda () (conv-engine poo 1 3)))
      (q-2
-      (lambda () (format t "Poo: Do you believe the presence of power yields the power of persuasion?~%~%You say:~%")))
+      (lambda () (format t "Do you believe the presence of power yields the power of persuasion?~%~%You say:~%")))
      (a-2
       (lambda () (format t "(1) **Leave**~%"))
       (lambda () (format t "(2) What nonsense!~%"))
@@ -669,7 +685,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "Poo: Fine, you suck.~%"))
       (lambda () (format t "Poo: So you are curious...~%") (conv-engine poo 1 4)))
      (q-3
-      (lambda () (format t "Poo: How kind. Please sit down.~%~%You say:~%")))
+      (lambda () (format t "How kind. Please sit down.~%~%You say:~%")))
      (a-3
       (lambda () (format t "(1) **Leave**~%"))
       (lambda () (format t "(2) Sure thing, poop!~%"))
@@ -939,7 +955,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 	  t)
 	;; Answer was incorrect
 	(progn
-          (format t "Hmmm... I don't think that's correct.  I guess I'll give up for now.~%")
+          (format t "Hmmm... I don't think that's correct.  Should I give up?.~%")
 	  (if (y-or-n-p)
 	      (try-answer-riddle riddle))))))
   
