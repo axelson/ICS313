@@ -909,7 +909,9 @@ The bathroom is up the stairs.")
     (if (= (length (string-split " " riddle-answer))
 	   (search-string riddle-answer (read-line) :return-zero-no-matches t))
 	;; Execute result of getting riddle correct
-	(access-struct riddles riddle 'result)
+	(progn
+	  (access-struct riddles riddle 'result)
+	  t)
 	;; Answer was incorrect
 	(format t "Hm.. I don't think that could've been possible.  I guess I'll give up for now.~%"))))
 
