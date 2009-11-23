@@ -30,11 +30,20 @@
   (length obj))
 
 ;; Define a function or macro (get-prop obj property) which returns the value of a property.
-(defun get-prop (obj property)
+(defun get-prop (obj &rest properties)
   "Gets property of object"
-  (cadr (find-if #'(lambda (x) (eql x property))
-           obj
-           :key #'car)))
+  (if (listp (car properties))
+      (setf properties (car properties)))
+  (let ((value
+	 (cadr (find-if #'(lambda (x) (eql x (car properties)))
+			obj
+			:key #'car))))
+    (if (= (length properties) 1)
+	value
+	(get-prop value (cdr properties)))))
+
+(defun flatten (list)
+  (loop for i in list if (listp i) append (flatten i) else collect i))
 
 
 ;; Define a function or macro (set-prop obj property value) which will set the value of a property.
@@ -267,9 +276,9 @@
 			(lobby ((state 0)
 				(displayname "the lobby")
 				(describe (cond 
-					    ((= (get-prop (get-prop rooms 'lobby) 'state) 0)
+					    ((= (get-prop rooms 'lobby 'state) 0)
 					     "A dead person lays on the ground.  It seems as if he was stabbed numerous times.~%The police officer, young rich widow, fat pompous bastard, butler, and married couple are all in the room.~%The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
-					    ((= (get-prop (get-prop rooms 'lobby) 'state) 1) 
+					    ((= (get-prop rooms 'lobby 'state) 1) 
 					      "A dead person lays on the ground.  It seems as if he was stabbed numerous times.~%The police officer stands next to the body with a stern look on his face.~%The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
 					    (t
 					      "Where did the dead guy go?  There are no traces of his body.
@@ -608,26 +617,35 @@ The bathroom is up the stairs.")
 				   (set-prop player 'birthday-riddle 1)
 				   )))
 			(Rainy-Day-Riddle
-			 (Riddle (lambda () (format t "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way. Why does he do this?")))
-			 (Answer (lambda () '(Umbrella)))
+			 (Riddle (lambda () (format t "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way.~%Why does he do this? ")))
+			 (Answer (lambda () "Umbrella"))
+			 (Result (lambda ()
+				   (format t "That's correct!~%")))
 			 (Hint (lambda () (format t "Think."))))
 			(Quarter-Dime-Riddle
 			 (Riddle (lambda () (format t "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter. What are the two coins?")))
-			 (Answer (lambda () '(Quarter Dime)))
+			 (Answer (lambda () "Quarter Dime"))
+			 (Result (lambda ()
+				   (format t "That's correct!~%")))
 			 (Hint (lambda () (format t "Think."))))
-			; Second floor riddles
+			;; Second floor riddles
 			(Children-Age-Riddle
-			 (Riddle (lambda () (format t "A deliveryman comes to a house to drop off a package. He asks the woman who lives there how many children she has.~%\"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at the house number nailed to the front of her house. \"I need another hint,\" he says.~%The woman thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.~%The deliveryman's eyes light up and he tells her the ages of her three children. What are their ages?")))
-			 (Answer (lambda () '(1 6 6)))
+			 (Riddle (lambda () (format t "A deliveryman comes to a house to drop off a package. He asks the woman who lives there how many children she has.~%\"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at the house number nailed to the front of her house. \"I need another hint,\" he says.~%The woman thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.~%The deliveryman's eyes light up and he tells her the ages of her three children.~%What are their ages? ")))
+			 (Answer (lambda () "1 6 6"))
+			 (Result (lambda () (format t "that's right!~%")))
 			 (Hint (lambda () (format t "Think."))))
 			(Second-Place-Riddle
 			 (Riddle (lambda () (format t "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")))
-			 (Answer (lambda () '(Second)))
+			 (Answer (lambda () "Second"))
+			 (Result (lambda ()
+				   (format t "That's correct!~%")))
 			 (Hint (lambda () (format t "Think."))))
-			; Third floor riddles
+			;; Third floor riddles
 			(Twins-Riddle
 			 (Riddle (lambda () (format t "Two girls are born to the same mother, on the same day, at the same time, in the same month and year and yet they're not twins. How can this be?")))
-			 (Answer (lambda () '(Triplets)))
+			 (Answer (lambda () "Triplets"))
+			 (Result (lambda ()
+				   (format t "That's correct!~%")))
 			 (Hint (lambda () (format t "Think."))))))
 
 ;; Riddle accessor function
@@ -690,27 +708,29 @@ The bathroom is up the stairs.")
         while pos))
 
 (defun search-string (key-list search-string)
-  "Searches search-string for words matching string-list"
+  "Searches search-string for words matching string-list and returns number of matches"
   (let ((matches 0))
     (loop for key in (string-split " " key-list)
        do (loop for string in (string-split " " search-string)
-		do (if (equalp key string)
-		    (incf matches))))
+	     do (when (equalp key string)
+		  (incf matches)
+		  (return))))
     (if (= 0 matches)
         nil
-        matches)))
+	matches)))
 
 ;; Riddle functions
 (defun try-answer-riddle (riddle)
   "User can try to answer the riddle"
   ;; Show riddle
   (access-struct riddles riddle 'riddle)
-  (if (search-string (access-struct riddles riddle 'answer)
-                     (read-line))
-      ;; Execute result of getting riddle correct
-      (access-struct riddles riddle 'result)
-      ;; Answer was incorrect
-      (format t "Hm.. I don't think that could've been possible.  I guess I'll give up for now.~%")))
+  (let ((riddle-answer (access-struct riddles riddle 'answer)))
+    (if (= (length (string-split " " riddle-answer))
+	   (search-string riddle-answer (read-line)))
+	;; Execute result of getting riddle correct
+	(access-struct riddles riddle 'result)
+	;; Answer was incorrect
+	(format t "Hm.. I don't think that could've been possible.  I guess I'll give up for now.~%"))))
 
 ;;;;;;;;;;;;;;;;;
 ; End Functions ;
@@ -723,7 +743,7 @@ The bathroom is up the stairs.")
   (do-action (get-prop characters character) 'talk))
 
 (defmacro char-get-prop (character property)
-  `(get-prop (get-prop characters ',character) ,property))
+  `(get-prop characters ',character ,property))
 
 (defmacro char-set-prop (character property value)
   `(set-prop (get-prop characters ,character) ,property ,value))
@@ -839,10 +859,10 @@ The bathroom is up the stairs.")
       ((= 0 (length item-string))
        (format t "You examine nothing, and look stupid doing it.~%"))
       ((contains? (get-current-room) item)
-       (funcall (eval (get-prop (get-prop items item) 'describe))))
+       (funcall (eval (get-prop items item 'describe))))
       ((player-has? item)
        (format t "You rummage about your pouch and see an item~%")
-       (funcall (eval (get-prop (get-prop items item) 'describe))))
+       (funcall (eval (get-prop items item 'describe))))
       (t (format t "Sorry, there is nothing special to examine about that.~%")))))
 
 (defun find-character (character-string)
