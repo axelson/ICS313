@@ -193,9 +193,9 @@
 				(1 (progn
 				     (format t "Police officer: I've sent everyone up to their rooms.  If you find anymore information, let me know...~%") (read-line)
 				     (if (equal 0 (eval (char-get-prop police 'conv-place-1)))
-					      (conv-engine police state)
-					      (format t "Police officer: I am here to ensure everyone's safety.~%")
-					      )))
+                                         (conv-engine police state)
+                                         (format t "Police officer: I am here to ensure everyone's safety.~%")
+                                         )))
 				(2 (progn (if (equal 0 (eval (char-get-prop police 'conv-place-2)))
 					      (conv-engine police state)
 					      (format t "Police officer: Suck it.~%"))))
