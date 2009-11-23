@@ -751,64 +751,64 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 ; Riddles ;
 ;;;;;;;;;;;
 
-(defparameter riddles '(
-			(Test-Riddle
-			 (Riddle (lambda ()
-				     (format t "Test riddle")))
-			 (Answer (lambda ()
-				   '(a test list)))
-			 (Hint (lambda ()
-				   (format t "A hint string"))))
-			; First floor riddles
-			(Ice-Riddle
-			 (Riddle (lambda () (format t "\"A man was found hanging in a room 30 feet off the ground. There was nothing else in the room except for a large puddle of water on the ground. At this point, investigators can't see any way the man could have climbed the walls to get to where he is hanging without it being a murder, but there are no signs of resistance.\"~%~%You think about the riddle for awhile and realize that it had to be suicide!  But how did the victim do it?~%Your answer: ")))
-			 (Answer (lambda () "Ice"))
-			 (Hint (lambda () (format t "Think.")))
-                         (Result (lambda ()
-                                   (format t "I got it!  He stood on ice with a rope around his neck and waited for the ice to melt!~%As you thought this, ice appeared in your pouch.~%")
-                                   (add-inventory ice)
-				   (set-prop player 'ice-riddle 1)
-				   )))
-			(Birthday-Riddle
-			 (Riddle (lambda () (format t "On the note says, \"What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?\"~%Your answer: ")))
-			 (Answer (lambda () "23"))
-			 (Hint (lambda () (format t "What is the general formula for finding the probability that no people in the room have the same birthday?")))
-			 (Result (lambda ()
-				   (format t "The answer has to be at least 23 people!~%Hmm... There must be a reason for this note.  I guess I'll keep it for now.~%You wrote on the note and put it in your pouch.~%")
-				   (add-inventory written-note)
-				   (set-prop player 'birthday-riddle 1)
-				   )))
-			(Rainy-Day-Riddle
-			 (Riddle (lambda () (format t "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way.~%Why does he do this? ")))
-			 (Answer (lambda () "Umbrella"))
-			 (Result (lambda ()
-				   (format t "That's correct!~%")))
-			 (Hint (lambda () (format t "Think."))))
-			(Quarter-Dime-Riddle
-			 (Riddle (lambda () (format t "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter. What are the two coins?")))
-			 (Answer (lambda () "Quarter Dime"))
-			 (Result (lambda ()
-				   (format t "That's correct!~%")))
-			 (Hint (lambda () (format t "Think."))))
-			;; Second floor riddles
-			(Children-Age-Riddle
-			 (Riddle (lambda () (format t "The husband continues, \"A deliveryman came to our house to drop off a package. He asks my wife how many children she has.  \"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at our house number nailed to the front of the house. \"I need another hint,\" he says.~%My wife thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.  The deliveryman's eyes light up and he tells us the ages of our three children.  Can you guess their ages?")))
-			 (Answer (lambda () "1 6 6"))
-			 (Result (lambda () (format t "That's right!~%")))
-			 (Hint (lambda () (format t "Think."))))
-			(Second-Place-Riddle
-			 (Riddle (lambda () (format t "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")))
-			 (Answer (lambda () "Second"))
-			 (Result (lambda ()
-				   (format t "That's correct!~%")))
-			 (Hint (lambda () (format t "Think."))))
-			;; Third floor riddles
-			(Twins-Riddle
-			 (Riddle (lambda () (format t "My sister and I were born to the same mother, on the same day, at the same time, in the same month, in the same year, and yet, we are not twins!  How can this be?")))
-			 (Answer (lambda () "Triplets"))
-			 (Result (lambda ()
-				   (format t "That's correct!~%")))
-			 (Hint (lambda () (format t "Think."))))))
+(setf riddles '(
+                (Test-Riddle
+                 (Riddle (lambda ()
+                           (format t "Test riddle")))
+                 (Answer (lambda ()
+                           '(a test list)))
+                 (Hint (lambda ()
+                         (format t "A hint string"))))
+                                        ; First floor riddles
+                (Ice-Riddle
+                 (Riddle (lambda () (format t "\"A man was found hanging in a room 30 feet off the ground. There was nothing else in the room except for a large puddle of water on the ground. At this point, investigators can't see any way the man could have climbed the walls to get to where he is hanging without it being a murder, but there are no signs of resistance.\"~%~%You think about the riddle for awhile and realize that it had to be suicide!  But how did the victim do it?~%Your answer: ")))
+                 (Answer (lambda () "Ice"))
+                 (Hint (lambda () (format t "Think.")))
+                 (Result (lambda ()
+                           (format t "I got it!  He stood on ice with a rope around his neck and waited for the ice to melt!~%As you thought this, ice appeared in your pouch.~%")
+                           (add-inventory ice)
+                           (set-prop player 'ice-riddle 1)
+                           )))
+                (Birthday-Riddle
+                 (Riddle (lambda () (format t "On the note says, \"What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?\"~%Your answer: ")))
+                 (Answer (lambda () "23"))
+                 (Hint (lambda () (format t "What is the general formula for finding the probability that no people in the room have the same birthday?")))
+                 (Result (lambda ()
+                           (format t "The answer has to be at least 23 people!~%Hmm... There must be a reason for this note.  I guess I'll keep it for now.~%You wrote on the note and put it in your pouch.~%")
+                           (add-inventory written-note)
+                           (set-prop player 'birthday-riddle 1)
+                           )))
+                (Rainy-Day-Riddle
+                 (Riddle (lambda () (format t "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way.~%Why does he do this? ")))
+                 (Answer (lambda () "Umbrella"))
+                 (Result (lambda ()
+                           (format t "That's correct!~%")))
+                 (Hint (lambda () (format t "Think."))))
+                (Quarter-Dime-Riddle
+                 (Riddle (lambda () (format t "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter. What are the two coins?")))
+                 (Answer (lambda () "Quarter Dime"))
+                 (Result (lambda ()
+                           (format t "That's correct!~%")))
+                 (Hint (lambda () (format t "Think."))))
+                ;; Second floor riddles
+                (Children-Age-Riddle
+                 (Riddle (lambda () (format t "The husband continues, \"A deliveryman came to our house to drop off a package. He asks my wife how many children she has.  \"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at our house number nailed to the front of the house. \"I need another hint,\" he says.~%My wife thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.  The deliveryman's eyes light up and he tells us the ages of our three children.  Can you guess their ages?")))
+                 (Answer (lambda () "1 6 6"))
+                 (Result (lambda () (format t "That's right!~%")))
+                 (Hint (lambda () (format t "Think."))))
+                (Second-Place-Riddle
+                 (Riddle (lambda () (format t "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")))
+                 (Answer (lambda () "Second"))
+                 (Result (lambda ()
+                           (format t "That's correct!~%")))
+                 (Hint (lambda () (format t "Think."))))
+                ;; Third floor riddles
+                (Twins-Riddle
+                 (Riddle (lambda () (format t "My sister and I were born to the same mother, on the same day, at the same time, in the same month, in the same year, and yet, we are not twins!  How can this be?")))
+                 (Answer (lambda () "Triplets"))
+                 (Result (lambda ()
+                           (format t "That's correct!~%")))
+                 (Hint (lambda () (format t "Think."))))))
 
 ;; Riddle accessor function
 ;; e.g., (access-riddle riddles 'twins-riddle 'hint)
