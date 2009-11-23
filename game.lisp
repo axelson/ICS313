@@ -1039,7 +1039,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
   "Shows user what is contained in their inventory"
   (if (get-prop pouch 'contents)
       (progn
-	(format t "You have ~(~A~) in your inventory.~%"  (get-prop pouch 'contents)))
+	(format t "You have the following items in your inventory:~%~A~%"  (get-prop pouch 'contents)))
       (format t "There is nothing in your inventory.~%")))
 
 (defun skip-first-floor ()
