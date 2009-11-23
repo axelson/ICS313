@@ -1050,9 +1050,9 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
   "Use an item from your inventory"
   (let ((item (translate-input item-string)))
     (if (player-has? item)
-        (progn (format t "You are using: ~A~%" item)
-               (if (get-prop items item 'use)
-                   (funcall (eval (get-prop items item 'use)))))
+        (progn (if (get-prop items item 'use)
+                   (funcall (eval (get-prop items item 'use)))
+                   (format t "You are unable to use the ~A at this time~%" item)))
         (format t "You don't have a \"~A\" in your inventory~%Maybe you should try the \"inventory\" command.~%" item))))
 
 (defun skip-first-floor ()
