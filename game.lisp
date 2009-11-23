@@ -1116,6 +1116,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     ((search-string "video tape" input) 'video-tape)
     ((search-string "will" input) 'will)
     ((search-string "knife" input) 'knife)
+    ((search-string "safe" input) 'safe)
     ;; Nil means that there was no match
     (t nil)
     ))
