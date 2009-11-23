@@ -606,8 +606,9 @@ The bathroom is up the stairs.")
 			 (Hint (lambda () (format t "Think."))))
 			; Second floor riddles
 			(Children-Age-Riddle
-			 (Riddle (lambda () (format t "A deliveryman comes to a house to drop off a package. He asks the woman who lives there how many children she has.~%\"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at the house number nailed to the front of her house. \"I need another hint,\" he says.~%The woman thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.~%The deliveryman's eyes light up and he tells her the ages of her three children. What are their ages?")))
-			 (Answer (lambda () '(1 6 6)))
+			 (Riddle (lambda () (format t "A deliveryman comes to a house to drop off a package. He asks the woman who lives there how many children she has.~%\"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at the house number nailed to the front of her house. \"I need another hint,\" he says.~%The woman thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.~%The deliveryman's eyes light up and he tells her the ages of her three children.~%What are their ages? ")))
+			 (Answer (lambda () "1 6 6"))
+			 (Result (lambda () (format t "that's right!~%")))
 			 (Hint (lambda () (format t "Think."))))
 			(Second-Place-Riddle
 			 (Riddle (lambda () (format t "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")))
