@@ -163,6 +163,14 @@
   "Adds an item to the player's inventory"
   `(set-prop pouch 'contents (append (get-prop pouch 'contents) '(,item))))
 
+;; Returns nil if item is not removed, t if it is removed
+(defun remove-inventory (item)
+  "Removes an item from the player's inventory"
+  (when (contains? pouch item)
+    (set-prop pouch 'contents (remove item (get-prop pouch 'contents) :count 1))
+    t))
+
+
 ;;;;;;;;;;;;;;;;;;;;;
 ; End Assignment 05 ;
 ;;;;;;;;;;;;;;;;;;;;;
