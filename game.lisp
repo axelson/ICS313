@@ -945,9 +945,14 @@ The bathroom is up the stairs.")
 ;;;;;;;;
 
 (defun game ()
-  "Runs RPG game"
+  "Starts RPG game"
+  (reset-state)
   (show-intro)
   ; Process following commands
+  (run-game))
+
+(defun run-game ()
+  "Runs RPG Game"
   (loop
      do (format t "What now? ")
      until (handle-input (read-line))))
@@ -972,10 +977,10 @@ The bathroom is up the stairs.")
     ;; Commands
     ((search-string "win" input)
      (format t "You won!")
-     (reset-state) t)
+     t)
     ((search-string "quit exit q" input)
      (format t "You Fail the Game!~%")
-     (reset-state) t)
+     t)
     ((search-string "inventory i" input)
      (check-inventory))
     ((search-string "examine" input)
