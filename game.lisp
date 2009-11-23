@@ -1082,7 +1082,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       ((contains? (get-current-room) item)
        (funcall (eval (get-prop items item 'describe))))
       ((player-has? item)
-       (format t "You rummage about your pouch and see an item~%")
+       (format t "You rummage about your pouch and examine your ~A~%" item)
        (funcall (eval (get-prop items item 'describe-inventory))))
       (t (format t "Sorry, there is nothing special to examine about that.~%")))))
 
