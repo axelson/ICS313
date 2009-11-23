@@ -347,7 +347,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 				   (contents (safe))
 				   (west hallway3north)))
 			(storageroom ((displayname "the storage room")
-				      (describe "A large storage room.  It looks messy.~%The hallway is behind you.")
+				      (describe "A large storage room.  It looks messy.~%There appears to be a door in front of you, although it's hard to tell through the inescapable mess.~%The hallway is behind you.")
 				      (south hallway3north)
 				      (north attic)))
 			(mcroom ((displayname "the married couple's room")
