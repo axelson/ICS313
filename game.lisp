@@ -142,8 +142,7 @@
 (progn
   (defparameter pouch '((describe "a small pouch")
 			(contents ())))
-  (defparameter player '((age 9)
-                         (inventory pouch)
+  (defparameter player '((inventory pouch)
 			 (ice-riddle 0)
 			 (birthday-riddle 0)
 			 (rainy-day-riddle 0)
