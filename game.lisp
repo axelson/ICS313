@@ -42,6 +42,9 @@
 	value
 	(get-prop value (cdr properties)))))
 
+(defun flatten (list)
+  (loop for i in list if (listp i) append (flatten i) else collect i))
+
 
 ;; Define a function or macro (set-prop obj property value) which will set the value of a property.
 (defun set-prop (obj property value)
@@ -263,7 +266,7 @@
 				(describe (cond 
 					    ((= (get-prop rooms 'lobby 'state) 0)
 					     "A dead person lays on the ground.  It seems as if he was stabbed numerous times.~%The police officer, young rich widow, fat pompous bastard, butler, and married couple are all in the room.~%The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
-					    ((= (get-prop rooms 'lobby 'state) 1)
+					    ((= (get-prop rooms 'lobby 'state) 1) 
 					      "A dead person lays on the ground.  It seems as if he was stabbed numerous times.~%The police officer stands next to the body with a stern look on his face.~%The ballroom is up ahead and the elevator is behind you.  There are two doors to the left and right.")
 					    (t
 					      "Where did the dead guy go?  There are no traces of his body.
