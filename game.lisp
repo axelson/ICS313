@@ -1113,7 +1113,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 
 (defun move-error ()
   "Shows user error when they try to move in a restricted direction"
-  (format t "There is a wall bob. You cannot go in that direction.~%"))
+  (format t "There is a wall. You cannot go in that direction.~%"))
 
 (defun show-help ()
   "Shows help for the user"
