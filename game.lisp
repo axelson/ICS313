@@ -997,15 +997,15 @@ The bathroom is up the stairs.")
   (cond
     ((= 0 (length character-string))
      (format t "You talk to the wall, the wall does not talk back, perhaps you should try talking to a person~%"))
-    ((find-character character-string)  ;Trying to talk to a character
-     (if (contains? (get-current-room) (find-character character-string))
-         (char-talkf (find-character character-string)) ;Talk to character
+    ((translate-input character-string)  ;Trying to talk to a character
+     (if (contains? (get-current-room) (translate-input character-string))
+         (char-talkf (translate-input character-string)) ;Talk to character
          (format t "Sorry, \"~A\" cannot hear through walls~%" character-string)))
     (t (format t "Your imaginary friend ~A responds!~%" character-string))))
 
 (defun examine (item-string)
   "Describes the item that is in a room"
-  (let ((item (find-item item-string)))
+  (let ((item (translate-input item-string)))
     (cond
       ((= 0 (length item-string))
        (format t "You examine nothing, and look stupid doing it.~%"))
@@ -1016,26 +1016,21 @@ The bathroom is up the stairs.")
        (funcall (eval (get-prop items item 'describe))))
       (t (format t "Sorry, there is nothing special to examine about that.~%")))))
 
-(defun find-character (character-string)
+(defun translate-input (input)
   "Matches user input with characters" 
   (cond
-    ((not (stringp character-string)) (format t "this requires a string~%"))
-    ((search-string "police officer" character-string) 'police)
-    ((search-string "fat pompous bastard" character-string) 'fat-pompous-bastard)
-    ((search-string "young rich widow" character-string) 'young-rich-widow)
-    ((search-string "married couple" character-string) 'married-couple)
-    ((search-string "butler" character-string) 'butler)
-    (t nil)
-    ))
-
-(defun find-item (item-string)
-  "Matches user input with items" 
-  (cond
-    ((not (stringp item-string)) (format t "this requires a string~%"))
-    ((search-string "newspaper" item-string) 'newspaper)
-    ((search-string "writing wall" item-string) 'writing-on-wall)
-    ((search-string "ice" item-string) 'ice)
-    ((search-string "note" item-string) 'note)
+    ;; Characters
+    ((not (stringp input)) (format t "this requires a string~%"))
+    ((search-string "police officer" input) 'police)
+    ((search-string "fat pompous bastard" input) 'fat-pompous-bastard)
+    ((search-string "young rich widow" input) 'young-rich-widow)
+    ((search-string "married couple" input) 'married-couple)
+    ((search-string "butler" input) 'butler)
+    ;; Items
+    ((search-string "newspaper" input) 'newspaper)
+    ((search-string "writing wall" input) 'writing-on-wall)
+    ((search-string "ice" input) 'ice)
+    ((search-string "note" input) 'note)
     (t nil)
     ))
 
