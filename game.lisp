@@ -1204,7 +1204,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
   (if (enter-to-continue) (return-from show-intro2))
   (format t "\"So are you telling me to stay here and DIE?!\" screamed the wife.~%")
   (if (enter-to-continue) (return-from show-intro2))
-  (format t "\"No.  But I do say that the probably of that happening is higher if you left this mansion now, ma'am.  With the killer is still on the loose, it's more likely that he's waiting for us to panic and leave the house.  I think it's better if we all go back into our rooms, and if anything happens, I'll be here.\" calmly said the officer.~%")
+  (format t "\"No.  But I do say that the probably of that happening is higher if you left this mansion now, ma'am.  With the killer still on the loose, it's more likely that he's waiting for us to panic and leave the house.  I think it's better if we all go back into our rooms, and if anything happens, I'll be here.\" calmly said the officer.~%")
   (if (enter-to-continue) (return-from show-intro2))
   (format t "With that, everyone somewhat agreed to return to their rooms and meet in the lobby the next morning.~%")
   (if (enter-to-continue) (return-from show-intro2))
