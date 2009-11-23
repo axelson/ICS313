@@ -678,11 +678,11 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     (format t "The conversation ends.~%"))
 
 (defun conv-engine (character place-no &optional (question-no 1))
-  ; Execute question
+  ;; Execute question
   (access-convo-all character (get-from-list places place-no) (get-from-list questions question-no))
-  ; Execute corresponding set of answers
+  ;; Execute corresponding set of answers
   (access-convo-all character (get-from-list places place-no) (get-from-list answers question-no))
-  ; Execute corresponding response
+  ;; Execute corresponding response
   (access-convo-resp character (get-from-list places place-no) (get-from-list responses question-no) (parse-input (read-line))))
 
 
@@ -705,7 +705,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 (defun ssc (arg1 arg2)
   (if (stringp arg1) () (setq arg1 (write-to-string arg1)))
   (if (stringp arg2) () (setq arg2 (write-to-string arg2)))
-  ; concatenate
+  ;; concatenate
   (return-from ssc (concatenate 'string arg1 arg2)))
 
 
@@ -763,7 +763,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                            '(a test list)))
                  (Hint (lambda ()
                          (format t "A hint string"))))
-                                        ; First floor riddles
+                ;; First floor riddles
                 (Ice-Riddle
                  (Riddle (lambda () (format t "\"A man was found hanging in a room 30 feet off the ground. There was nothing else in the room except for a large puddle of water on the ground. At this point, investigators can't see any way the man could have climbed the walls to get to where he is hanging without it being a murder, but there are no signs of resistance.\"~%~%You think about the riddle for awhile and realize that it had to be suicide!  But how did the victim do it?~%Your answer: ")))
                  (Answer (lambda () "Ice"))
@@ -960,7 +960,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 (defun handle-input (input)
   "Handles user input"
   (cond
-    ;; Commands
+    ;; Debug Commands
     ((search-string "win" input)
      (format t "You won!")
      t)
@@ -968,6 +968,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (format t "Skipping first floor~%")
      (skip-first-floor)
      nil)
+    ;; Commands
     ((search-string "quit exit q" input)
      (format t "You Fail the Game!~%")
      t)
@@ -1101,11 +1102,50 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 	  )
 	)
       (move-error)))
+  (let ((destination (get-prop (get-current-room) direction)))
+    (if destination
+        (progn
+          (cond
+            ;; First time leaving the lobby
+            ((equalp (get-prop (get-current-room) 'state) 0)
+             (format t "Are you sure you want to leave the lobby? (y/n) ")
+             (if (y-or-n-p)
+                 (progn
+                   (show-intro2)
+                   (set-prop (get-room 'lobby) 'state 1)
+                   (set-prop (get-room 'lobby) 'contents '(police)))))
+            ;; Elevator is locked
+            ((and (equalp destination 'elevator) (or (= (get-prop player 'ice-riddle) 0) (= (get-prop player 'birthday-riddle) 0)))
+             (format t "It appears the elevator is locked...~%"))
+            ;; Elevator becomes unlocked
+            ((and (= (get-prop player 'ice-riddle) 1) (= (get-prop player 'birthday-riddle) 1) (= (get-prop (get-room 'elevator) 'locked) 1))
+             (format t "~%As you head out, you hear a click from the elevator...~%~%")
+             (set-prop (get-room 'elevator) 'locked 0)
+             (set-prop game-state 'current-room (get-prop (get-current-room) direction)))
+            ;; In elevator, moving to a floor
+            ((equalp (get-prop game-state 'current-room) 'elevator)
+             (set-prop game-state 'current-room (get-prop (get-current-room) direction))
+             (format t "You moved to the ~A FLOOR, you are now in ~A.~%" direction (eval (get-prop (get-current-room) 'displayname)))
+             )
+            ;; trying to move to locked/hidden basement
+            ((and (equalp destination 'basement) (= (get-prop rooms 'bathroom 'locked) 1))
+             (move-error))
+            ;; trying to move to locked attic
+            ((and (equalp destination 'attic) (= (get-prop rooms 'attic 'locked) 1))
+             (format t "The attic is locked.~%There is a keyhole and scribble on the door that says, \"Access is given to only those who have bad luck...\"~%"))
+            ;; End game stuck in lobby
+            ((= (get-prop (get-room 'lobby) 'state) 2)
+             (format t "I don't think I should go there.  Solving this case is the top priority right now.~%"))
+            ;; General move
+            (t   
+             (set-prop game-state 'current-room (get-prop (get-current-room) direction))
+             (format t "You moved ~A, you are now in ~A.~%" direction (eval (get-prop (get-current-room) 'displayname))))))
+        (move-error))))
 
 
 (defun move-error ()
   "Shows user error when they try to move in a restricted direction"
-  (format t "There is a wall.  You cannot go in that direction.~%"))
+  (format t "There is a wall bob. You cannot go in that direction.~%"))
 
 (defun show-help ()
   "Shows help for the user"
