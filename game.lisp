@@ -1002,7 +1002,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     ((search-string "win" input)
      (format t "You won!")
      t)
-    ((search-string "skip" input)
+    ((search-string "skip-first-floor" input)
      (format t "Skipping first floor~%")
      (skip-first-floor)
      nil)
