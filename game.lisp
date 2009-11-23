@@ -383,7 +383,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     (ice ((describe (lambda () (format t "This would be great for making cold drinks.~%")))))
     (safe ((describe (lambda () (format t "It looks like someone tampered with the safe.  Seems like only one more number is needed.~%")))))
     (knife ((describe (lambda ()
-                        (format t "A bloody knife.  This is what the killer must have used!~%")
+                        (format t "You take a closer look at the garbage can.~%You find a bloody knife.  This must be what the killer must have used!~%")
                         (format t "I should take this with me, I can use it as evidence.~%")
                         (add-inventory 'knife)
                         (remove-from-container 'knife (get-room 'basement))))
