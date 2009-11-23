@@ -967,6 +967,9 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (format t "Skipping first floor~%")
      (skip-first-floor)
      nil)
+    ((search-string "reset" input)
+     (reset-state)
+     (format t "State of game has been reset~%"))
     ;; Commands
     ((search-string "quit exit q" input)
      (format t "You Fail the Game!~%")
