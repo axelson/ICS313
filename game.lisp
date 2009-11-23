@@ -1111,7 +1111,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     ((search-string "note" input) 'note)
     ((search-string "shiny object garbage" input) 'knife)
     ((search-string "phone log" input) 'phone-log)
-    ((search-string "attic key" input) 'attic-key)
+    ((search-string "attic key attic-key" input) 'attic-key)
     ((search-string "umbrella" input) 'umbrella)
     ((search-string "video tape" input) 'video-tape)
     ((search-string "will" input) 'will)
