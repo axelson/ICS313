@@ -1068,7 +1068,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     ((translate-input character-string)  ;Trying to talk to a character
      (if (contains? (get-current-room) (translate-input character-string))
          (char-talkf (translate-input character-string)) ;Talk to character
-         (format t "Sorry, \"~A\" cannot hear through walls~%" character-string)))
+         (format t "You call out to \"~A\", but alas, they cannot hear you through the mansion's thick walls~%" character-string)))
     (t (format t "Your imaginary friend ~A responds!~%" character-string))))
 
 (defun examine (item-string)
