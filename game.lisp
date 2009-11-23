@@ -887,7 +887,7 @@ The bathroom is up the stairs.")
   (access-struct riddles riddle 'riddle)
   (let ((riddle-answer (access-struct riddles riddle 'answer)))
     (if (= (length (string-split " " riddle-answer))
-	   (search-string riddle-answer (read-line)))
+	   (search-string riddle-answer (read-line) :return-zero-no-matches t))
 	;; Execute result of getting riddle correct
 	(access-struct riddles riddle 'result)
 	;; Answer was incorrect
