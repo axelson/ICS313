@@ -1526,7 +1526,8 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 	(format t "CONGRATULATIONS ON BEATING THE GAME!!!~%~%"))
       (progn
 	(format t "A clear, sunny morning.~%As the real police come the next morning to take the body and arrest the officer, you exit the house but feel as if you were missing something.  You shrug it off and decide to catch a cab home.  Tired from all the exhaustion, you fall on the bed and wake up one week later, only to find out that the judge could not make a case against the officer due to insufficient evidence and that the officer has gone missing.  That night, as you go into your bed, you feel the same chill down your spine that you felt the night of the party.~%~%")
-	(format t "CONGRATULATIONS ON BEATING THE GAME!!!~%~%"))))
+	(format t "CONGRATULATIONS ON BEATING THE GAME!!!~%~%")))
+  (throw 'end-game t))
 
 
 
