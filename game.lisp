@@ -380,14 +380,19 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
            (use (lambda ()
                   (if (equal (get-state 'current-room) 'hostroom)
                       (progn
-                        (format t "You use the number on the note to open the safe~%Inside the safe you find a key to the attic~%")
-                        (add-inventory attic-key))
+			(if (= (get-prop items 'safe 'has-key) 1)
+			    (progn 
+			      (set-prop (get-prop items 'safe) 'has-key 0) 
+			      (format t "You look at the note with the number 23 written on it.~%\"Hmm.. I wonder if this is the last number...\" you wonder.~%You enter the number and the safe pops open.~%\"Alright!  It worked!\"~%Inside the safe you find a key to the attic and put it in your pouch.~%")
+			      (add-inventory attic-key))
+			    (format t "There is nothing inside of the safe.~%")))
                       (format t "You cannot use the note here~%"))))
            (describe-inventory (lambda ()
                                  (format t "A note that has the number 23 on it.~%")))))
     (writing-on-wall ((describe (lambda () (format t "Slowly you decipher the writing on the wall: \"If life had a reset button, it would be in the ballroom.\"~%")))))
-    (ice ((describe (lambda () (format t "This would be great for making cold drinks.~%")))))
-    (safe ((describe (lambda () (format t "It looks like someone tampered with the safe.  Seems like only one more number is needed.~%")))))
+    (ice ((describe-inventory (lambda () (format t "This would be great for making cold drinks.~%")))))
+    (safe ((describe (lambda () (format t "It looks like someone tampered with the safe.  Seems like only one more number is needed.~%")))
+	   (has-key 1)))
     (knife ((describe (lambda ()
                         (format t "You take a closer look at the garbage can.~%You find a bloody knife.  This must be what the killer must have used!~%")
                         (format t "I should take this with me, I can use it as evidence!~%")
@@ -400,13 +405,39 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     (phone-log ((describe (lambda ()
 			    (show-attic-scene)
 			    (set-prop game-state 'current-room 'lobby)
-			    (set-prop (get-room 'lobby) 'state 2)
+			    (set-prop (get-room 'lobby) 'state -1)
 			    (set-prop (get-room 'lobby) 'contents '(police butler married-couple fat-pompous-bastard rich-young-widow))
 			    )
 			  )))
-    (attic-key ((describe-inventory (lambda () (format t "A golden key.  Hopefully this will let me in the attic... Wherever that is...~%")))
-                (use (lambda () (format t "You try to use the key to open the door, but while it fits in the door, it doesn't turn to unlock the door~%")))))
-    (umbrella ((describe (lambda () (format t "This would be really useful outside, but you know what they say about opening umbrellas indoors..~%")))))
+    (attic-key ((open-door 0)
+		(describe-inventory (lambda () (format t "A golden key.  Hopefully this will let me in the attic... Wherever that is...~%")))
+                (use (lambda () 
+		       (if (equal (get-state 'current-room) 'storageroom)
+			   (progn
+			     (if (= (get-prop items 'umbrella 'open-door) 1)
+				 (progn 
+				   (format t "You use the attic key on the door and hear it unlock.~%")
+				   (set-prop (get-prop rooms 'attic) 'locked 0)
+				   )
+				 (progn 
+				   (set-prop (get-prop items 'attic-key) 'open-door 1)
+				   (format t "You try to use the key to open the door, but while it fits in the door, it doesn't turn to unlock the door~%"))))
+			   (format t "You cannot use the attic key here.~%"))))))
+    (umbrella ((open-door 0)
+	       (describe (lambda () (format t "This would be really useful outside, but you know what they say about opening umbrellas indoors..~%")))
+	       (use (lambda ()
+		      (if (equal (get-state 'current-room) 'storageroom)
+			  (progn
+			    (if (= (get-prop items 'attic-key 'open-door) 1)
+				(progn 
+				  (format t "You use the umbrella inside of the room and hear the attic door unlock.~%")
+				  (set-prop (get-prop rooms 'attic) 'locked 0)
+				  )
+				(progn
+				  (set-prop (get-prop items 'umbrella) 'open-door 1)
+				  (format t "You open the umbrella inside of the room and feel as if your luck ran out.~%"))))
+			  (format t "You open the umbrella and really stupid.~%"))))))
+
     (will ((describe (lambda () (format t "A will stating how all of the late owner's property and riches will go to his eldest son.~%")))))
     (video-tape ((describe (lambda () (format t "A video tape of the couple's honeymoon showing everyone at the party.~%")))))
     )
@@ -550,7 +581,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) I am really not sure.. now that you ask.~%")))
      (r-4
       (lambda () (convo-end))
-      (lambda () (format t "Fat pompous bastard: Answer this first!") (try-answer-riddle 'second-place-riddle))
+      (lambda () (format t "Fat pompous bastard: Answer this first!  ") (try-answer-riddle 'second-place-riddle))
       (lambda () (format t "Fat pompous bastard: You insolent fool!  Get out of my sight!~%") (set-prop (get-prop characters 'fat-pompous-bastard) 'conv-place-1 -1)))
 )))
      
@@ -579,7 +610,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (conv-engine young-rich-widow 1 3))
       (lambda () (format t "Young rich widow: Sorry, I am not sure I can trust you just yet.. I just wanted to apologize.~%") (set-conv-state young-rich-widow conv-place-1 -1)))
      (q-3
-      (lambda () (format t "Young rich widow: What did you need?~%")))
+      (lambda () (format t "Young rich widow: What did you need?~%~%You say:~%")))
      (a-3
       (lambda () (format t "(1) **Leave**~%"))
       (lambda () (format t "(2) Is there any way I could search your room?~%"))
@@ -672,7 +703,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) I am not too interested in a diary passage, how about telling me something about the suspects.~%")))
      (r-6
       (lambda () (convo-end))
-      (lambda () (format t "Butler: It seemed to be a riddle, for those who weren't familiar with the peculiar situation.") (try-answer-riddle 'rainy-day-riddle))
+      (lambda () (format t "Butler: It seemed to be a riddle, for those who weren't familiar with the peculiar situation.  ") (try-answer-riddle 'rainy-day-riddle))
       (lambda () (format t "Butler: I am sorry then, sir, I do not have any other useful information.  Good night.~%")) (set-conv-state butler conv-place-1 -1))
 )))
 
@@ -835,7 +866,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                          (format t "A hint string"))))
                 ;; Newspaper
                 (Ice-Riddle
-                 (Riddle (lambda () (format t "\"A man was found hanging in a room 30 feet off the ground. There was nothing else in the room except for a large puddle of water on the ground. At this point, investigators can't see any way the man could have climbed the walls to get to where he is hanging without it being a murder, but there are no signs of resistance.\"~%~%You think about the riddle for awhile and realize that it had to be suicide!  But how did the victim do it?~%Your answer: ")))
+                 (Riddle (lambda () (format t "\"A man was found hanging in a room 30 feet off the ground. There was nothing else in the room except for a large puddle of water on the ground. At this point, investigators can't see any way the man could have climbed the walls to get to where he is hanging without it being a murder, but there are no signs of resistance.\"~%~%You think about the riddle for awhile and realize that it had to be suicide!  But how did the victim do it?~%~%Your answer: ")))
                  (Answer (lambda () "Ice"))
                  (Hint (lambda () (format t "Think.")))
                  (Result (lambda ()
@@ -845,7 +876,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                            )))
 		;; Ballroom
                 (Birthday-Riddle
-                 (Riddle (lambda () (format t "On the note says, \"What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?\"~%Your answer: ")))
+                 (Riddle (lambda () (format t "On the note says, \"What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?\"~%~%Your answer: ")))
                  (Answer (lambda () "23"))
                  (Hint (lambda () (format t "What is the general formula for finding the probability that no people in the room have the same birthday?")))
                  (Result (lambda ()
@@ -855,27 +886,27 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                            )))
 		;; Butler
                 (Rainy-Day-Riddle
-                 (Riddle (lambda () (format t "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way.~%Why does he do this? ")))
+                 (Riddle (lambda () (format t "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way.~%Why does he do this?~%~%Your answer: ")))
                  (Answer (lambda () "Umbrella"))
                  (Result (lambda ()
                            (format t "That's correct!~%") (set-conv-state butler 'conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))
 		;; Poo
                 (Quarter-Dime-Riddle
-                 (Riddle (lambda () (format t "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter.~%What are the two coins? ")))
+                 (Riddle (lambda () (format t "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter.~%What are the two coins?~%~%Your answer: ")))
                  (Answer (lambda () "Quarter Dime"))
                  (Result (lambda ()
                            (format t "That's correct!~%") (set-conv-state poo 'conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))
                 ;; Married-couple
                 (Children-Age-Riddle
-                 (Riddle (lambda () (format t "The husband continues, \"A deliveryman came to our house to drop off a package. He asks my wife how many children she has.  \"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at our house number nailed to the front of the house. \"I need another hint,\" he says.~%My wife thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.  The deliveryman's eyes light up and he tells us the ages of our three children.  Can you guess their ages?")))
+                 (Riddle (lambda () (format t "The husband continues, \"A deliveryman came to our house to drop off a package. He asks my wife how many children she has.  \"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at our house number nailed to the front of the house. \"I need another hint,\" he says.~%My wife thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.  The deliveryman's eyes light up and he tells us the ages of our three children.  Can you guess their ages?~%~%Your answer: ")))
                  (Answer (lambda () "1 6 6"))
                  (Result (lambda () (format t "That's right!~%") (set-conv-state married-couple 'conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))
 		;; Fat-pompous-bastard
                 (Second-Place-Riddle
-                 (Riddle (lambda () (format t "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")))
+                 (Riddle (lambda () (format t "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?~%~%Your Answer: ")))
                  (Answer (lambda () "Second"))
                  (Result (lambda ()
                            (format t "That's correct!~%") (set-conv-state fat-pompous-bastard 'conv-place-1 1)
@@ -883,7 +914,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                  (Hint (lambda () (format t "Think."))))
                 ;; Young-rich-widow
                 (Twins-Riddle
-                 (Riddle (lambda () (format t "My sister and I were born to the same mother, on the same day, at the same time, in the same month, in the same year, and yet, we are not twins!  How can this be?~%Your answer: ")))
+                 (Riddle (lambda () (format t "My sister and I were born to the same mother, on the same day, at the same time, in the same month, in the same year, and yet, we are not twins!  How can this be?~%~%Your answer: ")))
                  (Answer (lambda () "Triplets"))
                  (Result (lambda ()
                            (format t "That's correct!~%") (set-conv-state young-rich-widow 'conv-place-1 1)))
@@ -975,7 +1006,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 	  t)
 	;; Answer was incorrect
 	(progn
-          (format t "Hmmm... I don't think that's correct.  Should I give up?.~%")
+          (format t "Hmmm... I don't think that's correct.  Should I try again? (y/n) ")
 	  (if (y-or-n-p)
 	      (try-answer-riddle riddle))))))
   
@@ -1201,8 +1232,8 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
             ((and (equalp destination 'attic) (= (get-prop rooms 'attic 'locked) 1))
              (format t "The attic is locked.~%There is a keyhole and scribble on the door that says, \"Access is given to only those who have bad luck...\"~%"))
             ;; End game stuck in lobby
-            ((= (get-prop (get-room 'lobby) 'state) 2)
-             (format t "I don't think I should go there.  Solving this case is the top priority right now.~%"))
+            ((= (get-prop (get-room 'lobby) 'state) -1)
+             (format t "I don't think I should go there.  Solving this case is the top priority right now!~%"))
             ;; General move
             (t   
              (set-prop game-state 'current-room (get-prop (get-current-room) direction))
