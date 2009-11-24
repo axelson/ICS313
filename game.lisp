@@ -974,20 +974,6 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 			   (set-conv-state young-rich-widow conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))))
 
-;; Riddle accessor function
-;; e.g., (access-riddle riddles 'twins-riddle 'hint)
-;;
-;;(defmacro access-riddle (list-name riddle-name item)
-;;  `(loop for i in ,list-name do
-;;	(if (eq (car i) ,riddle-name)
-;;	    (loop for j in (cdr i) do
-;;		 (if (eq (car j) ,item) (format t (cadr j)) ())) ())))
-;;
-;;(defmacro access-struct (struct-name group-name item)
-;; `(loop for i in ,struct-name do
-;;	(if (eq (car i) ,group-name)
-;;	    (loop for j in (cdr i) do
-;;		 (if (eq (car j) ,item) (progn (funcall (cadr j)) (return-from access-struct)) ())) ())))
 
 (defun access-struct (struct-name group-name item)
   (loop for i in struct-name do
@@ -995,8 +981,6 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 	   (loop for j in (cdr i) do
 		(if (eq (car j) item) (return-from access-struct (funcall (eval (cadr j)))) ())) ())))
 
-;;(defun answer-test-riddle ()
-;;  (return-from answer-test-riddle 1))
 
 (defun split-line (line)
   (let ((start 0) (line (concatenate 'string line " ")) (parsed '()))
