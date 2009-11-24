@@ -177,7 +177,7 @@
 				      (talk nil)
 				      (conv-place-1 0)
 				      (conv-place-2 0)))
-			     (poo ((describe "A rancid smell")
+			     (poo ((describe (lambda () (format t "A rancid smell~%")))
 				   (state 1)
 				   (talk nil)
 				   (conv-place-1 0)
