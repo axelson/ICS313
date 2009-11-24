@@ -341,7 +341,8 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 			(hallway3north ((displayname "the north side of the third floor hallway")
 					(describe "The north-side of the third floor hallway.~%There is a room to the right and a room at the end of the hall.")
 					(east hostroom)
-					(north storageroom)))
+					(north storageroom)
+					(south hallway3)))
 			(hostroom ((displayname "the host's room")
 				   (describe "An elegant and beautiful room.~%There is a small safe in the corner of the room.~%The hallway is to the left.")
 				   (contents (safe))
@@ -889,34 +890,34 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                  (Riddle (lambda () (format t "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way.~%Why does he do this?~%~%Your answer: ")))
                  (Answer (lambda () "Umbrella"))
                  (Result (lambda ()
-                           (format t "That's correct!~%") (set-conv-state butler 'conv-place-1 1)))
+                           (format t "That's correct!~%") (set-conv-state butler conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))
 		;; Poo
                 (Quarter-Dime-Riddle
                  (Riddle (lambda () (format t "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter.~%What are the two coins?~%~%Your answer: ")))
                  (Answer (lambda () "Quarter Dime"))
                  (Result (lambda ()
-                           (format t "That's correct!~%") (set-conv-state poo 'conv-place-1 1)))
+                           (format t "That's correct!~%") (set-conv-state poo conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))
                 ;; Married-couple
                 (Children-Age-Riddle
                  (Riddle (lambda () (format t "The husband continues, \"A deliveryman came to our house to drop off a package. He asks my wife how many children she has.  \"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at our house number nailed to the front of the house. \"I need another hint,\" he says.~%My wife thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.  The deliveryman's eyes light up and he tells us the ages of our three children.  Can you guess their ages?~%~%Your answer: ")))
                  (Answer (lambda () "1 6 6"))
-                 (Result (lambda () (format t "That's right!~%") (set-conv-state married-couple 'conv-place-1 1)))
+                 (Result (lambda () (format t "That's right!~%") (set-conv-state married-couple conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))
 		;; Fat-pompous-bastard
                 (Second-Place-Riddle
                  (Riddle (lambda () (format t "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?~%~%Your Answer: ")))
                  (Answer (lambda () "Second"))
                  (Result (lambda ()
-                           (format t "That's correct!~%") (set-conv-state fat-pompous-bastard 'conv-place-1 1)))
+                           (format t "That's correct!~%") (set-conv-state fat-pompous-bastard conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))
                 ;; Young-rich-widow
                 (Twins-Riddle
                  (Riddle (lambda () (format t "My sister and I were born to the same mother, on the same day, at the same time, in the same month, in the same year, and yet, we are not twins!  How can this be?~%~%Your answer: ")))
                  (Answer (lambda () "Triplets"))
                  (Result (lambda ()
-                           (format t "That's correct!~%") (set-conv-state young-rich-widow 'conv-place-1 1)))
+                           (format t "That's correct!~%") (set-conv-state young-rich-widow conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))))
 
 ;; Riddle accessor function
@@ -1256,7 +1257,9 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
   (format t "1. Look/Check the current room - \"look\", \"l\"~%")
   (format t "2. Initiate a conversation with a character in the room - \"talk\" + character description (i.e. \"talk to young widow\")~%")
   (format t "3. Examine an item/object in the room - \"examine\", \"x\" + item description (i.e. \"examine newspaper\")~%")
-  (format t "4. Look at what is in your inventory - \"inventory\", \"i\"~%"))
+  (format t "4. Look at what is in your inventory - \"inventory\", \"i\"~%")
+  (format t "5. Use an item in your inventory - \"use\" + item (i.e. \"use key\")")
+  )
 
 (defun show-intro ()
   "Shows introduction when game starts"
