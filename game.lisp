@@ -1523,13 +1523,10 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
   (if (player-has? 'knife)
       (progn
 	(format t "A clear, sunny morning.~%As the real police come the next morning to take the body and arrest the officer, you realize that you still had the knife in your pouch and hand it over to one of the officers to use as evidence.  Tired from all the exhaustion, you fall on the bed and wake up one week later, only to find a suitcase on the ground.  Inside the suitcase was an unbelievable amount of money with a note on top that read:~%~%Thank you so much for all your help.  The younger son, Robert, was sent to jail on a life sentence.  It couldn't have been done without you.~%~%You look at all the money and wonder what you will spend it on...~%~%")
-	(format t "CONGRATULATIONS ON BEATING THE GAME!!!~%~%")
-	)
+	(format t "CONGRATULATIONS ON BEATING THE GAME!!!~%~%"))
       (progn
 	(format t "A clear, sunny morning.~%As the real police come the next morning to take the body and arrest the officer, you exit the house but feel as if you were missing something.  You shrug it off and decide to catch a cab home.  Tired from all the exhaustion, you fall on the bed and wake up one week later, only to find out that the judge could not make a case against the officer due to insufficient evidence and that the officer has gone missing.  That night, as you go into your bed, you feel the same chill down your spine that you felt the night of the party.~%~%")
-	(format t "CONGRATULATIONS ON BEATING THE GAME!!!~%~%")
-	)
-)
+	(format t "CONGRATULATIONS ON BEATING THE GAME!!!~%~%"))))
 
 
 
