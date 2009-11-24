@@ -438,15 +438,30 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(2) I did!  It was you!~%"))
       (lambda () (format t "(3) Ok! I'm dead!")))
      (r-1
-      (lambda () (format t "You foolishly make a mad dash to the elevator.  You turn your head around only to see the cop draw his gun...~%"))
+      (lambda () (death-end))
       (lambda () (conv-engine police 2 2))
       (lambda () (format t "Police officer: Not even worth my time...~%")))
      (q-2
       (lambda () (format t "Police officer: The only thing you did was show me the way to my dead brother's fortune!~%~%You say:~%")))
      (a-2
       (lambda () (format t "(1) **Leave**~%"))
-      (lambda () (format t "(2)"))))
+      (lambda () (format t "(2) **Yell at the top of your lungs, \"HELP!\"**~%"))
+      (lambda () (format t "(3) Your brother had a brilliant and powerful imagination, the reason why your father left you out of the will was because you did not share their love for mystery.  You will find no treasure up there if all you search for is the tangible!~%")))
+     (r-2
+      (lambda () (death-end))
+      (lambda () (conv-engine police 2 3))
+      (lambda () (format t "Police officer: If what you say is true, I gained nothing from this foolish escapade.  At least I rid the world of my brother's silly antics.. why stop there?~%The police officer pulls out his gun and a flash ends it all..~%")))
+     (q-3
+      (lambda () (format t "Police offier: FREEZE!~%The police pulls out his weapon in a desperate attempt to turn the tables and fram you!  You hear the rest of the party run out, drawn from the commotion.~%~%You say:~%")))
+     (a-3
+      (lambda () (format t "(1) **Leave**~%"))
+      (lambda () (format t "(2) The party's over, sir.  Everyone's here.  Give yourself up.~%"))
+      (lambda () (format t "(3)"))
+))
     ))
+
+(defun death-end ()
+  (format t "You foolishly make a mad dash to the nearest room for refuge.  You turn your head around, only to see the police officer draw his gun..~%"))
 
 (defparameter married-couple
   '(
@@ -818,7 +833,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                            '(a test list)))
                  (Hint (lambda ()
                          (format t "A hint string"))))
-                ;; First floor riddles
+                ;; Newspaper
                 (Ice-Riddle
                  (Riddle (lambda () (format t "\"A man was found hanging in a room 30 feet off the ground. There was nothing else in the room except for a large puddle of water on the ground. At this point, investigators can't see any way the man could have climbed the walls to get to where he is hanging without it being a murder, but there are no signs of resistance.\"~%~%You think about the riddle for awhile and realize that it had to be suicide!  But how did the victim do it?~%Your answer: ")))
                  (Answer (lambda () "Ice"))
@@ -828,6 +843,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                            (add-inventory ice)
                            (set-prop player 'ice-riddle 1)
                            )))
+		;; Ballroom
                 (Birthday-Riddle
                  (Riddle (lambda () (format t "On the note says, \"What is the least number of people that need to be in a room such that there is greater than a 50% chance that at least two of the people have the same birthday?\"~%Your answer: ")))
                  (Answer (lambda () "23"))
@@ -837,36 +853,39 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                            (add-inventory note)
                            (set-prop player 'birthday-riddle 1)
                            )))
+		;; Butler
                 (Rainy-Day-Riddle
                  (Riddle (lambda () (format t "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way.~%Why does he do this? ")))
                  (Answer (lambda () "Umbrella"))
                  (Result (lambda ()
-                           (format t "That's correct!~%")))
+                           (format t "That's correct!~%") (set-conv-state butler 'conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))
+		;; Poo
                 (Quarter-Dime-Riddle
                  (Riddle (lambda () (format t "You have two normal U.S. coins that add up to 35 cents. One of the coins is not a quarter.~%What are the two coins? ")))
                  (Answer (lambda () "Quarter Dime"))
                  (Result (lambda ()
-                           (format t "That's correct!~%")))
+                           (format t "That's correct!~%") (set-conv-state poo 'conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))
-                ;; Second floor riddles
+                ;; Married-couple
                 (Children-Age-Riddle
                  (Riddle (lambda () (format t "The husband continues, \"A deliveryman came to our house to drop off a package. He asks my wife how many children she has.  \"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at our house number nailed to the front of the house. \"I need another hint,\" he says.~%My wife thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.  The deliveryman's eyes light up and he tells us the ages of our three children.  Can you guess their ages?")))
                  (Answer (lambda () "1 6 6"))
-                 (Result (lambda () (format t "That's right!~%")))
+                 (Result (lambda () (format t "That's right!~%") (set-conv-state married-couple 'conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))
+		;; Fat-pompous-bastard
                 (Second-Place-Riddle
                  (Riddle (lambda () (format t "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")))
                  (Answer (lambda () "Second"))
                  (Result (lambda ()
-                           (format t "That's correct!~%")))
+                           (format t "That's correct!~%") (set-conv-state fat-pompous-bastard 'conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))
-                ;; Third floor riddles
+                ;; Young-rich-widow
                 (Twins-Riddle
                  (Riddle (lambda () (format t "My sister and I were born to the same mother, on the same day, at the same time, in the same month, in the same year, and yet, we are not twins!  How can this be?~%Your answer: ")))
                  (Answer (lambda () "Triplets"))
                  (Result (lambda ()
-                           (format t "That's correct!~%")))
+                           (format t "That's correct!~%") (set-conv-state young-rich-widow 'conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))))
 
 ;; Riddle accessor function
