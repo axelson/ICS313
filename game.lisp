@@ -392,7 +392,10 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                                  (format t "A note that has the number 23 on it.~%")))))
     (writing-on-wall ((describe (lambda () (format t "Slowly you decipher the writing on the wall: \"If life had a reset button, it would be in the ballroom.\"~%")))))
     (ice ((describe-inventory (lambda () (format t "This would be great for making cold drinks.~%")))))
-    (safe ((describe (lambda () (format t "It looks like someone tampered with the safe.  Seems like only one more number is needed.~%")))
+    (safe ((describe (lambda () 
+		       (if (= (get-prop items 'safe 'has-key) 1)
+			   (format t "It looks like someone tampered with the safe.  Seems like only one more number is needed.~%")
+			   (format t "An empty, open safe.~%"))))
 	   (has-key 1)))
     (knife ((describe (lambda ()
                         (format t "You take a closer look at the garbage can.~%You find a bloody knife.  This must be what the killer must have used!~%")
@@ -417,12 +420,12 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 			   (progn
 			     (if (= (get-prop items 'umbrella 'open-door) 1)
 				 (progn 
-				   (format t "You use the attic key on the door and hear it unlock.~%")
+				   (format t "You try to use the key to open the door, but it has no handle.~%However, as you turn away, you hear the door unlock.~%")
 				   (set-prop (get-prop rooms 'attic) 'locked 0)
 				   )
 				 (progn 
 				   (set-prop (get-prop items 'attic-key) 'open-door 1)
-				   (format t "You try to use the key to open the door, but while it fits in the door, it doesn't turn to unlock the door~%"))))
+				   (format t "You try to use the key to open the door, but it has no handle.~%"))))
 			   (format t "You cannot use the attic key here.~%"))))))
     (umbrella ((open-door 0)
 	       (describe-inventory (lambda () (format t "This would be really useful outside, but you know what they say about opening umbrellas indoors..~%")))
@@ -431,7 +434,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 			  (progn
 			    (if (= (get-prop items 'attic-key 'open-door) 1)
 				(progn 
-				  (format t "You use the umbrella inside of the room and hear the attic door unlock.~%")
+				  (format t "You use the umbrella inside of the room and feel as if your luck ran out.~%All of a sudden you hear the attic door unlock.~%")
 				  (set-prop (get-prop rooms 'attic) 'locked 0)
 				  )
 				(progn
@@ -460,8 +463,8 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) No, nothing substantial, yet.~%")))
      (r-1
       (lambda () (convo-end))
-      (lambda () (format t "Sorry, nothing new.  It's best you stay put.~%") (set-conv-state police conv-place-1 -1))
-      (lambda () (format t "Well, it may be best to stay in your room.  It could be dangerous wandering about.~%") (set-conv-state police conv-place-1 -1))))
+      (lambda () (format t "Police officer: Sorry, nothing new.  It's best you stay put.~%") (set-conv-state police conv-place-1 -1))
+      (lambda () (format t "Police officer: Well, it may be best to stay in your room.  It could be dangerous wandering about.~%") (set-conv-state police conv-place-1 -1))))
     (place-2
      (q-1
       (lambda () (format t "Police officer: So, thought you could solve this all by yourself?~%~%You say:~%")))
@@ -484,7 +487,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (conv-engine police 2 3))
       (lambda () (format t "Police officer: If what you say is true, I gained nothing from this foolish escapade.  At least I rid the world of my brother's silly antics.. why stop there?~%The police officer pulls out his gun and a flash ends it all..~%")))
      (q-3
-      (lambda () (format t "Police offier: FREEZE!~%The police pulls out his weapon in a desperate attempt to turn the tables and frame you!  You hear the rest of the party run out, drawn by the commotion.~%~%You say:~%")))
+      (lambda () (format t "Police officer: FREEZE!~%The police pulls out his weapon in a desperate attempt to turn the tables and fram you!  You hear the rest of the party run out, drawn from the commotion.~%~%You say:~%")))
      (a-3
       (lambda () (format t "(1) **Leave**~%"))
       (lambda () (format t "(2) The party's over, sir.  Everyone's here.  Give yourself up.~%"))
@@ -494,9 +497,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (conv-engine police 2 4))
       (lambda () (format t "The police shoots you in the back.~%As you fall, your vision goes.  You hit the ground--body numb.  As the world closes around you you hear the police say, \"Don't worry folks, I caught him dead in his tracks making a run for it.\"~%")))
      (q-4
-      (lambda () (format t "The party arrives.")))
-))
-    ))
+      (lambda () (format t "The party arrives."))))))
 
 (defun game-over ()
   (format t "You lose.~%")
@@ -517,7 +518,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-1
       (lambda () (convo-end))
       (lambda () (format t "Married couple: So are we.~%") (conv-engine married-couple 1 2))
-      (lambda () (format t "Excuse me? I do not think it would be wise of us to let you in.  Our first concern is our safety.  Please leave.~%") (set-prop (get-prop characters 'married-couple) 'conv-place-1 -1)))
+      (lambda () (format t "Married couple: Excuse me? I do not think it would be wise of us to let you in.  Our first concern is our safety.  Please leave.~%") (set-prop (get-prop characters 'married-couple) 'conv-place-1 -1)))
      (q-2
       (lambda () (format t "Married couple: But our first and utmost concern is on keeping our family safe.~%~%You say:~%")))
      (a-2
@@ -537,7 +538,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-3
       (lambda () (convo-end))
       (lambda () (conv-engine married-couple 1 4))
-      (lambda () (format t "I think you should stay put and keep yourself safe.. besides, the killer is out there.~%") (set-prop (get-prop characters 'married-couple) 'conv-place-1 -1)))
+      (lambda () (format t "Married couple: I think you should stay put and keep yourself safe.. besides, the killer is out there.~%") (set-prop (get-prop characters 'married-couple) 'conv-place-1 -1)))
      (q-4
       (lambda () (format t "Married couple: Before we let you in, you have to show that you have concern for our family.~%~%You say:~%")))
      (a-4
@@ -583,7 +584,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-3
       (lambda () (convo-end))
       (lambda () (if (player-has? 'ice) (progn (format t "<You give the fat pompous bastard some ice>~%") (conv-engine fat-pompous-bastard 1 4)) (format t "You have nothing to give.~%")))
-      (lambda () (format t "Give me a break, I don't have to listen to you!~%<Door slams>~%") (set-prop (get-prop characters 'fat-pompous-bastard) 'conv-place-1 -1)))
+      (lambda () (format t "Fat pompous bastard: Give me a break, I don't have to listen to you!~%<Door slams>~%") (set-prop (get-prop characters 'fat-pompous-bastard) 'conv-place-1 -1)))
      (q-4
       (lambda () (format t "Fat pompous bastard: Ah!  It's nice to finally get a drink, now what do you want?~%~%You say:~%")))
      (a-4
@@ -609,7 +610,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-1
       (lambda () (convo-end))
       (lambda () (conv-engine young-rich-widow 1 2))
-      (lambda () (format t "I'm sorry, maybe you should come back when you're in a good mood.~%") (set-conv-state young-rich-widow conv-place-1 -1)))
+      (lambda () (format t "Young rich widow: I'm sorry, maybe you should come back when you're in a good mood.~%") (set-conv-state young-rich-widow conv-place-1 -1)))
      (q-2
       (lambda () (format t "Young rich widow: Did you have any answers?~%~%You say:~%")))
      (a-2
@@ -694,7 +695,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) You do not have to sound so grim, sir.~%")))
      (r-4
       (lambda () (convo-end))
-      (lambda () (format t "Not if I'm quick!~%<Door slams>~%") (set-conv-state butler conv-place-1 -1))
+      (lambda () (format t "Butler: Not if I'm quick!~%<Door slams>~%") (set-conv-state butler conv-place-1 -1))
       (lambda () (conv-engine butler 1 5)))
      (q-5
       (lambda () (format t "Butler: That's encouraging, let me be of service.~%~%You say:~%")))
@@ -729,7 +730,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "(3) I may not be able to produce a friend for you, but will my company do?~%")))
      (r-1
       (lambda () (convo-end))
-      (lambda () (format t "The poo looks insulted.~%Although you are distracted by the smell and the fact that it has no face, you notice it crinkle its brow.~%Obligingly, the poo continues...~%~%") (conv-engine poo 1 2))
+      (lambda () (format t "Poo: The poo looks insulted.~%Although you are distracted by the smell and the fact that it has no face, you notice it crinkle its brow.~%Obligingly, the poo continues...~%~%") (conv-engine poo 1 2))
       (lambda () (conv-engine poo 1 3)))
      (q-2
       (lambda () (format t "Do you believe the presence of power yields the power of persuasion?~%~%You say:~%")))
@@ -742,7 +743,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "Poo: Fine, you suck.~%"))
       (lambda () (format t "Poo: So you are curious...~%") (conv-engine poo 1 4)))
      (q-3
-      (lambda () (format t "How kind. Please sit down.~%~%You say:~%")))
+      (lambda () (format t "Poo: How kind. Please sit down.~%~%You say:~%")))
      (a-3
       (lambda () (format t "(1) **Leave**~%"))
       (lambda () (format t "(2) Sure thing, poop!~%"))
@@ -1240,6 +1241,9 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                    (update-all-state 1)
                    (set-prop (get-room 'lobby) 'state 1)
                    (set-prop (get-room 'lobby) 'contents '(police)))))
+	    ;; End game stuck in lobby
+            ((= (get-prop (get-room 'lobby) 'state) -1)
+             (format t "I don't think I should go there.  Solving this case is the top priority right now!~%"))
 	    ;;Reset mistakes in ballroom
 	    ((equalp destination 'ballroom) 
 	     (reset-conv-state)
@@ -1264,10 +1268,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
             ;; Trying to move to locked attic
             ((and (equalp destination 'attic) (= (get-prop rooms 'attic 'locked) 1))
              (format t "The attic is locked.~%There is a keyhole and scribble on the door that says, \"Access is given to only those who have bad luck...\"~%"))
-            ;; End game stuck in lobby
-            ((= (get-prop (get-room 'lobby) 'state) -1)
-             (format t "I don't think I should go there.  Solving this case is the top priority right now!~%"))
-            ;; General move
+	    ;; General move
             (t   
              (set-prop game-state 'current-room (get-prop (get-current-room) direction))
              (format t "You moved ~A, you are now in ~A.~%" direction (eval (get-prop (get-current-room) 'displayname))))))
@@ -1332,9 +1333,9 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 
 (defun show-attic-scene ()
   "Show the scene when the player reaches the attic"
-  (format t "As you flip through the pages of the phone log, you notice that the last call was made yesterday to a technician to fix the main phone lines of the house.")
+  (format t "As you flip through the pages of the phone log, you notice that the last call was made yesterday to a technician to fix the main phone lines of the house.~%")
   (if (enter-to-continue) (return-from show-attic-scene))
-  (format t "You think for a second and recall something strange about tonight's events.  Your eyes grow as you realize who the killer is and rush downstairs to the nearest phone.  You try to place a call, but the lines are still down.  \"Alright!  All I need to do is confirm one more thing and I'll have a solid case!\"")
+  (format t "You think for a second and recall something strange about tonight's events.  Your eyes grow as you realize who the killer is and rush downstairs to the nearest phone.  You try to place a call, but the lines are still down.  \"Alright!  All I need to do is confirm one more thing and I'll have a solid case!\"~%")
   (if (enter-to-continue) (return-from show-attic-scene))
   (format t "~%(You have returned to the lobby)~%~%")
 )
