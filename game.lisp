@@ -1219,7 +1219,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
        (if (get-prop items item 'describe)
 	   (funcall (eval (get-prop items item 'describe))))
        (if (get-prop characters item 'describe)
-	   (funcall (eval (get-prop characters item 'describe)))))
+	   (format t (eval (get-prop characters item 'describe)))))
       ((player-has? item)
        (format t "You rummage about your pouch and examine your ~A~%" item)
        (funcall (eval (get-prop items item 'describe-inventory))))
