@@ -424,7 +424,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 				   (format t "You try to use the key to open the door, but while it fits in the door, it doesn't turn to unlock the door~%"))))
 			   (format t "You cannot use the attic key here.~%"))))))
     (umbrella ((open-door 0)
-	       (describe (lambda () (format t "This would be really useful outside, but you know what they say about opening umbrellas indoors..~%")))
+	       (describe-inventory (lambda () (format t "This would be really useful outside, but you know what they say about opening umbrellas indoors..~%")))
 	       (use (lambda ()
 		      (if (equal (get-state 'current-room) 'storageroom)
 			  (progn
@@ -887,9 +887,11 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 		;; Butler
                 (Rainy-Day-Riddle
                  (Riddle (lambda () (format t "A man lives on the 44th floor of his building. On rainy days, when he gets home from work, he takes the elevator all the way up to his floor. But on sunny days, he goes up to floor 20 and walks the rest of the way.~%Why does he do this?~%~%Your answer: ")))
-                 (Answer (lambda () "Umbrella"))
+                 (Answer (lambda () "Umbrella/Midget"))
                  (Result (lambda ()
-                           (format t "That's correct!~%") (set-conv-state butler 'conv-place-1 1)))
+                           (format t "I know! The man was a midget and he needed his umbrella (that he carries on rainy days) to press button for his floor which is higher than the button for floor 20!~%Suddenly you notice that your small pouch now contains an umbrella, maybe you should try to emulate Marry Poppins later.~%")
+			   (set-conv-state butler 'conv-place-1 1)
+			   (add-inventory umbrella)))
                  (Hint (lambda () (format t "Think."))))
 		;; Poo
                 (Quarter-Dime-Riddle
