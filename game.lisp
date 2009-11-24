@@ -878,7 +878,8 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                  (Riddle (lambda () (format t "In the final stretch of a road race, you pass the 2nd-place runner right before crossing the finish line. What place do you finish in?")))
                  (Answer (lambda () "Second"))
                  (Result (lambda ()
-                           (format t "That's correct!~%") (set-conv-state fat-pompous-bastard 'conv-place-1 1)))
+                           (format t "That's correct!~%") (set-conv-state fat-pompous-bastard 'conv-place-1 1)
+			   (format t "The fat pompous bastard laughs.  See, you cannot win.. Loser!  And by the way, you can't look in my room.  Go to the bathroom by the lobby.  I took a huge shit there earlier.  Bask in its smell, it may help you.~%")))
                  (Hint (lambda () (format t "Think."))))
                 ;; Young-rich-widow
                 (Twins-Riddle
