@@ -177,7 +177,7 @@
 				      (talk nil)
 				      (conv-place-1 0)
 				      (conv-place-2 0)))
-			     (poo ((describe (lambda () (format t "A large chunk of poo, I think it moved!~%Is it alive?~%")))
+			     (poo ((describe "A large chunk of poo, I think it moved!~%Is it alive?~%")
 				   (state 1)
 				   (talk nil)
 				   (conv-place-1 0)
