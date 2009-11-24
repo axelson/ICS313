@@ -762,6 +762,13 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 (defun convo-end ()
     (format t "The conversation ends.~%"))
 
+(defparameter die-threshold 0)
+
+(defun dies? ()
+  (if (< (random 20) die-threshold)
+      T
+      Nil))
+
 (defun reset-conv-state ()
   (let ((reset 0))
     (if (equal -1 (char-get-prop police 'conv-place-1))
@@ -777,7 +784,10 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     (if (equal -1 (char-get-prop poo 'conv-place-1))
 	(progn (set-conv-state poo conv-place-1 0) (setq reset 1)) ())
     (if (equal reset 1)
-	(format t "You get this feeling that second chances are possible.~%") ()))) 
+	(progn
+	  (format t "You get this feeling that second chances are possible.~%")
+	  (setq die-threshold (1+ die-threshold)))
+	())))
 
 (defun conv-engine (character place-no &optional (question-no 1))
   ;; Execute question
