@@ -1052,9 +1052,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
   ;; Show riddle
   (access-struct riddles riddle 'riddle)
   (let ((riddle-answer (access-struct riddles riddle 'answer)))
-    (if (or skip
-	    (= (length (string-split " " riddle-answer))
-	       (search-string riddle-answer (read-line) :return-zero-no-matches t)))
+    (if (or skip (parse-riddle-answer riddle-answer (read-line)))
 	;; Execute result of getting riddle correct
 	(progn
 	  (access-struct riddles riddle 'result)
