@@ -508,9 +508,10 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "The party arrives."))))))
 
 (defun game-over ()
-   (handle-input "q")
-  ;quit the game
-)
+  ;; Quit the game
+  (handle-input "q"))
+
+
 (defun death-end ()
   (format t "You foolishly make a mad dash to the nearest room for refuge.  You turn your head around, only to see the police officer draw his gun..~%")
   (game-over)
@@ -1117,14 +1118,15 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
   "Starts RPG game"
   (reset-state)
   (show-intro)
-  ; Process following commands
+  ;; Process following commands
   (run-game))
 
 (defun run-game ()
   "Runs RPG Game"
-  (loop
-     do (format t "What now? ")
-     until (handle-input (read-line))))
+  (catch 'end-game
+    (loop
+       do (format t "What now? ")
+       until (handle-input (read-line)))))
 
 (defun describe-room (&optional (room nil))
   "Describes the contents of a room"
@@ -1155,6 +1157,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     ((search-string "quit exit q" input)
      (format t "You lose the Game!~%")
      (format t "~%----------------------------GAME OVER----------------------------~%~%")
+     (throw 'end-game t)
      t)
     ((search-string "inventory i" input)
      (check-inventory))
