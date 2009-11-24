@@ -1025,6 +1025,27 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
         (if return-zero-no-matches 0 nil)
 	matches)))
 
+  (defun check-word (in ans)
+    "Uses a/b syntax to check 2 words"
+    ;;(format t "check-word: ans: ~A~%" ans)
+    (if (search "/" ans)
+	;; Format answer is an OR (example: foo/bar)
+	(find in (string-split "/" ans) :test #'equalp)
+	;; Just two words to AND together
+	(equalp in ans)))
+
+;; answer has this format
+;; "a b" ; requires a and b
+;; "a/b" ; requires a or b
+;; "a/b c" ; requires (a or b) AND c
+(defun parse-riddle-answer (input answer)
+  (let ((answer-list (string-split " " answer)))
+    (loop for word in (string-split " " input)
+       do (when (find word answer-list :test #'check-word)
+	    (setf answer-list (remove word answer-list :count 1 :test #'check-word))))
+    (not answer-list)))
+
+
 ;; Riddle functions
 (defun try-answer-riddle (riddle &optional (skip nil))
   "User can try to answer the riddle"
