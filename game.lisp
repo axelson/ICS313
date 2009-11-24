@@ -936,7 +936,9 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                 (Children-Age-Riddle
                  (Riddle (lambda () (format t "The husband continues, \"A deliveryman came to our house to drop off a package. He asks my wife how many children she has.  \"Three,\" she says. \"And I bet you can't guess their ages.\"~%\"Ok, give me a hint,\" the deliveryman says.~%\"Well, if you multiply their ages together, you get 36,\" she says. \"And if you add their ages together, the sum is equal to our house number.\"~%The deliveryman looks at our house number nailed to the front of the house. \"I need another hint,\" he says.~%My wife thinks for a moment. \"My youngest son will have a lot to learn from his older brothers,\" she says.  The deliveryman's eyes light up and he tells us the ages of our three children.  Can you guess their ages?~%~%Your answer: ")))
                  (Answer (lambda () "1 6 6"))
-                 (Result (lambda () (format t "That's right!~%") (set-conv-state married-couple conv-place-1 1)))
+                 (Result (lambda () (format t "That's right!~%") (set-conv-state married-couple conv-place-1 1)
+				 (format t "The married couple let you search their room.~%Discouraged that you were unable to find anything of value, you head out to explore the rest of the house.~%\"Wait!\" You turn around to see the wife point toward a video camera.  \"We were filming our activities this evening,\" said the husband, \"And we made sure to film everyone that was present!\" added the wife.  He walks over to you and hands you the video tape.  \"There may be useful information in there.\"~%You receive the video tape and insert it into your pouch.")
+				 (add-inventory video-tape)))
                  (Hint (lambda () (format t "Think."))))
 		;; Fat-pompous-bastard
                 (Second-Place-Riddle
