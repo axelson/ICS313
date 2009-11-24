@@ -472,7 +472,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (r-1
       (lambda () (death-end))
       (lambda () (conv-engine police 2 2))
-      (lambda () (format t "Police officer: Not even worth my time...~%")))
+      (lambda () (format t "Police officer: Not even worth my time...~%") (game-over)))
      (q-2
       (lambda () (format t "Police officer: The only thing you did was show me the way to my dead brother's fortune!~%~%You say:~%")))
      (a-2
@@ -484,14 +484,24 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (conv-engine police 2 3))
       (lambda () (format t "Police officer: If what you say is true, I gained nothing from this foolish escapade.  At least I rid the world of my brother's silly antics.. why stop there?~%The police officer pulls out his gun and a flash ends it all..~%")))
      (q-3
-      (lambda () (format t "Police offier: FREEZE!~%The police pulls out his weapon in a desperate attempt to turn the tables and fram you!  You hear the rest of the party run out, drawn from the commotion.~%~%You say:~%")))
+      (lambda () (format t "Police offier: FREEZE!~%The police pulls out his weapon in a desperate attempt to turn the tables and frame you!  You hear the rest of the party run out, drawn by the commotion.~%~%You say:~%")))
      (a-3
       (lambda () (format t "(1) **Leave**~%"))
       (lambda () (format t "(2) The party's over, sir.  Everyone's here.  Give yourself up.~%"))
-      (lambda () (format t "(3)"))
+      (lambda () (format t "(3) I have evidence that I can use against you!  Give up!~%")))
+     (r-3
+      (lambda () (death-end))
+      (lambda () (conv-engine police 2 4))
+      (lambda () (format t "The police shoots you in the back.~%As you fall, your vision goes.  You hit the ground--body numb.  As the world closes around you you hear the police say, \"Don't worry folks, I caught him dead in his tracks making a run for it.\"~%")))
+     (q-4
+      (lambda () (format t "The party arrives.")))
 ))
     ))
 
+(defun game-over ()
+  (format t "You lose.~%")
+  ;quit the game
+)
 (defun death-end ()
   (format t "You foolishly make a mad dash to the nearest room for refuge.  You turn your head around, only to see the police officer draw his gun..~%"))
 
@@ -767,7 +777,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 (defun luck ()
   "Run function after leaving the ballroom"
   (if (and dies? did-reset?)
-      (format t "DIE")
+      (format t "You walk out of the ballroom, and feel a chill run through your spine.  \"You think you can solve this?\" says a cold, familiar voice.  You turn around to see who issued the threat.  A sharp pain rings through your body as you collapse to the floor.  You look up to see the sillouhette of the killer against the lobby ceiling lights.  And the world fades.~%")
       ())
   (setq did-reset? 0))
 
@@ -812,7 +822,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
   (loop
      (case (if (string= input "")
                nil
-               (progn (parse-integer input)))
+               (progn (parse-integer input :junk-allowed t)))
        (1 (return 1))
        (2 (return 2))
        (3 (return 3))
