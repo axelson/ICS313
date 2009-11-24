@@ -392,6 +392,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                                  (format t "A note that has the number 23 on it.~%")))))
     (writing-on-wall ((describe (lambda () (format t "Slowly you decipher the writing on the wall: \"If life had a reset button, it would be in the ballroom.\"~%")))))
     (ice ((describe-inventory (lambda () (format t "This would be great for making cold drinks.~%")))))
+    (video-tape ((describe-inventory (lambda () (format t "A video that shows EVERYONE at the party.~%")))))
     (safe ((describe (lambda () 
 		       (if (= (get-prop items 'safe 'has-key) 1)
 			   (format t "It looks like someone tampered with the safe.  Seems like only one more number is needed.~%")
