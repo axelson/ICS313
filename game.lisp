@@ -329,9 +329,15 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 			(yourroom ((displayname "your room")
 				   (describe "Your room.")
 				   (west hallway2)))
-			(vacantroom1((displayname "a vacant room")
-				     (describe "A vacant room.~%The hallway is to the right.")
-				     (east hallway2)))
+			(vacantroom1((state 0)
+				     (displayname "a vacant room")
+				     (describe (cond 
+						 ((= (get-prop rooms 'vacantroom1 'state) 0)
+						  "A vacant room.~%The hallway is to the right.")
+						 ((= (get-prop rooms 'vacantroom1 'state) 1)
+						  "A vacant room.~%You notice a drawer. (Maybe this is what the widow was talking about?)~%The hallway is to the right.")))
+				     (east hallway2)
+				     (contents ())))
 			(hallway3 ((displayname "the third floor hallway")
 				   (describe "The third floor hallway.~%There are two rooms to the left and right.  The hallway extends north.")
 				   (north hallway3north)
@@ -408,9 +414,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                                   (format t "A bloody knife. This might be what the killer used~%")))))
     (phone-log ((describe (lambda ()
 			    (show-attic-scene)
-			    (set-prop game-state 'current-room 'lobby)
-			    (set-prop (get-room 'lobby) 'state -1)
-			    (set-prop (get-room 'lobby) 'contents '(police butler married-couple fat-pompous-bastard rich-young-widow))
+			    (conv-engine police 2)
 			    )
 			  )))
     (attic-key ((open-door 0)
@@ -444,6 +448,9 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 
     (will ((describe (lambda () (format t "A will stating how all of the late owner's property and riches will go to his eldest son.~%")))))
     (video-tape ((describe (lambda () (format t "A video tape of the couple's honeymoon showing everyone at the party.~%")))))
+    (drawer ((describe (lambda () (format t "An ordinary drawer...~%~%...~%~%What a minute.. there's a fake bottom to the drawer!  You open it and find a rolled up piece of paper.~%")
+			       (add-inventory will)
+			       (format t "~%You received the will.~%~%")))))
     )
 )
 
@@ -471,7 +478,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      (a-1
       (lambda () (format t "(1) **Leave**~%"))
       (lambda () (format t "(2) I did!  It was you!~%"))
-      (lambda () (format t "(3) Ok! I'm dead!")))
+      (lambda () (format t "(3) Ok! I'm dead!~%")))
      (r-1
       (lambda () (death-end))
       (lambda () (conv-engine police 2 2))
@@ -487,7 +494,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (conv-engine police 2 3))
       (lambda () (format t "Police officer: If what you say is true, I gained nothing from this foolish escapade.  At least I rid the world of my brother's silly antics.. why stop there?~%The police officer pulls out his gun and a flash ends it all..~%")))
      (q-3
-      (lambda () (format t "Police officer: FREEZE!~%The police pulls out his weapon in a desperate attempt to turn the tables and fram you!  You hear the rest of the party run out, drawn from the commotion.~%~%You say:~%")))
+      (lambda () (format t "Police officer: FREEZE!~%The police pulls out his weapon in a desperate attempt to turn the tables and frame you!  You hear the rest of the party run out, drawn from the commotion.~%~%You say:~%")))
      (a-3
       (lambda () (format t "(1) **Leave**~%"))
       (lambda () (format t "(2) The party's over, sir.  Everyone's here.  Give yourself up.~%"))
@@ -500,11 +507,13 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
       (lambda () (format t "The party arrives."))))))
 
 (defun game-over ()
-  (format t "You lose.~%")
+   (handle-input "q")
   ;quit the game
 )
 (defun death-end ()
-  (format t "You foolishly make a mad dash to the nearest room for refuge.  You turn your head around, only to see the police officer draw his gun..~%"))
+  (format t "You foolishly make a mad dash to the nearest room for refuge.  You turn your head around, only to see the police officer draw his gun..~%")
+  (game-over)
+  t)
 
 (defparameter married-couple
   '(
@@ -777,15 +786,16 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
 
 (defun luck ()
   "Run function after leaving the ballroom"
-  (if (and dies? did-reset?)
-      (format t "You walk out of the ballroom, and feel a chill run through your spine.  \"You think you can solve this?\" says a cold, familiar voice.  You turn around to see who issued the threat.  A sharp pain rings through your body as you collapse to the floor.  You look up to see the sillouhette of the killer against the lobby ceiling lights.  And the world fades.~%")
-      ())
-  (setq did-reset? 0))
+  (setq did-reset? 0)
+  (if (and (dies?) did-reset?)
+      (progn 
+	(format t "You walk out of the ballroom, and feel a chill run through your spine.  \"You think you can solve this?\" says a cold, familiar voice.  You turn around to see who issued the threat.  A sharp pain rings through your body as you collapse to the floor.  You look up to see the sillouhette of the killer against the lobby ceiling lights.  And the world fades.~%~%") t)
+	()))
 
 (defparameter die-threshold 0)
 
 (defun dies? ()
-  (if (< (random 20) die-threshold)
+  (if (< (random 5) die-threshold)
       T
       Nil))
 
@@ -951,7 +961,12 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                  (Riddle (lambda () (format t "My sister and I were born to the same mother, on the same day, at the same time, in the same month, in the same year, and yet, we are not twins!  How can this be?~%~%Your answer: ")))
                  (Answer (lambda () "Triplets"))
                  (Result (lambda ()
-                           (format t "That's correct!~%") (set-conv-state young-rich-widow conv-place-1 1)))
+                           (format t "Young rich widow: That's correct!~%It seems that I can trust you.. I don't know if you heard about this but it seems that the host had a sibling.  When their father passed away, the father wrote on a will that stated that all of the property shall go to the elder son, and none to his younger one.~%")
+			   (format t "\"Why would the father do that?\", you ask.~%")
+			   (format t "Young rich widow: I'm not too sure.  But I think that the father and the younger son did not get along so well.  So the younger son was infuriated when he heard of the will and disappeared.  I'm a good friend of the friend of the host so I'm sure of this.  Speaking of which, I did overhear a conversation of the will being misplaced in one of the vacant rooms.  Perhaps you should look for that.~%")
+			   (set-prop (get-prop rooms 'vacantroom1) 'contents '(drawer))
+			   (set-prop (get-prop rooms 'vacantroom1) 'state 1)
+			   (set-conv-state young-rich-widow conv-place-1 1)))
                  (Hint (lambda () (format t "Think."))))))
 
 ;; Riddle accessor function
@@ -1114,13 +1129,13 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
      nil)
     ;; Commands
     ((search-string "quit exit q" input)
-     (format t "You Fail the Game!~%")
+     (format t "You lose the Game!~%")
+     (format t "~%----------------------------GAME OVER----------------------------~%~%")
      t)
     ((search-string "inventory i" input)
      (check-inventory))
     ((search-string "examine x" input)
-     (examine input)
-     nil)
+     (examine input))
     ((search-string "look l" input)
      (format t "~%")
      (describe-room))
@@ -1222,6 +1237,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
     ((search-string "will" input) 'will)
     ((search-string "knife" input) 'knife)
     ((search-string "safe" input) 'safe)
+    ((search-string "drawer" input) 'drawer)
     ;; Nil means that there was no match
     (t nil)
     ))
@@ -1241,14 +1257,18 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
                    (update-all-state 1)
                    (set-prop (get-room 'lobby) 'state 1)
                    (set-prop (get-room 'lobby) 'contents '(police)))))
-	    ;; End game stuck in lobby
-            ((= (get-prop (get-room 'lobby) 'state) -1)
-             (format t "I don't think I should go there.  Solving this case is the top priority right now!~%"))
-	    ;;Reset mistakes in ballroom
+	    ;; Reset mistakes in ballroom
 	    ((equalp destination 'ballroom) 
 	     (reset-conv-state)
 	     (set-prop game-state 'current-room (get-prop (get-current-room) direction))
              (format t "You moved ~A, you are now in ~A.~%" direction (eval (get-prop (get-current-room) 'displayname))))
+	    ;; Checks for random death of character
+	    ((and (equalp (get-prop game-state 'current-room) 'ballroom) (equalp destination 'lobby))
+	     (if (luck) (game-over)
+		 (progn
+		   (set-prop game-state 'current-room (get-prop (get-current-room) direction))
+		   (format t "You moved ~A, you are now in ~A.~%" direction (eval (get-prop (get-current-room) 'displayname)))))
+	     )
             ;; Elevator is locked
             ((and (equalp destination 'elevator) (or (= (get-prop player 'ice-riddle) 0) (= (get-prop player 'birthday-riddle) 0)))
              (format t "It appears the elevator is locked...~%"))
@@ -1292,7 +1312,7 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
   (format t "2. Initiate a conversation with a character in the room - \"talk\" + character description (i.e. \"talk to young widow\")~%")
   (format t "3. Examine an item/object in the room - \"examine\", \"x\" + item description (i.e. \"examine newspaper\")~%")
   (format t "4. Look at what is in your inventory - \"inventory\", \"i\"~%")
-  (format t "5. Use an item in your inventory - \"use\" + item (i.e. \"use key\")")
+  (format t "5. Use an item in your inventory - \"use\" + item (i.e. \"use key\")~%")
   )
 
 (defun show-intro ()
@@ -1337,7 +1357,8 @@ The ballroom is up ahead and the elevator is behind you.  There are two doors to
   (if (enter-to-continue) (return-from show-attic-scene))
   (format t "You think for a second and recall something strange about tonight's events.  Your eyes grow as you realize who the killer is and rush downstairs to the nearest phone.  You try to place a call, but the lines are still down.  \"Alright!  All I need to do is confirm one more thing and I'll have a solid case!\"~%")
   (if (enter-to-continue) (return-from show-attic-scene))
-  (format t "~%(You have returned to the lobby)~%~%")
+  (format t "As you rush out of the storage room, you are stopped dead in your tracks by the police officer.~%")
+  (if (enter-to-continue) (return-from show-attic-scene))
 )
 
 
